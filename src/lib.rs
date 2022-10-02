@@ -1,9 +1,7 @@
 #![allow(unused_imports)]
 #![allow(unused_macros)]
 
-#[macro_use]
-extern crate function_name;
-pub use ::function_name::named;
+pub use volmark::*;
 
 #[cfg(test)]
 pub mod test {
