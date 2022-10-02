@@ -1,0 +1,15 @@
+[package]
+name = "Breakwater"
+version = "0.1.0"
+edition = "2021"
+authors = ["Nathan Douglas <github@darkdell.net>"]
+
+[lib]
+name = "breakwater"
+path = "src/lib.rs"
+
+[[bin]]
+name = "breakwater"
+path = "src/main.rs"
+
+[dependencies]
