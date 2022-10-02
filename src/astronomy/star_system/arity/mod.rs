@@ -31,6 +31,19 @@ pub enum StarSystemArity {
   Quaternary,
 }
 
+/// Implementation of StarSystemArity.
+impl StarSystemArity {
+  /// Implement weighted distribution.
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> StarSystemArity {
+    use StarSystemArity::*;
+    let choices = [Solitary, Binary, Trinary, Quaternary];
+    // These don't match actual distributions of star systems.
+    let weights = [130, 60, 9, 1];
+    let distribution = WeightedIndex::new(&weights).unwrap();
+    return choices[distribution.sample(rng)];
+  }
+}
+
 /// Implement standard distribution.
 impl Distribution<StarSystemArity> for Standard {
   fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> StarSystemArity {
@@ -43,18 +56,6 @@ impl Distribution<StarSystemArity> for Standard {
       3 => Quaternary,
       _ => unreachable!(),
     }
-  }
-}
-
-impl StarSystemArity {
-  /// Implement weighted distribution.
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> StarSystemArity {
-    use StarSystemArity::*;
-    let choices = [Solitary, Binary, Trinary, Quaternary];
-    // These don't match actual distributions of star systems.
-    let weights = [130, 60, 9, 1];
-    let distribution = WeightedIndex::new(&weights).unwrap();
-    return choices[distribution.sample(rng)];
   }
 }
 
