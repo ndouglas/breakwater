@@ -3,13 +3,16 @@
 
 pub use volmark::*;
 
+pub mod astronomy;
+pub use astronomy::*;
+
 #[cfg(test)]
 pub mod test {
 
   use pretty_env_logger::env_logger::builder;
   use std::env::set_var;
 
-  use super::*;
+  pub use super::*;
 
   #[named]
   pub fn init() {

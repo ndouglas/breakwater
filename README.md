@@ -5,6 +5,10 @@ The general idea is that I want to be able to create maps, rooms, weather phenom
 
 I don't know, I'm just making this up as I go.
 
+## Planetary System
+
+Generation of the Planetary System begins with a Host Star.  This is what we'll term the star at the center of this conjectured extrasolar system.  It's possible for the host star to be part of a binary system; in a non-circumbinary (S-type) planetary orbit, the planet will circle only one of the stars, whereas a circumbinary (P-type) planetary orbit features the planet circling both.  This could lead to very interesting worlds!
+
 ## Hornvale Project
 - [Hornvale](https://github.com/ndouglas/hornvale/): Frontend and connective logic
   - [Goldengrove](https://github.com/ndouglas/goldengrove/): Narrative/mythopoetic procedural content generation and tools
