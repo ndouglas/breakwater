@@ -22,3 +22,19 @@ pub const MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE: f64 = 1.31;
 ///
 /// Measured in Gyr, or billions of years.
 pub const MINIMUM_STAR_AGE_TO_SUPPORT_LIFE: f64 = 4.0;
+
+/// The radius of our stellar neighborhood.
+///
+/// This may be flexible or changed at some point, but for the time being I'm
+/// thinking about fairly conventional fantasy systems where interstellar
+/// travel isn't a thing.
+///
+/// Measured in Ly, or light years.
+pub const RADIUS_OF_STELLAR_NEIGHBORHOOD: u8 = 10;
+
+/// The stellar density of our (stellar) neighborhood.
+///
+/// As above, this is currently set to be fairly conventional.
+///
+/// Measured in s/ly^3, or stars per cubic light year.
+pub const DENSITY_OF_STELLAR_NEIGHBORHOOD: f64 = 0.004;
