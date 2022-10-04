@@ -18,7 +18,7 @@ use rand::prelude::*;
 /// a shared center of gravity, or one star and three stars or two stars and
 /// two stars orbiting around a shared center of gravity.
 ///
-/// We'll contemplate the actual configuration elsewhere.
+/// We'll contemplate the actual arrangement elsewhere.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum StarSystemArity {
   /// A single star.
