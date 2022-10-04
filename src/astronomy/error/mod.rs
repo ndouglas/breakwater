@@ -8,4 +8,10 @@ pub enum AstronomicalError {
   StellarMassTooLowForMainSequence,
   /// Higher than MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND.
   StellarMassTooHighForMainSequence,
+  /// Lower than MINIMUM_STAR_AGE_TO_SUPPORT_LIFE.
+  StarTooYoungToSupportLife,
+  /// Lower than MINIMUM_STAR_MASS_TO_SUPPORT_LIFE.
+  StellarMassTooLowToSupportLife,
+  /// Higher than MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE.
+  StellarMassTooHighToSupportLife,
 }

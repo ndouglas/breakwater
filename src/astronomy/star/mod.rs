@@ -56,10 +56,21 @@ pub struct Star {
 
 /// Implementation of SpectralClass.
 impl Star {
-  /// From mass, for a main-sequence star.
+  /// Generate a random main-sequence star with specified constraints.
+  ///
+  /// This may or may not be habitable.
   #[named]
-  pub fn get_main_sequence_from_mass<R: Rng + ?Sized>(rng: &mut R, mass: f64) -> Result<Star, AstronomicalError> {
+  pub fn get_random_main_sequence_constrained<R: Rng + ?Sized>(
+    rng: &mut R,
+    constraints: &StarConstraints,
+  ) -> Result<Star, AstronomicalError> {
     trace_enter!();
+    let lower_bound_mass = constraints.minimum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
+    trace_var!(lower_bound_mass);
+    let upper_bound_mass = constraints.maximum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND);
+    trace_var!(upper_bound_mass);
+    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
+    trace_var!(mass);
     let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
     trace_var!(temperature);
     let luminosity = get_main_sequence_star_luminosity_from_mass(mass)?;
@@ -70,7 +81,11 @@ impl Star {
     trace_var!(class);
     let life_expectancy = mass / luminosity * 10.0;
     trace_var!(life_expectancy);
-    let current_age = rng.gen_range((0.2 * life_expectancy)..(0.8 * life_expectancy));
+    let lower_bound_age = constraints.minimum_age.unwrap_or(0.2 * life_expectancy);
+    trace_var!(lower_bound_age);
+    let upper_bound_age = constraints.maximum_age.unwrap_or(0.8 * life_expectancy);
+    trace_var!(upper_bound_age);
+    let current_age = rng.gen_range(lower_bound_age..upper_bound_age);
     trace_var!(current_age);
     let density = mass / radius.powf(3.0);
     trace_var!(density);
@@ -103,29 +118,6 @@ impl Star {
     Ok(result)
   }
 
-  /// Generate a random main-sequence star with specified constraints.
-  ///
-  /// This may or may not be habitable.
-  #[named]
-  pub fn get_random_main_sequence_constrained<R: Rng + ?Sized>(
-    rng: &mut R,
-    constraints: &StarConstraints,
-  ) -> Result<Star, AstronomicalError> {
-    trace_enter!();
-    let lower_bound_mass = constraints
-      .minimum_stellar_mass
-      .unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
-    let upper_bound_mass = constraints
-      .maximum_stellar_mass
-      .unwrap_or(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND);
-    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
-    trace_var!(mass);
-    let result = Star::get_main_sequence_from_mass(rng, mass)?;
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-
   /// Generate a random main-sequence star.
   ///
   /// This may or may not be habitable.
@@ -135,8 +127,10 @@ impl Star {
     let result = Star::get_random_main_sequence_constrained(
       rng,
       &StarConstraints {
-        minimum_stellar_mass: Some(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND),
-        maximum_stellar_mass: Some(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND),
+        minimum_mass: Some(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND),
+        maximum_mass: Some(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND),
+        minimum_age: None,
+        maximum_age: None,
       },
     )?;
     trace_var!(result);
@@ -151,8 +145,10 @@ impl Star {
     let result = Star::get_random_main_sequence_constrained(
       rng,
       &StarConstraints {
-        minimum_stellar_mass: Some(MINIMUM_STAR_MASS_TO_SUPPORT_LIFE),
-        maximum_stellar_mass: Some(MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE),
+        minimum_mass: Some(MINIMUM_STAR_MASS_TO_SUPPORT_LIFE),
+        maximum_mass: Some(MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE),
+        minimum_age: Some(MINIMUM_STAR_AGE_TO_SUPPORT_LIFE),
+        maximum_age: None,
       },
     )?;
     trace_var!(result);
@@ -162,12 +158,19 @@ impl Star {
 
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
-  pub fn is_habitable(&self) -> bool {
+  pub fn is_habitable(&self) -> Result<(), AstronomicalError> {
     trace_enter!();
-    let result = self.current_age >= MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
-    trace_var!(result);
+    if self.current_age < MINIMUM_STAR_AGE_TO_SUPPORT_LIFE {
+      return Err(AstronomicalError::StarTooYoungToSupportLife);
+    }
+    if self.mass < MINIMUM_STAR_MASS_TO_SUPPORT_LIFE {
+      return Err(AstronomicalError::StellarMassTooLowToSupportLife);
+    }
+    if self.mass > MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE {
+      return Err(AstronomicalError::StellarMassTooHighToSupportLife);
+    }
     trace_exit!();
-    result
+    Ok(())
   }
 }
 
@@ -181,27 +184,30 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random_main_sequence() {
+  pub fn get_random_main_sequence() -> Result<(), AstronomicalError> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let star = Star::get_random_main_sequence(&mut rng);
+    let star = Star::get_random_main_sequence(&mut rng)?;
     trace_var!(star);
-    println!("{:#?}", star);
     trace_exit!();
+    Ok(())
   }
 
   #[named]
   #[test]
-  pub fn get_random_habitable() {
+  pub fn get_random_habitable() -> Result<(), AstronomicalError> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let star = Star::get_random_habitable(&mut rng);
+    let star = Star::get_random_habitable(&mut rng)?;
     trace_var!(star);
+    assert_eq!(star.is_habitable()?, ());
     println!("{:#?}", star);
     trace_exit!();
+    Ok(())
   }
+
 }
