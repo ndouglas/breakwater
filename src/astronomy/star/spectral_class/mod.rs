@@ -1,9 +1,9 @@
 use rand::distributions::Standard;
 use rand::prelude::*;
 
-use crate::astronomy::get_main_sequence_luminosity_from_mass;
-use crate::astronomy::get_main_sequence_radius_from_mass;
-use crate::astronomy::get_main_sequence_temperature_from_mass;
+use crate::astronomy::get_main_sequence_star_luminosity_from_mass;
+use crate::astronomy::get_main_sequence_star_radius_from_mass;
+use crate::astronomy::get_main_sequence_star_temperature_from_mass;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;

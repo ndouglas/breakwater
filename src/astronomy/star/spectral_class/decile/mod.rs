@@ -2,7 +2,7 @@ use rand::distributions::Standard;
 use rand::distributions::Uniform;
 use rand::prelude::*;
 
-use crate::astronomy::get_main_sequence_temperature_from_mass;
+use crate::astronomy::get_main_sequence_star_temperature_from_mass;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
@@ -45,7 +45,7 @@ impl SpectralClassDecile {
       return Err(AstronomicalError::StellarMassTooHighForMainSequence);
     }
     let options = [D0, D1, D2, D3, D4, D5, D6, D7, D8, D9];
-    let temperature = get_main_sequence_temperature_from_mass(mass)?;
+    let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
     let result = match temperature {
       temperature if temperature < 3_700.0 => options[(10.0 * (1.0 - ((temperature - 2_000.0) / 1_700.0))) as usize],
       temperature if temperature < 5_200.0 => options[(10.0 * (1.0 - ((temperature - 3_700.0) / 1_500.0))) as usize],

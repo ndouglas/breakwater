@@ -2,7 +2,7 @@ use rand::distributions::Standard;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 
-use crate::astronomy::get_main_sequence_temperature_from_mass;
+use crate::astronomy::get_main_sequence_star_temperature_from_mass;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
@@ -59,7 +59,7 @@ impl SpectralClassType {
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
       return Err(AstronomicalError::StellarMassTooHighForMainSequence);
     }
-    let temperature = get_main_sequence_temperature_from_mass(mass)?;
+    let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
     use SpectralClassType::*;
     let result = match temperature {
       temperature if temperature < 3_700.0 => M,
