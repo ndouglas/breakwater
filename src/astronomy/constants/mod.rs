@@ -12,7 +12,7 @@ pub const MINIMUM_STAR_MASS_TO_SUPPORT_LIFE: f64 = 0.55;
 
 /// Above this is probably too high to support conventional life.
 /// Measured in Msol, or solar mass equivalents.
-pub const MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE: f64 = 1.31;
+pub const MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE: f64 = 1.25;
 
 /// Assume a star has to be at least this old to have interesting life.
 ///
@@ -30,7 +30,7 @@ pub const MINIMUM_STAR_AGE_TO_SUPPORT_LIFE: f64 = 4.0;
 /// travel isn't a thing.
 ///
 /// Measured in Ly, or light years.
-pub const RADIUS_OF_STELLAR_NEIGHBORHOOD: u8 = 10;
+pub const RADIUS_OF_STELLAR_NEIGHBORHOOD: f64 = 10.0;
 
 /// The stellar density of our (stellar) neighborhood.
 ///

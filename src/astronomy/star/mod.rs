@@ -81,9 +81,9 @@ impl Star {
     trace_var!(class);
     let life_expectancy = mass / luminosity * 10.0;
     trace_var!(life_expectancy);
-    let lower_bound_age = constraints.minimum_age.unwrap_or(0.2 * life_expectancy);
+    let lower_bound_age = constraints.minimum_age.unwrap_or(0.1 * life_expectancy);
     trace_var!(lower_bound_age);
-    let upper_bound_age = constraints.maximum_age.unwrap_or(0.8 * life_expectancy);
+    let upper_bound_age = constraints.maximum_age.unwrap_or(0.9 * life_expectancy);
     trace_var!(upper_bound_age);
     let current_age = rng.gen_range(lower_bound_age..upper_bound_age);
     trace_var!(current_age);
@@ -205,7 +205,6 @@ pub mod test {
     let star = Star::get_random_habitable(&mut rng)?;
     trace_var!(star);
     assert_eq!(star.is_habitable()?, ());
-    println!("{:#?}", star);
     trace_exit!();
     Ok(())
   }
