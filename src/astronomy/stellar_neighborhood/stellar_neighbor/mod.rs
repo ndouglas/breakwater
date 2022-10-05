@@ -3,7 +3,9 @@ use rand::prelude::*;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::get_random_point_in_sphere;
 use crate::astronomy::AstronomicalError;
+use crate::astronomy::Star;
 use crate::astronomy::StarSystem;
+use crate::astronomy::StarSystemStars;
 
 pub mod constraints;
 pub use constraints::*;
@@ -45,7 +47,9 @@ impl StellarNeighbor {
     trace_var!(z);
     let coordinates = (x, y, z);
     trace_var!(coordinates);
-    let star_system = StarSystem {};
+    let star_system = StarSystem {
+      stars: StarSystemStars::Solitary(Star::get_random_habitable(rng)?),
+    };
     trace_var!(star_system);
     let result = StellarNeighbor {
       coordinates,

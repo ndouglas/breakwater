@@ -1,7 +1,5 @@
-pub mod arity;
-pub use arity::*;
-pub mod arrangement;
-pub use arrangement::*;
+pub mod stars;
+pub use stars::*;
 
 /// The `StarSystem` type.
 ///
@@ -15,5 +13,8 @@ pub use arrangement::*;
 /// bound to those stars in some interesting way.
 ///
 /// And I use "solar system" only to refer to our (your and my) star system.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub struct StarSystem {}
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct StarSystem {
+  /// The basic configuration of the host star(s).
+  pub stars: StarSystemStars,
+}
