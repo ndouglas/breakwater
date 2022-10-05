@@ -1,4 +1,5 @@
 use rand::prelude::*;
+use std::f64::consts::PI;
 
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
@@ -12,6 +13,12 @@ pub use stellar_neighbor::*;
 /// The `StellarNeighborhood` type.
 ///
 /// This is mostly a container for star systems.
+///
+/// We carve out a spherical section, a few light years or so in radius, and
+/// generate some companion star systems.  These are likely to be other class V
+/// stars, possibly with planets of their own.
+///
+/// Why?  Well, just to add a little color to the night sky.
 #[derive(Clone, Debug, PartialEq)]
 pub struct StellarNeighborhood {
   /// The radius of this neighborhood, measured in light years.
@@ -37,8 +44,30 @@ impl StellarNeighborhood {
   ) -> Result<StellarNeighborhood, AstronomicalError> {
     trace_enter!();
     let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    trace_var!(radius);
     let density = constraints.density.unwrap_or(DENSITY_OF_STELLAR_NEIGHBORHOOD);
-    let neighbors = vec![];
+    trace_var!(density);
+    let volume = (4.0 / 3.0) * PI * radius.powf(3.0);
+    trace_var!(volume);
+    let average_stars = density * volume;
+    trace_var!(average_stars);
+    let number_of_stars = rng.gen_range((0.875 * average_stars)..(1.125 * average_stars)) as usize;
+    trace_var!(number_of_stars);
+    let mut neighbors = vec![];
+    trace_var!(neighbors);
+    let mut star_counter = 0;
+    let neighbor_constraints = constraints.neighbor_constraints.unwrap_or(StellarNeighborConstraints {
+      radius: Some(radius),
+    });
+    trace_var!(neighbor_constraints);
+    loop {
+      neighbors.push(StellarNeighbor::get_random_constrained(rng, &neighbor_constraints)?);
+      star_counter += 1;
+      if star_counter > number_of_stars {
+        break;
+      }
+    }
+    trace_var!(neighbors);
     let result = StellarNeighborhood {
       radius,
       density,
@@ -70,6 +99,7 @@ pub mod test {
     let constraints = StellarNeighborhoodConstraints {
       radius: Some(RADIUS_OF_STELLAR_NEIGHBORHOOD),
       density: Some(DENSITY_OF_STELLAR_NEIGHBORHOOD),
+      neighbor_constraints: None,
     };
     let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(stellar_neighborhood);

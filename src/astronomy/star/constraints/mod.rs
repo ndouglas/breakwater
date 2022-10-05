@@ -1,6 +1,7 @@
 /// Constraints for creating a star.
 ///
 /// This is intended to ease creating stars with specific characteristics.
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct StarConstraints {
   /// The minimum mass of the star, in Msol.
   pub minimum_mass: Option<f64>,

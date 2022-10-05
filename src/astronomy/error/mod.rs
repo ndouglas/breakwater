@@ -14,4 +14,5 @@ pub enum AstronomicalError {
   StellarMassTooLowToSupportLife,
   /// Higher than MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE.
   StellarMassTooHighToSupportLife,
+  /// 
 }

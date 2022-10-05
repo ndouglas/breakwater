@@ -6,7 +6,7 @@ pub use arrangement::*;
 /// The `StarSystem` type.
 ///
 /// This is probably a good place to include some notes on terminology.
-/// 
+///
 /// For ease of programming, I'm conflating the concepts of "star" or "stellar"
 /// systems and "planetary" systems.
 ///
@@ -15,6 +15,5 @@ pub use arrangement::*;
 /// bound to those stars in some interesting way.
 ///
 /// And I use "solar system" only to refer to our (your and my) star system.
-pub struct StarSystem {
-  
-}
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+pub struct StarSystem {}
