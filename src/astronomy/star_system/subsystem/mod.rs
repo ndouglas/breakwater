@@ -12,6 +12,7 @@ pub mod constraints;
 use constraints::*;
 pub mod binary_configuration;
 use binary_configuration::*;
+use binary_configuration::orbit_type::OrbitType;
 pub mod r#type;
 use r#type::*;
 

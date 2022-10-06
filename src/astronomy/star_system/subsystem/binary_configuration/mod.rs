@@ -11,7 +11,7 @@ use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION;
 
 pub mod orbit_type;
-pub use orbit_type::*;
+use orbit_type::*;
 
 /// Details about the orbital information of a subsystem.
 #[derive(Clone, Debug, PartialEq)]
