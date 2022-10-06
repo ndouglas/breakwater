@@ -1,11 +1,11 @@
 use rand::prelude::*;
 
-use crate::astronomy::AstronomicalError;
-use crate::astronomy::Star;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints;
+use crate::astronomy::star_system::subsystem::error::Error;
 use crate::astronomy::star_system::subsystem::Subsystem;
-use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::AstronomicalError;
+use crate::astronomy::Star;
 use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 
 /// The `Type` type.
@@ -25,10 +25,7 @@ impl Type {
   ///
   /// This may or may not be habitable, depending on the constraints.
   #[named]
-  pub fn get_random_constrained<R: Rng + ?Sized>(
-    rng: &mut R,
-    constraints: &Constraints,
-  ) -> Result<Type, AstronomicalError> {
+  pub fn get_random_constrained<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<Type, Error> {
     trace_enter!();
     let mut maximum_depth = constraints.maximum_depth;
     maximum_depth -= 1;
@@ -168,14 +165,14 @@ impl Type {
 
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
-  pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
+  pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
     use Type::*;
     let result = match self {
-      Single(star) => star.check_habitable(),
+      Single(star) => Ok(star.check_habitable()?),
       Double(sub1, sub2) => {
         if !sub1.is_habitable() && !sub2.is_habitable() {
-          return Err(AstronomicalError::NoHabitableZoneFoundInSubsystem);
+          return Err(Error::NoHabitableZoneFound);
         }
         Ok(())
       },
@@ -197,7 +194,6 @@ impl Type {
     trace_exit!();
     result
   }
-
 }
 
 #[cfg(test)]
@@ -210,7 +206,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random() -> Result<(), AstronomicalError> {
+  pub fn get_random() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -225,7 +221,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random2() -> Result<(), AstronomicalError> {
+  pub fn get_random2() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -240,7 +236,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random3() -> Result<(), AstronomicalError> {
+  pub fn get_random3() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -253,10 +249,9 @@ pub mod test {
     Ok(())
   }
 
-
   #[named]
   #[test]
-  pub fn get_random4() -> Result<(), AstronomicalError> {
+  pub fn get_random4() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -268,5 +263,4 @@ pub mod test {
     trace_exit!();
     Ok(())
   }
-
 }

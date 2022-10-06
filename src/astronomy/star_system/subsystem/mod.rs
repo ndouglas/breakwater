@@ -1,18 +1,19 @@
 use rand::prelude::*;
 
-use crate::astronomy::AstronomicalError;
-use crate::astronomy::Star;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::Star;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 
 pub mod constraints;
 use constraints::*;
+pub mod error;
+use error::*;
 pub mod binary_configuration;
-use binary_configuration::*;
 use binary_configuration::orbit_type::OrbitType;
+use binary_configuration::*;
 pub mod r#type;
 use r#type::*;
 
@@ -48,7 +49,7 @@ impl Subsystem {
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &SubsystemConstraints,
-  ) -> Result<Subsystem, AstronomicalError> {
+  ) -> Result<Subsystem, Error> {
     trace_enter!();
     use Type::*;
     let r#type = Type::get_random_constrained(rng, constraints)?;
@@ -80,7 +81,7 @@ impl Subsystem {
           }
           trials -= 1;
           if trials <= 0 {
-            return Err(AstronomicalError::UnableToGenerateCoherentStarSubsystemOrbitalInformation);
+            return Err(Error::UnableToGenerateBinaryConfiguration);
           }
         }
         Some(information)
@@ -165,7 +166,7 @@ impl Subsystem {
 
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
-  pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
+  pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
     let result = {
       // Check habitability of the individual component subsystems.
@@ -177,15 +178,15 @@ impl Subsystem {
       if let Some(binary_configuration) = &self.binary_configuration {
         use OrbitType::*;
         match binary_configuration.orbit_type {
-          None => return Err(AstronomicalError::NoHabitableZoneFoundInSubsystem),
+          None => return Err(Error::NoHabitableZoneFound),
           PType => {
             let habitable_zone = self.r#type.get_habitable_zone();
             let forbidden_zone = binary_configuration.forbidden_zone;
             if forbidden_zone.0 <= habitable_zone.0 && forbidden_zone.1 >= habitable_zone.1 {
-              return Err(AstronomicalError::HabitableZoneContainedWithinForbiddenZone);
+              return Err(Error::HabitableZoneContainedWithinForbiddenZone);
             }
             if habitable_zone.1 <= 4.0 * binary_configuration.maximum_separation {
-              return Err(AstronomicalError::HabitableZoneTooCloseToBinaryHostStars);
+              return Err(Error::HabitableZoneTooCloseToBinaryHostStars);
             }
           },
           STypePrimary | STypeSecondary | STypeBoth => {},
@@ -210,7 +211,6 @@ impl Subsystem {
     trace_exit!();
     result
   }
-
 }
 
 #[cfg(test)]
@@ -223,7 +223,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random() -> Result<(), AstronomicalError> {
+  pub fn get_random() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -240,7 +240,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random2() -> Result<(), AstronomicalError> {
+  pub fn get_random2() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -257,7 +257,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random3() -> Result<(), AstronomicalError> {
+  pub fn get_random3() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -274,7 +274,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random4() -> Result<(), AstronomicalError> {
+  pub fn get_random4() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();

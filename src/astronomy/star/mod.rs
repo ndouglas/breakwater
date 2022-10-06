@@ -9,12 +9,14 @@ use crate::astronomy::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
 
 pub mod constraints;
 use constraints::*;
+pub mod error;
+use error::*;
 pub mod math;
-use math::*;
 use math::color::get_main_sequence_star_absolute_rgb_from_mass;
 use math::luminosity::get_main_sequence_star_luminosity_from_mass;
 use math::radius::get_main_sequence_star_radius_from_mass;
 use math::temperature::get_main_sequence_star_temperature_from_mass;
+use math::*;
 pub mod spectral_class;
 use spectral_class::*;
 
@@ -61,7 +63,7 @@ impl Star {
   pub fn get_random_main_sequence_constrained<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &Constraints,
-  ) -> Result<Star, AstronomicalError> {
+  ) -> Result<Star, Error> {
     trace_enter!();
     let lower_bound_mass = constraints.minimum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
     trace_var!(lower_bound_mass);
@@ -120,12 +122,9 @@ impl Star {
   ///
   /// This may or may not be habitable.
   #[named]
-  pub fn get_random_main_sequence<R: Rng + ?Sized>(rng: &mut R) -> Result<Star, AstronomicalError> {
+  pub fn get_random_main_sequence<R: Rng + ?Sized>(rng: &mut R) -> Result<Star, Error> {
     trace_enter!();
-    let result = Star::get_random_main_sequence_constrained(
-      rng,
-      &Constraints::main_sequence(),
-    )?;
+    let result = Star::get_random_main_sequence_constrained(rng, &Constraints::main_sequence())?;
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -133,12 +132,9 @@ impl Star {
 
   /// Generate a random habitable main-sequence star.
   #[named]
-  pub fn get_random_habitable<R: Rng + ?Sized>(rng: &mut R) -> Result<Star, AstronomicalError> {
+  pub fn get_random_habitable<R: Rng + ?Sized>(rng: &mut R) -> Result<Star, Error> {
     trace_enter!();
-    let result = Star::get_random_main_sequence_constrained(
-      rng,
-      &Constraints::habitable(),
-    )?;
+    let result = Star::get_random_main_sequence_constrained(rng, &Constraints::habitable())?;
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -146,16 +142,16 @@ impl Star {
 
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
-  pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
+  pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
     if self.current_age < MINIMUM_STAR_AGE_TO_SUPPORT_LIFE {
-      return Err(AstronomicalError::StarTooYoungToSupportLife);
+      return Err(Error::TooYoungToSupportLife);
     }
     if self.mass < MINIMUM_STAR_MASS_TO_SUPPORT_LIFE {
-      return Err(AstronomicalError::StellarMassTooLowToSupportLife);
+      return Err(Error::MassTooLowToSupportLife);
     }
     if self.mass > MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE {
-      return Err(AstronomicalError::StellarMassTooHighToSupportLife);
+      return Err(Error::MassTooHighToSupportLife);
     }
     trace_exit!();
     Ok(())
@@ -185,7 +181,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random_main_sequence() -> Result<(), AstronomicalError> {
+  pub fn get_random_main_sequence() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -198,7 +194,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random_habitable() -> Result<(), AstronomicalError> {
+  pub fn get_random_habitable() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();

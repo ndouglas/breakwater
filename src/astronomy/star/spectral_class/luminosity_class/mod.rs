@@ -2,8 +2,8 @@ use rand::distributions::Standard;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 
+use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::luminosity::get_main_sequence_star_luminosity_from_mass;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::star::spectral_class::Type;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
@@ -41,14 +41,14 @@ impl LuminosityClass {
   ///
   /// Note that `mass` is measured in solar mass equivalents.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<LuminosityClass, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<LuminosityClass, Error> {
     trace_enter!();
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
-      return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+      return Err(Error::MassTooLowForMainSequence);
     }
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
-      return Err(AstronomicalError::StellarMassTooHighForMainSequence);
+      return Err(Error::MassTooHighForMainSequence);
     }
     // By definition.
     let result = LuminosityClass::ClassV;
@@ -59,7 +59,7 @@ impl LuminosityClass {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<LuminosityClass, AstronomicalError> {
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<LuminosityClass, Error> {
     trace_enter!();
     use LuminosityClass::*;
     // Disregard stars that would've blown up and killed us already (Class 0 - III).
@@ -95,7 +95,6 @@ impl LuminosityClass {
     trace_exit!();
     result.to_string()
   }
-
 }
 
 /// Implement uniform distribution.
@@ -142,7 +141,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_main_sequence_from_mass() -> Result<(), AstronomicalError> {
+  pub fn get_main_sequence_from_mass() -> Result<(), Error> {
     init();
     trace_enter!();
     let luminosity = LuminosityClass::get_main_sequence_from_mass(1.0)?;

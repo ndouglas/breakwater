@@ -1,10 +1,11 @@
 use rand::prelude::*;
 
 use crate::astronomy::math::point::get_random_point_in_sphere;
+use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
+use crate::astronomy::star_system::error::Error;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::StarSystem;
-use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
@@ -32,7 +33,7 @@ impl StellarNeighbor {
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &Constraints,
-  ) -> Result<StellarNeighbor, AstronomicalError> {
+  ) -> Result<StellarNeighbor, Error> {
     trace_enter!();
     let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
     trace_var!(radius);
@@ -93,7 +94,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random() -> Result<(), AstronomicalError> {
+  pub fn get_random() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();

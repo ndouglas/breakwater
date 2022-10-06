@@ -1,15 +1,16 @@
 use rand::prelude::*;
 
-use crate::astronomy::AstronomicalError;
-use crate::astronomy::star_system::subsystem::Subsystem;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_system::subsystem::Subsystem;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
+use crate::astronomy::MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION;
 use crate::astronomy::MINIMUM_BINARY_STAR_SEPARATION;
 use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
-use crate::astronomy::MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION;
 
+pub mod error;
+use error::*;
 pub mod orbit_type;
 use orbit_type::*;
 
@@ -46,7 +47,7 @@ impl BinaryConfiguration {
     sub1: &Subsystem,
     sub2: &Subsystem,
     constraints: &SubsystemConstraints,
-  ) -> Result<BinaryConfiguration, AstronomicalError> {
+  ) -> Result<BinaryConfiguration, Error> {
     trace_enter!();
     let minimum_separation_constraint = constraints
       .minimum_separation
@@ -93,7 +94,7 @@ impl BinaryConfiguration {
     let minimum_separation = minimum_distances_from_barycenter.0 + minimum_distances_from_barycenter.1;
     trace_var!(minimum_separation);
     if minimum_separation < MINIMUM_BINARY_STAR_SEPARATION {
-      return Err(AstronomicalError::BinaryStarsTooCloseForComfort);
+      return Err(Error::BinaryStarsTooCloseForComfort);
     }
     let maximum_distances_from_barycenter = {
       let d1 = average_distances_from_barycenter.0 * (1.0 + orbital_eccentricities.0);
@@ -134,5 +135,4 @@ impl BinaryConfiguration {
     trace_exit!();
     Ok(result)
   }
-
 }

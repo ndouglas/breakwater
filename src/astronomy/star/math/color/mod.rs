@@ -1,5 +1,5 @@
+use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
@@ -13,14 +13,14 @@ use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 ///
 /// This came from StackOverflow: https://stackoverflow.com/q/21977786
 #[named]
-pub fn get_main_sequence_star_absolute_rgb_from_mass(mass: f64) -> Result<(u8, u8, u8), AstronomicalError> {
+pub fn get_main_sequence_star_absolute_rgb_from_mass(mass: f64) -> Result<(u8, u8, u8), Error> {
   trace_enter!();
   trace_var!(mass);
   if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
-    return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+    return Err(Error::MassTooLowForMainSequence);
   }
   if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
-    return Err(AstronomicalError::StellarMassTooHighForMainSequence);
+    return Err(Error::MassTooHighForMainSequence);
   }
   let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
   trace_var!(temperature);
@@ -100,7 +100,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn test_get_main_sequence_star_absolute_rgb_from_mass() -> Result<(), AstronomicalError> {
+  pub fn test_get_main_sequence_star_absolute_rgb_from_mass() -> Result<(), Error> {
     init();
     trace_enter!();
     // Jolly ol' Sol

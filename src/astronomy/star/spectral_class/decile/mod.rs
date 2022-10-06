@@ -2,8 +2,8 @@ use rand::distributions::Standard;
 use rand::distributions::Uniform;
 use rand::prelude::*;
 
+use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
@@ -34,15 +34,15 @@ impl Decile {
   ///
   /// Note that `mass` is measured in solar mass equivalents.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<Decile, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<Decile, Error> {
     trace_enter!();
     use Decile::*;
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
-      return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+      return Err(Error::MassTooLowForMainSequence);
     }
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
-      return Err(AstronomicalError::StellarMassTooHighForMainSequence);
+      return Err(Error::MassTooHighForMainSequence);
     }
     let options = [D0, D1, D2, D3, D4, D5, D6, D7, D8, D9];
     let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
@@ -63,7 +63,7 @@ impl Decile {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<Decile, AstronomicalError> {
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<Decile, Error> {
     trace_enter!();
     let result = rng.gen();
     trace_var!(result);

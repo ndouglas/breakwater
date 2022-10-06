@@ -1,17 +1,17 @@
-use crate::astronomy::AstronomicalError;
+use crate::astronomy::star::error::Error;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
 /// Get the luminosity of a main-sequence star in Lsol based on its Msol.
 #[named]
-pub fn get_main_sequence_star_luminosity_from_mass(mass: f64) -> Result<f64, AstronomicalError> {
+pub fn get_main_sequence_star_luminosity_from_mass(mass: f64) -> Result<f64, Error> {
   trace_enter!();
   trace_var!(mass);
   if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
-    return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+    return Err(Error::MassTooLowForMainSequence);
   }
   if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
-    return Err(AstronomicalError::StellarMassTooHighForMainSequence);
+    return Err(Error::MassTooHighForMainSequence);
   }
   let result = match mass {
     mass if mass < 0.43 => 0.23 * mass.powf(2.3),
@@ -35,7 +35,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn test_get_main_sequence_star_luminosity_from_mass() -> Result<(), AstronomicalError> {
+  pub fn test_get_main_sequence_star_luminosity_from_mass() -> Result<(), Error> {
     init();
     trace_enter!();
     // Jolly ol' Sol

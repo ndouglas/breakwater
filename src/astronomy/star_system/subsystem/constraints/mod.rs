@@ -4,13 +4,13 @@ use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::MAXIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION;
+use crate::astronomy::MAXIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY;
+use crate::astronomy::MAXIMUM_STAR_SUBSYSTEM_RECURSION;
 use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::MINIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MINIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY;
-use crate::astronomy::MAXIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
-use crate::astronomy::MAXIMUM_STAR_SUBSYSTEM_RECURSION;
 
 /// Constraints for creating a star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -151,7 +151,6 @@ impl Constraints {
       maximum_depth,
     }
   }
-
 }
 
 impl Default for Constraints {

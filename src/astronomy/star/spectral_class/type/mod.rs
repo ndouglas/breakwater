@@ -2,8 +2,8 @@ use rand::distributions::Standard;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 
+use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
@@ -50,14 +50,14 @@ pub enum Type {
 impl Type {
   /// From mass, for a main-sequence star.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<Type, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<Type, Error> {
     trace_enter!();
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
-      return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+      return Err(Error::MassTooLowForMainSequence);
     }
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
-      return Err(AstronomicalError::StellarMassTooHighForMainSequence);
+      return Err(Error::MassTooHighForMainSequence);
     }
     let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
     use Type::*;
@@ -78,7 +78,7 @@ impl Type {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<Type, AstronomicalError> {
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<Type, Error> {
     use Type::*;
     // Just assume that we're calculating based on main-sequence stars and
     // things that won't kill everyone.
@@ -154,7 +154,6 @@ impl Distribution<Type> for Standard {
     trace_exit!();
     result
   }
-
 }
 
 #[cfg(test)]

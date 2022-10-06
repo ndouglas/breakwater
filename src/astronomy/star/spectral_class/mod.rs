@@ -1,11 +1,11 @@
 use rand::distributions::Standard;
 use rand::prelude::*;
 
+use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::color::get_main_sequence_star_absolute_rgb_from_mass;
 use crate::astronomy::star::math::luminosity::get_main_sequence_star_luminosity_from_mass;
 use crate::astronomy::star::math::radius::get_main_sequence_star_radius_from_mass;
 use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
@@ -34,14 +34,14 @@ pub struct SpectralClass {
 impl SpectralClass {
   /// From mass, for a main-sequence star.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<SpectralClass, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<SpectralClass, Error> {
     trace_enter!();
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
-      return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+      return Err(Error::MassTooLowForMainSequence);
     }
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
-      return Err(AstronomicalError::StellarMassTooLowForMainSequence);
+      return Err(Error::MassTooLowForMainSequence);
     }
     let r#type = Type::get_main_sequence_from_mass(mass)?;
     trace_var!(r#type);
@@ -49,7 +49,12 @@ impl SpectralClass {
     trace_var!(decile);
     let luminosity_class = LuminosityClass::get_main_sequence_from_mass(mass)?;
     trace_var!(luminosity_class);
-    let string = format!("{}{}{}", r#type.get_char(), decile.get_char(), luminosity_class.get_string());
+    let string = format!(
+      "{}{}{}",
+      r#type.get_char(),
+      decile.get_char(),
+      luminosity_class.get_string()
+    );
     trace_var!(string);
     let result = SpectralClass {
       r#type,
@@ -64,7 +69,7 @@ impl SpectralClass {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<SpectralClass, AstronomicalError> {
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<SpectralClass, Error> {
     trace_enter!();
     let r#type = Type::get_random(rng)?;
     trace_var!(r#type);
@@ -72,7 +77,12 @@ impl SpectralClass {
     trace_var!(decile);
     let luminosity_class = LuminosityClass::get_random(rng)?;
     trace_var!(luminosity_class);
-    let string = format!("{}{}{}", r#type.get_char(), decile.get_char(), luminosity_class.get_string());
+    let string = format!(
+      "{}{}{}",
+      r#type.get_char(),
+      decile.get_char(),
+      luminosity_class.get_string()
+    );
     trace_var!(string);
     let result = SpectralClass {
       r#type,
@@ -106,7 +116,12 @@ impl Distribution<SpectralClass> for Standard {
     trace_var!(decile);
     let luminosity_class: LuminosityClass = rng.gen();
     trace_var!(luminosity_class);
-    let string = format!("{}{}{}", r#type.get_char(), decile.get_char(), luminosity_class.get_string());
+    let string = format!(
+      "{}{}{}",
+      r#type.get_char(),
+      decile.get_char(),
+      luminosity_class.get_string()
+    );
     trace_var!(string);
     let result = SpectralClass {
       r#type,
