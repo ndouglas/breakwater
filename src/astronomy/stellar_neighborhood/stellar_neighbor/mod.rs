@@ -1,6 +1,6 @@
 use rand::prelude::*;
 
-use crate::astronomy::get_random_point_in_sphere;
+use crate::astronomy::math::point::get_random_point_in_sphere;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::StarSystem;
@@ -8,7 +8,7 @@ use crate::astronomy::star_system::constraints::Constraints as StarSystemConstra
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
-pub use constraints::*;
+use constraints::*;
 
 /// The `StellarNeighbor` class.
 ///
@@ -31,7 +31,7 @@ impl StellarNeighbor {
   #[named]
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    constraints: &StellarNeighborConstraints,
+    constraints: &Constraints,
   ) -> Result<StellarNeighbor, AstronomicalError> {
     trace_enter!();
     let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
@@ -46,10 +46,10 @@ impl StellarNeighbor {
     trace_var!(z);
     let coordinates = (x, y, z);
     trace_var!(coordinates);
-    let star_system_constraints = constraints
-      .star_system_constraints
+    let system_constraints = constraints
+      .system_constraints
       .unwrap_or(StarSystemConstraints::default());
-    let star_system = StarSystem::get_random_constrained(rng, &star_system_constraints)?;
+    let star_system = StarSystem::get_random_constrained(rng, &system_constraints)?;
     trace_var!(star_system);
     let result = StellarNeighbor {
       coordinates,
@@ -98,7 +98,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = StellarNeighborConstraints::default();
+    let constraints = Constraints::default();
     let stellar_neighbor = StellarNeighbor::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(stellar_neighbor);
     // println!("{:#?}", stellar_neighbor);

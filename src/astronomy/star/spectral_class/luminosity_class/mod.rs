@@ -2,7 +2,7 @@ use rand::distributions::Standard;
 use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 
-use crate::astronomy::get_main_sequence_star_luminosity_from_mass;
+use crate::astronomy::star::math::luminosity::get_main_sequence_star_luminosity_from_mass;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::star::spectral_class::Type;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;

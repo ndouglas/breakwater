@@ -1,4 +1,2 @@
-pub mod space;
-pub use space::*;
-pub mod star;
-pub use star::*;
+pub mod point;
+use point::*;

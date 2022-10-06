@@ -1,6 +1,6 @@
-use crate::astronomy::StellarNeighborConstraints;
-use crate::astronomy::DENSITY_OF_STELLAR_NEIGHBORHOOD;
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::stellar_neighborhood::stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
+use crate::astronomy::constants::DENSITY_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]

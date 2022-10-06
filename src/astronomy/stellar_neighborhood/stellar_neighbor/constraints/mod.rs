@@ -1,47 +1,47 @@
 use std::default::Default;
 
-use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
+use crate::astronomy::star_system::constraints::Constraints as SystemConstraints;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct StellarNeighborConstraints {
+pub struct Constraints {
   /// The radius of the neighborhood, in light years.
   pub radius: Option<f64>,
   /// Star system constraints.
-  pub star_system_constraints: Option<StarSystemConstraints>,
+  pub system_constraints: Option<SystemConstraints>,
 }
 
-impl StellarNeighborConstraints {
+impl Constraints {
   /// Generate a main-sequence star system.
   pub fn main_sequence() -> Self {
     let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let star_system_constraints = Some(StarSystemConstraints::main_sequence());
+    let system_constraints = Some(SystemConstraints::main_sequence());
     Self {
       radius,
-      star_system_constraints,
+      system_constraints,
     }
   }
 
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
     let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let star_system_constraints = Some(StarSystemConstraints::habitable());
+    let system_constraints = Some(SystemConstraints::habitable());
     Self {
       radius,
-      star_system_constraints,
+      system_constraints,
     }
   }
 }
 
-impl Default for StellarNeighborConstraints {
+impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
     let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let star_system_constraints = Some(StarSystemConstraints::default());
+    let system_constraints = Some(SystemConstraints::default());
     Self {
       radius,
-      star_system_constraints,
+      system_constraints,
     }
   }
 }

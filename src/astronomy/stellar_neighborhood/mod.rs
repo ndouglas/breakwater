@@ -7,9 +7,10 @@ use crate::astronomy::DENSITY_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
-pub use constraints::*;
+use constraints::*;
 pub mod stellar_neighbor;
-pub use stellar_neighbor::*;
+use stellar_neighbor::*;
+use stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
 
 /// The `StellarNeighborhood` type.
 ///
@@ -58,7 +59,7 @@ impl StellarNeighborhood {
     let mut star_counter = 0;
     let neighbor_constraints = constraints.neighbor_constraints.unwrap_or(StellarNeighborConstraints {
       radius: Some(radius),
-      star_system_constraints: Some(StarSystemConstraints::default()),
+      system_constraints: Some(StarSystemConstraints::default()),
     });
     trace_var!(neighbor_constraints);
     loop {
