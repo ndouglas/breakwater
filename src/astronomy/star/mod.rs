@@ -1,6 +1,5 @@
 use rand::prelude::*;
 
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 use crate::astronomy::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;

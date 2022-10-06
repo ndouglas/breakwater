@@ -3,7 +3,6 @@ use rand::prelude::*;
 use crate::astronomy::math::point::get_random_point_in_sphere;
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::StarSystem;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;

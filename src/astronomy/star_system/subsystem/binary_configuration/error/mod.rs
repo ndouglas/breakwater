@@ -1,5 +1,3 @@
-use std::convert::From;
-
 use crate::astronomy::star::error::Error as StarError;
 
 /// Binary star subsystem configuration errors.

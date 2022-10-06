@@ -4,7 +4,6 @@ use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints;
 use crate::astronomy::star_system::subsystem::error::Error;
 use crate::astronomy::star_system::subsystem::Subsystem;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 

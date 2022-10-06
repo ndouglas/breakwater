@@ -1,7 +1,5 @@
 pub mod constants;
 use constants::*;
-pub mod error;
-use error::*;
 pub mod math;
 use math::*;
 pub mod star_system;

@@ -3,7 +3,6 @@ use std::f64::consts::PI;
 
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
-use crate::astronomy::AstronomicalError;
 use crate::astronomy::DENSITY_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
