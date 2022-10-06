@@ -143,7 +143,7 @@ impl BinaryConfiguration {
     trace_var!(maximum_separation);
     let forbidden_zone = (minimum_separation / 3.0, maximum_separation * 3.0);
     trace_var!(forbidden_zone);
-    let danger_zone = (0.0, 4.0 * forbidden_zone.1);
+    let danger_zone = (0.0, maximum_separation * 4.0);
     trace_var!(danger_zone);
     let habitable_zone = ((luminosity / 1.1).sqrt(), (luminosity / 0.53).sqrt());
     trace_var!(habitable_zone);
@@ -233,5 +233,4 @@ impl BinaryConfiguration {
     trace_exit!();
     result
   }
-
 }

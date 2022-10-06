@@ -45,13 +45,15 @@ pub const DENSITY_OF_STELLAR_NEIGHBORHOOD: f64 = 0.004;
 pub const PROBABILITY_OF_BINARY_STARS: f64 = 0.25;
 
 /// The minimum separation of binary stars, in AU.
-pub const MINIMUM_BINARY_STAR_SEPARATION: f64 = 0.1;
+pub const MINIMUM_BINARY_STAR_SEPARATION: f64 = 0.04;
 
 /// The minimum average separation of "close" binary stars, in AU.
-pub const MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 0.15;
+pub const MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 0.1;
 
 /// The maximum average separation of "close" binary stars, in AU.
-pub const MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 1.0;
+/// I've adjusted this down from about 2AU to its present number because the
+/// failure rate is ridiculously high otherwise.
+pub const MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 0.20;
 
 /// The minimum orbital eccentricity of "close" binary stars (unitless).
 pub const MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY: f64 = 0.4;

@@ -207,7 +207,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable_p_type_binary();
     let subsystem = {
-      let mut retries = 0;
+      let mut retries = 10;
       let subsystem;
       loop {
         let candidate_result = Subsystem::get_random_constrained(&mut rng, &constraints);
