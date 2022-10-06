@@ -4,19 +4,19 @@ use rand::prelude::*;
 
 use crate::astronomy::get_main_sequence_star_luminosity_from_mass;
 use crate::astronomy::AstronomicalError;
-use crate::astronomy::SpectralClassType;
+use crate::astronomy::star::spectral_class::Type;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
-/// The `SpectralClassLuminosity` type.
+/// The `LuminosityClass` type.
 ///
-/// Luminosity indicates the actual size of the star.
+/// Luminosity Class indicates the actual size of the star.
 ///
 /// This is, of course, of critical importance, since we could generate a star
 /// that is simply too enormous to live near.  I'm completely clueless when it
 /// comes to astronomy, but I'm _trying_ to get some basic things right.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub enum SpectralClassLuminosity {
+pub enum LuminosityClass {
   /// Hypergiant
   Class0,
   /// Supergiant
@@ -35,13 +35,13 @@ pub enum SpectralClassLuminosity {
   ClassVII,
 }
 
-/// Implementation of SpectralClassLuminosity.
-impl SpectralClassLuminosity {
+/// Implementation of LuminosityClass.
+impl LuminosityClass {
   /// From mass, for a main-sequence star.
   ///
   /// Note that `mass` is measured in solar mass equivalents.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<SpectralClassLuminosity, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<LuminosityClass, AstronomicalError> {
     trace_enter!();
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
@@ -51,7 +51,7 @@ impl SpectralClassLuminosity {
       return Err(AstronomicalError::StellarMassTooHighForMainSequence);
     }
     // By definition.
-    let result = SpectralClassLuminosity::ClassV;
+    let result = LuminosityClass::ClassV;
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -59,9 +59,9 @@ impl SpectralClassLuminosity {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<SpectralClassLuminosity, AstronomicalError> {
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<LuminosityClass, AstronomicalError> {
     trace_enter!();
-    use SpectralClassLuminosity::*;
+    use LuminosityClass::*;
     // Disregard stars that would've blown up and killed us already (Class 0 - III).
     let choices = [ClassIV, ClassV, ClassVI, ClassVII];
     trace_var!(choices);
@@ -75,6 +75,27 @@ impl SpectralClassLuminosity {
     trace_exit!();
     Ok(result)
   }
+
+  /// Get string equivalent.
+  #[named]
+  pub fn get_string(&self) -> String {
+    trace_enter!();
+    use LuminosityClass::*;
+    let result = match self {
+      Class0 => "0",
+      ClassI => "I",
+      ClassII => "II",
+      ClassIII => "III",
+      ClassIV => "IV",
+      ClassV => "V",
+      ClassVI => "VI",
+      ClassVII => "VII",
+    };
+    trace_var!(result);
+    trace_exit!();
+    result.to_string()
+  }
+
 }
 
 /// Implement uniform distribution.
@@ -87,13 +108,13 @@ impl SpectralClassLuminosity {
 /// For actual random usage, use the ::get_random() method.
 ///
 /// Also possible that I'll figure out a better way to do this.
-impl Distribution<SpectralClassLuminosity> for Standard {
+impl Distribution<LuminosityClass> for Standard {
   #[named]
-  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SpectralClassLuminosity {
+  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> LuminosityClass {
     trace_enter!();
     let index: u8 = rng.gen_range(0..8);
     trace_var!(index);
-    use SpectralClassLuminosity::*;
+    use LuminosityClass::*;
     let result = match index {
       0 => Class0,
       1 => ClassI,
@@ -124,9 +145,9 @@ pub mod test {
   pub fn get_main_sequence_from_mass() -> Result<(), AstronomicalError> {
     init();
     trace_enter!();
-    let luminosity = SpectralClassLuminosity::get_main_sequence_from_mass(1.0)?;
+    let luminosity = LuminosityClass::get_main_sequence_from_mass(1.0)?;
     trace_var!(luminosity);
-    assert_eq!(luminosity, SpectralClassLuminosity::ClassV);
+    assert_eq!(luminosity, LuminosityClass::ClassV);
     trace_exit!();
     Ok(())
   }
@@ -138,7 +159,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let luminosity = SpectralClassLuminosity::get_random(&mut rng);
+    let luminosity = LuminosityClass::get_random(&mut rng);
     trace_var!(luminosity);
     trace_exit!();
   }

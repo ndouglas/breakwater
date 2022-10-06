@@ -7,7 +7,7 @@ use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
-/// The `SpectralClassType` type.
+/// The `Type` type.
 ///
 /// The spectral class of a star indicates its temperature and its mass.
 ///
@@ -21,7 +21,7 @@ use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 /// - Y, a very cool brown dwarf
 /// - D, a white dwarf
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub enum SpectralClassType {
+pub enum Type {
   /// very hot and extremely luminous
   O,
   /// very luminous and blue
@@ -46,11 +46,11 @@ pub enum SpectralClassType {
   D,
 }
 
-/// Implementation of SpectralClassType.
-impl SpectralClassType {
+/// Implementation of Type.
+impl Type {
   /// From mass, for a main-sequence star.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<SpectralClassType, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<Type, AstronomicalError> {
     trace_enter!();
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
@@ -60,7 +60,7 @@ impl SpectralClassType {
       return Err(AstronomicalError::StellarMassTooHighForMainSequence);
     }
     let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
-    use SpectralClassType::*;
+    use Type::*;
     let result = match temperature {
       temperature if temperature < 3_700.0 => M,
       temperature if temperature < 5_200.0 => K,
@@ -78,8 +78,8 @@ impl SpectralClassType {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<SpectralClassType, AstronomicalError> {
-    use SpectralClassType::*;
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<Type, AstronomicalError> {
+    use Type::*;
     // Just assume that we're calculating based on main-sequence stars and
     // things that won't kill everyone.
     let choices = [B, A, F, G, K, M, L, T, Y, D];
@@ -94,6 +94,29 @@ impl SpectralClassType {
     trace_exit!();
     Ok(result)
   }
+
+  /// Get char equivalent.
+  #[named]
+  pub fn get_char(&self) -> char {
+    trace_enter!();
+    use Type::*;
+    let result = match self {
+      O => 'O',
+      B => 'B',
+      A => 'A',
+      F => 'F',
+      G => 'G',
+      K => 'K',
+      M => 'M',
+      L => 'L',
+      T => 'T',
+      Y => 'Y',
+      D => 'D',
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
 }
 
 /// Implement uniform distribution.
@@ -106,11 +129,11 @@ impl SpectralClassType {
 /// For actual random usage, use the ::get_random() method.
 ///
 /// Also possible that I'll figure out a better way to do this.
-impl Distribution<SpectralClassType> for Standard {
+impl Distribution<Type> for Standard {
   #[named]
-  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SpectralClassType {
+  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Type {
     trace_enter!();
-    use SpectralClassType::*;
+    use Type::*;
     let index: u8 = rng.gen_range(0..11);
     trace_var!(index);
     let result = match index {
@@ -131,6 +154,7 @@ impl Distribution<SpectralClassType> for Standard {
     trace_exit!();
     result
   }
+
 }
 
 #[cfg(test)]
@@ -148,7 +172,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let r#type = SpectralClassType::get_random(&mut rng);
+    let r#type = Type::get_random(&mut rng);
     trace_var!(r#type);
     trace_exit!();
   }

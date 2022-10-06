@@ -9,11 +9,11 @@ use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
 pub mod decile;
-pub use decile::*;
-pub mod luminosity;
-pub use luminosity::*;
+use decile::*;
+pub mod luminosity_class;
+use luminosity_class::*;
 pub mod r#type;
-pub use r#type::*;
+use r#type::*;
 
 /// The `SpectralClass` type.
 ///
@@ -21,11 +21,12 @@ pub use r#type::*;
 ///
 /// This is a combination of its type, a decile within that type, and its
 /// luminosity.
-#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct SpectralClass {
-  pub r#type: SpectralClassType,
+  pub r#type: Type,
   pub decile: Decile,
-  pub luminosity: SpectralClassLuminosity,
+  pub luminosity_class: LuminosityClass,
+  pub string: String,
 }
 
 /// Implementation of SpectralClass.
@@ -41,16 +42,19 @@ impl SpectralClass {
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
       return Err(AstronomicalError::StellarMassTooLowForMainSequence);
     }
-    let r#type = SpectralClassType::get_main_sequence_from_mass(mass)?;
+    let r#type = Type::get_main_sequence_from_mass(mass)?;
     trace_var!(r#type);
     let decile = Decile::get_main_sequence_from_mass(mass)?;
     trace_var!(decile);
-    let luminosity = SpectralClassLuminosity::get_main_sequence_from_mass(mass)?;
-    trace_var!(luminosity);
+    let luminosity_class = LuminosityClass::get_main_sequence_from_mass(mass)?;
+    trace_var!(luminosity_class);
+    let string = format!("{}{}{}", r#type.get_char(), decile.get_char(), luminosity_class.get_string());
+    trace_var!(string);
     let result = SpectralClass {
       r#type,
       decile,
-      luminosity,
+      luminosity_class,
+      string,
     };
     trace_var!(result);
     trace_exit!();
@@ -61,16 +65,19 @@ impl SpectralClass {
   #[named]
   pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<SpectralClass, AstronomicalError> {
     trace_enter!();
-    let r#type = SpectralClassType::get_random(rng)?;
+    let r#type = Type::get_random(rng)?;
     trace_var!(r#type);
     let decile = Decile::get_random(rng)?;
     trace_var!(decile);
-    let luminosity = SpectralClassLuminosity::get_random(rng)?;
-    trace_var!(luminosity);
+    let luminosity_class = LuminosityClass::get_random(rng)?;
+    trace_var!(luminosity_class);
+    let string = format!("{}{}{}", r#type.get_char(), decile.get_char(), luminosity_class.get_string());
+    trace_var!(string);
     let result = SpectralClass {
       r#type,
       decile,
-      luminosity,
+      luminosity_class,
+      string,
     };
     trace_var!(result);
     trace_exit!();
@@ -92,10 +99,19 @@ impl Distribution<SpectralClass> for Standard {
   #[named]
   fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SpectralClass {
     trace_enter!();
+    let r#type: Type = rng.gen();
+    trace_var!(r#type);
+    let decile: Decile = rng.gen();
+    trace_var!(decile);
+    let luminosity_class: LuminosityClass = rng.gen();
+    trace_var!(luminosity_class);
+    let string = format!("{}{}{}", r#type.get_char(), decile.get_char(), luminosity_class.get_string());
+    trace_var!(string);
     let result = SpectralClass {
-      r#type: rng.gen(),
-      decile: rng.gen(),
-      luminosity: rng.gen(),
+      r#type,
+      decile,
+      luminosity_class,
+      string,
     };
     trace_var!(result);
     trace_exit!();

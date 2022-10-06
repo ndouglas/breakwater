@@ -12,15 +12,15 @@ use crate::astronomy::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
 use crate::astronomy::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
 
 pub mod constraints;
-pub use constraints::*;
+use constraints::*;
 pub mod spectral_class;
-pub use spectral_class::*;
+use spectral_class::*;
 
 /// The `Star` type.
 ///
 /// This is intended to encompass the most useful information we can generate
 /// about stars, specifically main-sequence stars.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Star {
   /// Type, Decile, Luminosity class.
   pub class: SpectralClass,
