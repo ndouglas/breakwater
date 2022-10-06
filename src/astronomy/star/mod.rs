@@ -40,14 +40,10 @@ pub struct Star {
   pub density: f64,
   /// Habitable zone, measured in AU.
   pub habitable_zone: (f64, f64),
-  /// Minimum sustainable distance for satellites, measured in AU.
-  /// This is inferior to computing the Roche limit, but we don't have enough
-  /// information for that yet.
-  pub approximate_satellite_inner_bound: f64,
-  /// Maximum sustainable distance for satellites, measured in AU.
-  /// This is inferior to computing the Hill sphere, but we don't have enough
-  /// information for that yet.
-  pub approximate_satellite_outer_bound: f64,
+  /// Minimum and maximum sustainable distance for satellites, measured in AU.
+  /// This is inferior to computing the Roche limit and Hill sphere, but we
+  /// don't have enough information for that yet.
+  pub satellite_bounds: (f64, f64),
   /// The frost line, measured in AU.
   pub frost_line: f64,
   /// The absolute color of this star in SRGB.
@@ -95,6 +91,7 @@ impl Star {
     trace_var!(approximate_satellite_inner_bound);
     let approximate_satellite_outer_bound = 40.0 * mass;
     trace_var!(approximate_satellite_outer_bound);
+    let satellite_bounds = (approximate_satellite_inner_bound, approximate_satellite_outer_bound);
     let frost_line = 4.85 * luminosity.sqrt();
     trace_var!(frost_line);
     let absolute_rgb = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
@@ -108,8 +105,7 @@ impl Star {
       current_age,
       density,
       habitable_zone,
-      approximate_satellite_inner_bound,
-      approximate_satellite_outer_bound,
+      satellite_bounds,
       frost_line,
       absolute_rgb,
     };
@@ -158,7 +154,7 @@ impl Star {
 
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
-  pub fn is_habitable(&self) -> Result<(), AstronomicalError> {
+  pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
     trace_enter!();
     if self.current_age < MINIMUM_STAR_AGE_TO_SUPPORT_LIFE {
       return Err(AstronomicalError::StarTooYoungToSupportLife);
@@ -171,6 +167,19 @@ impl Star {
     }
     trace_exit!();
     Ok(())
+  }
+
+  /// Indicate whether this star is capable of supporting conventional life.
+  #[named]
+  pub fn is_habitable(&self) -> bool {
+    trace_enter!();
+    let result = match self.check_habitable() {
+      Ok(()) => true,
+      Err(_) => false,
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
   }
 }
 
@@ -204,7 +213,7 @@ pub mod test {
     trace_var!(rng);
     let star = Star::get_random_habitable(&mut rng)?;
     trace_var!(star);
-    assert_eq!(star.is_habitable()?, ());
+    assert!(star.is_habitable());
     trace_exit!();
     Ok(())
   }

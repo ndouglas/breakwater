@@ -14,4 +14,14 @@ pub enum AstronomicalError {
   StellarMassTooLowToSupportLife,
   /// Higher than MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE.
   StellarMassTooHighToSupportLife,
+  /// Lower than MINIMUM_BINARY_STAR_SEPARATION.
+  BinaryStarsTooCloseForComfort,
+  /// Unable to generate subsystem after a number of tries.
+  UnableToGenerateCoherentStarSubsystemOrbitalInformation,
+  /// The habitable zone is contained within the forbidden zone.
+  HabitableZoneContainedWithinForbiddenZone,
+  /// The habitable zone isn't sufficiently far from the host stars.
+  HabitableZoneTooCloseToBinaryHostStars,
+  /// No habitable conditions found anywhere in subsystem.
+  NoHabitableZoneFoundInSubsystem,
 }

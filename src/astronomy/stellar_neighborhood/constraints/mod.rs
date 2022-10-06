@@ -1,4 +1,6 @@
 use crate::astronomy::StellarNeighborConstraints;
+use crate::astronomy::DENSITY_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -9,4 +11,44 @@ pub struct StellarNeighborhoodConstraints {
   pub density: Option<f64>,
   /// Any constraints placed on the various neighbors.
   pub neighbor_constraints: Option<StellarNeighborConstraints>,
+}
+
+impl StellarNeighborhoodConstraints {
+  /// Generate a main-sequence star system.
+  pub fn main_sequence() -> Self {
+    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    let density = Some(DENSITY_OF_STELLAR_NEIGHBORHOOD);
+    let neighbor_constraints = Some(StellarNeighborConstraints::main_sequence());
+    Self {
+      radius,
+      density,
+      neighbor_constraints,
+    }
+  }
+
+  /// Generate a habitable star system.
+  pub fn habitable() -> Self {
+    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    let density = Some(DENSITY_OF_STELLAR_NEIGHBORHOOD);
+    let neighbor_constraints = Some(StellarNeighborConstraints::habitable());
+    Self {
+      radius,
+      density,
+      neighbor_constraints,
+    }
+  }
+}
+
+impl Default for StellarNeighborhoodConstraints {
+  /// No constraints, just let it all hang out.
+  fn default() -> Self {
+    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    let density = Some(DENSITY_OF_STELLAR_NEIGHBORHOOD);
+    let neighbor_constraints = Some(StellarNeighborConstraints::default());
+    Self {
+      radius,
+      density,
+      neighbor_constraints,
+    }
+  }
 }

@@ -53,5 +53,4 @@ pub mod test {
     trace_var!(point);
     trace_exit!();
   }
-
 }

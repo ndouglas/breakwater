@@ -1,11 +1,11 @@
 use rand::prelude::*;
 
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::get_random_point_in_sphere;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::StarSystem;
-use crate::astronomy::StarSystemStars;
+use crate::astronomy::StarSystemConstraints;
+use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
 pub use constraints::*;
@@ -16,7 +16,7 @@ pub use constraints::*;
 ///
 /// This is just a combination of a fully-fledged star system and a set of 3-D
 /// coordinates so that we can place it relative to our primary star system.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct StellarNeighbor {
   /// Each coordinate (x,y,z) is a distance (in light years) from the origin.
   pub coordinates: (f64, f64, f64),
@@ -25,7 +25,6 @@ pub struct StellarNeighbor {
 }
 
 impl StellarNeighbor {
-
   /// Generate a random stellar neighborhood with the specified constraints.
   ///
   /// This may or may not be habitable.
@@ -47,9 +46,10 @@ impl StellarNeighbor {
     trace_var!(z);
     let coordinates = (x, y, z);
     trace_var!(coordinates);
-    let star_system = StarSystem {
-      stars: StarSystemStars::Solitary(Star::get_random_habitable(rng)?),
-    };
+    let star_system_constraints = constraints
+      .star_system_constraints
+      .unwrap_or(StarSystemConstraints::default());
+    let star_system = StarSystem::get_random_constrained(rng, &star_system_constraints)?;
     trace_var!(star_system);
     let result = StellarNeighbor {
       coordinates,
@@ -60,6 +60,27 @@ impl StellarNeighbor {
     Ok(result)
   }
 
+  /// Retrieve or calculate the total mass of the stars.
+  ///
+  /// Calculated in Msol.
+  #[named]
+  pub fn get_star_mass(&self) -> f64 {
+    trace_enter!();
+    let result = self.star_system.get_star_mass();
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Retrieve or calculate the total number of stars in the system.
+  #[named]
+  pub fn get_star_count(&self) -> u8 {
+    trace_enter!();
+    let result = self.star_system.get_star_count();
+    trace_u8!(result);
+    trace_exit!();
+    result
+  }
 }
 
 #[cfg(test)]
@@ -77,14 +98,11 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = StellarNeighborConstraints {
-      radius: Some(RADIUS_OF_STELLAR_NEIGHBORHOOD),
-    };
+    let constraints = StellarNeighborConstraints::default();
     let stellar_neighbor = StellarNeighbor::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(stellar_neighbor);
-    println!("{:#?}", stellar_neighbor);
+    // println!("{:#?}", stellar_neighbor);
     trace_exit!();
     Ok(())
   }
-
 }

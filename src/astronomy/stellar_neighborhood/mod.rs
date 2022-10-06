@@ -2,8 +2,9 @@ use rand::prelude::*;
 use std::f64::consts::PI;
 
 use crate::astronomy::AstronomicalError;
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::StarSystemConstraints;
 use crate::astronomy::DENSITY_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
 pub use constraints::*;
@@ -33,7 +34,6 @@ pub struct StellarNeighborhood {
 }
 
 impl StellarNeighborhood {
-
   /// Generate a random stellar neighborhood with the specified constraints.
   ///
   /// This may or may not be habitable.
@@ -58,11 +58,13 @@ impl StellarNeighborhood {
     let mut star_counter = 0;
     let neighbor_constraints = constraints.neighbor_constraints.unwrap_or(StellarNeighborConstraints {
       radius: Some(radius),
+      star_system_constraints: Some(StarSystemConstraints::default()),
     });
     trace_var!(neighbor_constraints);
     loop {
-      neighbors.push(StellarNeighbor::get_random_constrained(rng, &neighbor_constraints)?);
-      star_counter += 1;
+      let neighbor = StellarNeighbor::get_random_constrained(rng, &neighbor_constraints)?;
+      star_counter += neighbor.get_star_count() as usize;
+      neighbors.push(neighbor);
       if star_counter > number_of_stars {
         break;
       }
@@ -77,9 +79,7 @@ impl StellarNeighborhood {
     trace_exit!();
     Ok(result)
   }
-
 }
-
 
 #[cfg(test)]
 pub mod test {
@@ -96,16 +96,11 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = StellarNeighborhoodConstraints {
-      radius: Some(RADIUS_OF_STELLAR_NEIGHBORHOOD),
-      density: Some(DENSITY_OF_STELLAR_NEIGHBORHOOD),
-      neighbor_constraints: None,
-    };
+    let constraints = StellarNeighborhoodConstraints::habitable();
     let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(stellar_neighborhood);
-    println!("{:#?}", stellar_neighborhood);
+    // println!("{:#?}", stellar_neighborhood);
     trace_exit!();
     Ok(())
   }
-
 }
