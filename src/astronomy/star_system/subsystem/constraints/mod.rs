@@ -1,6 +1,6 @@
 use std::default::Default;
 
-use crate::astronomy::StarConstraints;
+use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::MAXIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION;

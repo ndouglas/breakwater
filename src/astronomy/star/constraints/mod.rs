@@ -10,7 +10,7 @@ use crate::astronomy::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
 ///
 /// This is intended to ease creating stars with specific characteristics.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct StarConstraints {
+pub struct Constraints {
   /// The minimum mass of the star, in Msol.
   pub minimum_mass: Option<f64>,
   /// The maximum mass of the star, in Msol.
@@ -21,7 +21,7 @@ pub struct StarConstraints {
   pub maximum_age: Option<f64>,
 }
 
-impl StarConstraints {
+impl Constraints {
   /// Generate a main-sequence star.
   pub fn main_sequence() -> Self {
     let minimum_mass = Some(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
@@ -65,7 +65,7 @@ impl StarConstraints {
   }
 }
 
-impl Default for StarConstraints {
+impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
     let minimum_mass = None;

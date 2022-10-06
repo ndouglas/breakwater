@@ -2,7 +2,7 @@ use rand::prelude::*;
 
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
-use crate::astronomy::star::constraints::StarConstraints as StarConstraints;
+use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints;
 use crate::astronomy::StarSubsystem;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;

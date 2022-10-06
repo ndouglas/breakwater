@@ -58,7 +58,7 @@ impl Star {
   #[named]
   pub fn get_random_main_sequence_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    constraints: &StarConstraints,
+    constraints: &Constraints,
   ) -> Result<Star, AstronomicalError> {
     trace_enter!();
     let lower_bound_mass = constraints.minimum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
@@ -122,12 +122,7 @@ impl Star {
     trace_enter!();
     let result = Star::get_random_main_sequence_constrained(
       rng,
-      &StarConstraints {
-        minimum_mass: Some(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND),
-        maximum_mass: Some(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND),
-        minimum_age: None,
-        maximum_age: None,
-      },
+      &Constraints::main_sequence(),
     )?;
     trace_var!(result);
     trace_exit!();
@@ -140,12 +135,7 @@ impl Star {
     trace_enter!();
     let result = Star::get_random_main_sequence_constrained(
       rng,
-      &StarConstraints {
-        minimum_mass: Some(MINIMUM_STAR_MASS_TO_SUPPORT_LIFE),
-        maximum_mass: Some(MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE),
-        minimum_age: Some(MINIMUM_STAR_AGE_TO_SUPPORT_LIFE),
-        maximum_age: None,
-      },
+      &Constraints::habitable(),
     )?;
     trace_var!(result);
     trace_exit!();

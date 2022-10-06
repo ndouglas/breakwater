@@ -7,7 +7,7 @@ use crate::astronomy::AstronomicalError;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
-/// The `SpectralClassDecile` type.
+/// The `Decile` type.
 ///
 /// This rather annoying type is to indicate which of the ten subdivisions
 /// of a spectral class type a star might fall.
@@ -15,7 +15,7 @@ use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 /// This unfortunately has a rather complex effect on which stars are and are
 /// not habitable. An F6 star? Sure, we could probably live there. F4? Eh...
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub enum SpectralClassDecile {
+pub enum Decile {
   D0,
   D1,
   D2,
@@ -28,15 +28,15 @@ pub enum SpectralClassDecile {
   D9,
 }
 
-/// Implementation of SpectralClassDecile.
-impl SpectralClassDecile {
+/// Implementation of Decile.
+impl Decile {
   /// From mass, for a main-sequence star.
   ///
   /// Note that `mass` is measured in solar mass equivalents.
   #[named]
-  pub fn get_main_sequence_from_mass(mass: f64) -> Result<SpectralClassDecile, AstronomicalError> {
+  pub fn get_main_sequence_from_mass(mass: f64) -> Result<Decile, AstronomicalError> {
     trace_enter!();
-    use SpectralClassDecile::*;
+    use Decile::*;
     trace_var!(mass);
     if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
       return Err(AstronomicalError::StellarMassTooLowForMainSequence);
@@ -63,7 +63,7 @@ impl SpectralClassDecile {
 
   /// Implement weighted distribution.
   #[named]
-  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<SpectralClassDecile, AstronomicalError> {
+  pub fn get_random<R: Rng + ?Sized>(rng: &mut R) -> Result<Decile, AstronomicalError> {
     trace_enter!();
     let result = rng.gen();
     trace_var!(result);
@@ -82,13 +82,13 @@ impl SpectralClassDecile {
 /// For actual random usage, use the ::get_random() method.
 ///
 /// Also possible that I'll figure out a better way to do this.
-impl Distribution<SpectralClassDecile> for Standard {
+impl Distribution<Decile> for Standard {
   #[named]
-  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> SpectralClassDecile {
+  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Decile {
     trace_enter!();
     let index: u8 = rng.gen_range(0..10);
     trace_var!(index);
-    use SpectralClassDecile::*;
+    use Decile::*;
     let result = match index {
       0 => D0,
       1 => D1,
@@ -123,7 +123,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let decile = SpectralClassDecile::get_random(&mut rng);
+    let decile = Decile::get_random(&mut rng);
     trace_var!(decile);
     trace_exit!();
   }

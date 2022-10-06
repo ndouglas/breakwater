@@ -2,7 +2,7 @@ use rand::prelude::*;
 
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
-use crate::astronomy::StarConstraints;
+use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;

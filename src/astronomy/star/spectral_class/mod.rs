@@ -24,7 +24,7 @@ pub use r#type::*;
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub struct SpectralClass {
   pub r#type: SpectralClassType,
-  pub decile: SpectralClassDecile,
+  pub decile: Decile,
   pub luminosity: SpectralClassLuminosity,
 }
 
@@ -43,7 +43,7 @@ impl SpectralClass {
     }
     let r#type = SpectralClassType::get_main_sequence_from_mass(mass)?;
     trace_var!(r#type);
-    let decile = SpectralClassDecile::get_main_sequence_from_mass(mass)?;
+    let decile = Decile::get_main_sequence_from_mass(mass)?;
     trace_var!(decile);
     let luminosity = SpectralClassLuminosity::get_main_sequence_from_mass(mass)?;
     trace_var!(luminosity);
@@ -63,7 +63,7 @@ impl SpectralClass {
     trace_enter!();
     let r#type = SpectralClassType::get_random(rng)?;
     trace_var!(r#type);
-    let decile = SpectralClassDecile::get_random(rng)?;
+    let decile = Decile::get_random(rng)?;
     trace_var!(decile);
     let luminosity = SpectralClassLuminosity::get_random(rng)?;
     trace_var!(luminosity);
