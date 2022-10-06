@@ -1,8 +1,8 @@
 use rand::prelude::*;
 
 use crate::astronomy::AstronomicalError;
-use crate::astronomy::StarSubsystem;
-use crate::astronomy::StarSubsystemConstraints;
+use crate::astronomy::star_system::subsystem::StarSubsystem;
+use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::MINIMUM_BINARY_STAR_SEPARATION;
@@ -15,7 +15,7 @@ pub use orbit_type::*;
 
 /// Details about the orbital information of a subsystem.
 #[derive(Clone, Debug, PartialEq)]
-pub struct StarSubsystemOrbitalInformation {
+pub struct BinaryConfiguration {
   /// Average separation of the binary components, in AU.
   pub average_separation: f64,
   /// Minimum separation of the components, in AU.
@@ -33,10 +33,10 @@ pub struct StarSubsystemOrbitalInformation {
   /// Areas in which nothing can exist.
   pub forbidden_zone: (f64, f64),
   /// Whether this is amenable to a P-type or S-type orbit.
-  pub orbit_type: StarSubsystemOrbitalInformationOrbitType,
+  pub orbit_type: OrbitType,
 }
 
-impl StarSubsystemOrbitalInformation {
+impl BinaryConfiguration {
   /// Generate a random subsystem with the specified constraints.
   ///
   /// This may or may not be habitable, depending on the constraints.
@@ -45,8 +45,8 @@ impl StarSubsystemOrbitalInformation {
     rng: &mut R,
     sub1: &StarSubsystem,
     sub2: &StarSubsystem,
-    constraints: &StarSubsystemConstraints,
-  ) -> Result<StarSubsystemOrbitalInformation, AstronomicalError> {
+    constraints: &SubsystemConstraints,
+  ) -> Result<BinaryConfiguration, AstronomicalError> {
     trace_enter!();
     let minimum_separation_constraint = constraints
       .minimum_separation
@@ -106,7 +106,7 @@ impl StarSubsystemOrbitalInformation {
     let forbidden_zone = (minimum_separation / 3.0, maximum_separation * 3.0);
     trace_var!(forbidden_zone);
     let orbit_type = {
-      use StarSubsystemOrbitalInformationOrbitType::*;
+      use OrbitType::*;
       if maximum_separation <= MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION {
         PType
       } else if sub1.is_habitable() && sub2.is_habitable() {
@@ -119,7 +119,7 @@ impl StarSubsystemOrbitalInformation {
         None
       }
     };
-    let result = StarSubsystemOrbitalInformation {
+    let result = BinaryConfiguration {
       average_separation,
       minimum_separation,
       maximum_separation,

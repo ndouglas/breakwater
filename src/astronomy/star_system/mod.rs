@@ -1,6 +1,7 @@
 use rand::prelude::*;
 
 use crate::astronomy::AstronomicalError;
+use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
@@ -38,7 +39,7 @@ impl StarSystem {
     trace_enter!();
     let star_subsystem_constraints = constraints
       .star_subsystem_constraints
-      .unwrap_or(StarSubsystemConstraints::default());
+      .unwrap_or(SubsystemConstraints::default());
     let star_subsystem = StarSubsystem::get_random_constrained(rng, &star_subsystem_constraints)?;
     trace_var!(star_subsystem);
     let result = StarSystem { stars: star_subsystem };
@@ -68,6 +69,31 @@ impl StarSystem {
     trace_exit!();
     result
   }
+
+  /// Indicate whether this star system is capable of supporting conventional life.
+  #[named]
+  pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
+    trace_enter!();
+    use StarSubsystemType::*;
+    let result = self.stars.check_habitable();
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Indicate whether this star system is capable of supporting conventional life.
+  #[named]
+  pub fn is_habitable(&self) -> bool {
+    trace_enter!();
+    let result = match self.check_habitable() {
+      Ok(()) => true,
+      Err(_) => false,
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
 }
 
 #[cfg(test)]

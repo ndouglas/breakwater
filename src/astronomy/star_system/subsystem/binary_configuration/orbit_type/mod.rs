@@ -1,6 +1,6 @@
 /// Indicates whether a subsystem is amenable to a habitable satellite.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
-pub enum StarSubsystemOrbitalInformationOrbitType {
+pub enum OrbitType {
   /// Neither component nor the subsystem as a whole is amenable.
   None,
   /// The subsystem as a whole can be orbited habitably.

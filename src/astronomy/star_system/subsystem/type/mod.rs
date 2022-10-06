@@ -2,9 +2,10 @@ use rand::prelude::*;
 
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
-use crate::astronomy::StarConstraints;
+use crate::astronomy::star::constraints::StarConstraints as StarConstraints;
+use crate::astronomy::star_system::subsystem::constraints::Constraints;
 use crate::astronomy::StarSubsystem;
-use crate::astronomy::StarSubsystemConstraints;
+use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 
 /// The `StarSubsystemType` type.
@@ -26,16 +27,20 @@ impl StarSubsystemType {
   #[named]
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    constraints: &StarSubsystemConstraints,
+    constraints: &Constraints,
   ) -> Result<StarSubsystemType, AstronomicalError> {
     trace_enter!();
+    let mut maximum_depth = constraints.maximum_depth;
+    maximum_depth -= 1;
     let binary_probability = constraints.binary_probability.unwrap_or(PROBABILITY_OF_BINARY_STARS);
     let is_binary = rng.gen_range(0.0..1.0) <= binary_probability;
     let star_constraints = constraints.star_constraints.unwrap_or(StarConstraints::default());
-    let result = match is_binary {
+    let result = match is_binary && maximum_depth >= 1 {
       true => {
-        let sub_a = StarSubsystem::get_random_constrained(rng, constraints)?;
-        let sub_b = StarSubsystem::get_random_constrained(rng, constraints)?;
+        let mut new_constraints = constraints.clone();
+        new_constraints.maximum_depth = maximum_depth;
+        let sub_a = StarSubsystem::get_random_constrained(rng, &new_constraints)?;
+        let sub_b = StarSubsystem::get_random_constrained(rng, &new_constraints)?;
         let sub_a_mass = sub_a.get_mass();
         let sub_b_mass = sub_b.get_mass();
         let first = Box::new(if sub_a_mass > sub_b_mass {
@@ -210,11 +215,58 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = StarSubsystemConstraints::habitable_solitary_or_p_type_binary();
+    let constraints = Constraints::habitable_solitary_or_p_type_binary();
     let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(star_subsystem_type);
-    println!("{:#?}", star_subsystem_type);
+    // println!("{:#?}", star_subsystem_type);
     trace_exit!();
     Ok(())
   }
+
+  #[named]
+  #[test]
+  pub fn get_random2() -> Result<(), AstronomicalError> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let constraints = Constraints::habitable_solitary_or_s_type_binary();
+    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(star_subsystem_type);
+    // println!("{:#?}", star_subsystem_type);
+    trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  #[test]
+  pub fn get_random3() -> Result<(), AstronomicalError> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let constraints = Constraints::habitable_p_type_binary();
+    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(star_subsystem_type);
+    // println!("{:#?}", star_subsystem_type);
+    trace_exit!();
+    Ok(())
+  }
+
+
+  #[named]
+  #[test]
+  pub fn get_random4() -> Result<(), AstronomicalError> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let constraints = Constraints::habitable_s_type_binary();
+    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(star_subsystem_type);
+    // println!("{:#?}", star_subsystem_type);
+    trace_exit!();
+    Ok(())
+  }
+
 }

@@ -73,3 +73,6 @@ pub const MINIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY: f64 = 0.4;
 
 /// The maximum orbital eccentricity of "distant" binary stars (unitless).
 pub const MAXIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY: f64 = 0.7;
+
+/// Maximum subsystem nesting.
+pub const MAXIMUM_STAR_SUBSYSTEM_RECURSION: u8 = 2;
