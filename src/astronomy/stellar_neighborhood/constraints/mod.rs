@@ -4,7 +4,7 @@ use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct StellarNeighborhoodConstraints {
+pub struct Constraints {
   /// The radius of the neighborhood, in light years.
   pub radius: Option<f64>,
   /// The density of the neighborhood, in stars per cubic light year.
@@ -13,7 +13,7 @@ pub struct StellarNeighborhoodConstraints {
   pub neighbor_constraints: Option<StellarNeighborConstraints>,
 }
 
-impl StellarNeighborhoodConstraints {
+impl Constraints {
   /// Generate a main-sequence star system.
   pub fn main_sequence() -> Self {
     let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
@@ -39,7 +39,7 @@ impl StellarNeighborhoodConstraints {
   }
 }
 
-impl Default for StellarNeighborhoodConstraints {
+impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
     let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);

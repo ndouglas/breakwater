@@ -41,7 +41,7 @@ impl StellarNeighborhood {
   #[named]
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    constraints: &StellarNeighborhoodConstraints,
+    constraints: &Constraints,
   ) -> Result<StellarNeighborhood, AstronomicalError> {
     trace_enter!();
     let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
@@ -97,7 +97,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = StellarNeighborhoodConstraints::habitable();
+    let constraints = Constraints::habitable();
     let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(stellar_neighborhood);
     // println!("{:#?}", stellar_neighborhood);
