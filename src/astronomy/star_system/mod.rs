@@ -38,7 +38,22 @@ impl StarSystem {
     let subsystem_constraints = constraints
       .subsystem_constraints
       .unwrap_or(SubsystemConstraints::default());
-    let subsystem = Subsystem::get_random_constrained(rng, &subsystem_constraints)?;
+    let subsystem = {
+      let mut retries = constraints.retries.unwrap_or(10);
+      let subsystem;
+      loop {
+        let candidate_result = Subsystem::get_random_constrained(rng, &subsystem_constraints);
+        if let Ok(candidate) = candidate_result {
+          subsystem = candidate;
+          break;
+        }
+        if retries == 0 {
+          return Err(Error::NoSuitableSubsystemsCouldBeGenerated);
+        }
+        retries -= 1;
+      }
+      subsystem
+    };
     trace_var!(subsystem);
     let result = StarSystem { subsystem };
     trace_var!(result);
@@ -52,7 +67,7 @@ impl StarSystem {
   #[named]
   pub fn get_star_mass(&self) -> f64 {
     trace_enter!();
-    let result = self.subsystem.get_mass();
+    let result = self.subsystem.mass;
     trace_var!(result);
     trace_exit!();
     result
@@ -62,7 +77,7 @@ impl StarSystem {
   #[named]
   pub fn get_star_count(&self) -> u8 {
     trace_enter!();
-    let result = self.subsystem.get_count();
+    let result = self.subsystem.star_count;
     trace_u8!(result);
     trace_exit!();
     result

@@ -46,7 +46,7 @@ pub struct Star {
   /// Minimum and maximum sustainable distance for satellites, measured in AU.
   /// This is inferior to computing the Roche limit and Hill sphere, but we
   /// don't have enough information for that yet.
-  pub satellite_bounds: (f64, f64),
+  pub satellite_zone: (f64, f64),
   /// The frost line, measured in AU.
   pub frost_line: f64,
   /// The absolute color of this star in SRGB.
@@ -94,7 +94,7 @@ impl Star {
     trace_var!(approximate_satellite_inner_bound);
     let approximate_satellite_outer_bound = 40.0 * mass;
     trace_var!(approximate_satellite_outer_bound);
-    let satellite_bounds = (approximate_satellite_inner_bound, approximate_satellite_outer_bound);
+    let satellite_zone = (approximate_satellite_inner_bound, approximate_satellite_outer_bound);
     let frost_line = 4.85 * luminosity.sqrt();
     trace_var!(frost_line);
     let absolute_rgb = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
@@ -108,7 +108,7 @@ impl Star {
       current_age,
       density,
       habitable_zone,
-      satellite_bounds,
+      satellite_zone,
       frost_line,
       absolute_rgb,
     };

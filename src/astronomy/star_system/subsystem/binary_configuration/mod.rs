@@ -17,24 +17,46 @@ use orbit_type::*;
 /// Details about the orbital information of a subsystem.
 #[derive(Clone, Debug, PartialEq)]
 pub struct BinaryConfiguration {
+  /// The primary (larger mass) subsystem.
+  pub primary: Subsystem,
+  /// The secondary subsystem.
+  pub secondary: Subsystem,
+  /// The total mass, in Msol.
+  pub mass: f64,
+  /// The count of stars.
+  pub star_count: u8,
+  /// The total luminosity, in Lsol.
+  pub luminosity: f64,
   /// Average separation of the binary components, in AU.
   pub average_separation: f64,
   /// Minimum separation of the components, in AU.
   pub minimum_separation: f64,
   /// Maximum separation of the components, in AU.
   pub maximum_separation: f64,
-  /// Orbital eccentricities of the components.
-  pub orbital_eccentricities: (f64, f64),
+  /// Orbital eccentricity of the components.
+  pub orbital_eccentricity: f64,
   /// Average distance from barycenter of the components.
   pub average_distances_from_barycenter: (f64, f64),
   /// Minumum distance from barycenter of the components.
   pub minimum_distances_from_barycenter: (f64, f64),
   /// Maxumum distance from barycenter of the components.
   pub maximum_distances_from_barycenter: (f64, f64),
-  /// Areas in which nothing can exist.
+  /// Area in which nothing can exist.
   pub forbidden_zone: (f64, f64),
+  /// Area in which nothing _habitable_ can exist.
+  pub danger_zone: (f64, f64),
+  /// Habitable zone.
+  pub habitable_zone: (f64, f64),
+  /// Satellite bounds.
+  pub satellite_zone: (f64, f64),
+  /// The frost line.
+  pub frost_line: f64,
   /// Whether this is amenable to a P-type or S-type orbit.
   pub orbit_type: OrbitType,
+  /// Whether the habitable zone is contained within the forbidden zone.
+  pub habitable_zone_is_forbidden: bool,
+  /// Whether the habitable zone is contained within the danger zone.
+  pub habitable_zone_is_dangerous: bool,
 }
 
 impl BinaryConfiguration {
@@ -44,8 +66,6 @@ impl BinaryConfiguration {
   #[named]
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    sub1: &Subsystem,
-    sub2: &Subsystem,
     constraints: &SubsystemConstraints,
   ) -> Result<BinaryConfiguration, Error> {
     trace_enter!();
@@ -67,27 +87,44 @@ impl BinaryConfiguration {
     trace_var!(maximum_orbital_eccentricity);
     let average_separation = rng.gen_range(minimum_separation_constraint..maximum_separation_constraint);
     trace_var!(average_separation);
-    let orbital_eccentricities = {
-      let o1 = rng.gen_range(minimum_orbital_eccentricity..maximum_orbital_eccentricity);
-      let o2 = rng.gen_range(minimum_orbital_eccentricity..maximum_orbital_eccentricity);
-      (o1, o2)
+    let orbital_eccentricity = rng.gen_range(minimum_orbital_eccentricity..maximum_orbital_eccentricity);
+    trace_var!(orbital_eccentricity);
+    let (primary, secondary) = {
+      let sub_a = Subsystem::get_random_constrained(rng, constraints)?;
+      let sub_b = Subsystem::get_random_constrained(rng, constraints)?;
+      let sub_a_mass = sub_a.mass;
+      let sub_b_mass = sub_b.mass;
+      let first = if sub_a_mass > sub_b_mass {
+        sub_a.clone()
+      } else {
+        sub_b.clone()
+      };
+      let second = if sub_a_mass > sub_b_mass {
+        sub_b.clone()
+      } else {
+        sub_a.clone()
+      };
+      (first, second)
     };
-    trace_var!(orbital_eccentricities);
-    let sub1_mass = sub1.get_mass();
-    trace_var!(sub1_mass);
-    let sub2_mass = sub2.get_mass();
-    trace_var!(sub2_mass);
-    let total_mass = sub1_mass + sub2_mass;
-    trace_var!(total_mass);
+    let primary_mass = primary.mass;
+    trace_var!(primary_mass);
+    let secondary_mass = secondary.mass;
+    trace_var!(secondary_mass);
+    let mass = primary_mass + secondary_mass;
+    trace_var!(mass);
+    let star_count = primary.star_count + secondary.star_count;
+    trace_var!(star_count);
+    let luminosity = primary.luminosity + secondary.luminosity;
+    trace_var!(luminosity);
     let average_distances_from_barycenter = {
-      let d1 = average_separation * (sub2_mass / total_mass);
-      let d2 = average_separation * (sub1_mass / total_mass);
+      let d1 = average_separation * (secondary_mass / mass);
+      let d2 = average_separation * (primary_mass / mass);
       (d1, d2)
     };
     trace_var!(average_distances_from_barycenter);
     let minimum_distances_from_barycenter = {
-      let d1 = average_distances_from_barycenter.0 * (1.0 - orbital_eccentricities.0);
-      let d2 = average_distances_from_barycenter.1 * (1.0 - orbital_eccentricities.1);
+      let d1 = average_distances_from_barycenter.0 * (1.0 - orbital_eccentricity);
+      let d2 = average_distances_from_barycenter.1 * (1.0 - orbital_eccentricity);
       (d1, d2)
     };
     trace_var!(minimum_distances_from_barycenter);
@@ -97,8 +134,8 @@ impl BinaryConfiguration {
       return Err(Error::BinaryStarsTooCloseForComfort);
     }
     let maximum_distances_from_barycenter = {
-      let d1 = average_distances_from_barycenter.0 * (1.0 + orbital_eccentricities.0);
-      let d2 = average_distances_from_barycenter.1 * (1.0 + orbital_eccentricities.1);
+      let d1 = average_distances_from_barycenter.0 * (1.0 + orbital_eccentricity);
+      let d2 = average_distances_from_barycenter.1 * (1.0 + orbital_eccentricity);
       (d1, d2)
     };
     trace_var!(maximum_distances_from_barycenter);
@@ -106,33 +143,95 @@ impl BinaryConfiguration {
     trace_var!(maximum_separation);
     let forbidden_zone = (minimum_separation / 3.0, maximum_separation * 3.0);
     trace_var!(forbidden_zone);
+    let danger_zone = (0.0, 4.0 * forbidden_zone.1);
+    trace_var!(danger_zone);
+    let habitable_zone = ((luminosity / 1.1).sqrt(), (luminosity / 0.53).sqrt());
+    trace_var!(habitable_zone);
+    let satellite_zone = (0.1 * mass, 40.0 * mass);
+    trace_var!(satellite_zone);
+    let frost_line = 4.85 * luminosity.sqrt();
+    trace_var!(frost_line);
     let orbit_type = {
       use OrbitType::*;
       if maximum_separation <= MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION {
         PType
-      } else if sub1.is_habitable() && sub2.is_habitable() {
+      } else if primary.is_habitable() && secondary.is_habitable() {
         STypeBoth
-      } else if sub1.is_habitable() {
+      } else if primary.is_habitable() {
         STypePrimary
-      } else if sub2.is_habitable() {
+      } else if secondary.is_habitable() {
         STypeSecondary
       } else {
         None
       }
     };
+    let habitable_zone_is_forbidden = habitable_zone.1 <= forbidden_zone.1;
+    trace_var!(habitable_zone_is_forbidden);
+    let habitable_zone_is_dangerous = habitable_zone.1 <= danger_zone.1;
+    trace_var!(habitable_zone_is_dangerous);
     let result = BinaryConfiguration {
+      primary,
+      secondary,
+      mass,
+      star_count,
+      luminosity,
       average_separation,
       minimum_separation,
       maximum_separation,
-      orbital_eccentricities,
+      orbital_eccentricity,
       average_distances_from_barycenter,
       minimum_distances_from_barycenter,
       maximum_distances_from_barycenter,
       forbidden_zone,
+      danger_zone,
+      habitable_zone,
+      satellite_zone,
+      frost_line,
       orbit_type,
+      habitable_zone_is_forbidden,
+      habitable_zone_is_dangerous,
     };
     trace_var!(result);
     trace_exit!();
     Ok(result)
   }
+
+  /// Indicate whether this subsystem is capable of supporting conventional life.
+  #[named]
+  pub fn check_habitable(&self) -> Result<(), Error> {
+    use OrbitType::*;
+    trace_enter!();
+    let result = match self.orbit_type {
+      None => return Err(Error::NoHabitableZoneFound),
+      PType => {
+        if self.habitable_zone_is_forbidden {
+          println!("HabitableZoneContainedWithinForbiddenZone");
+          return Err(Error::HabitableZoneContainedWithinForbiddenZone);
+        }
+        if self.habitable_zone_is_dangerous {
+          println!("HabitableZoneContainedWithinDangerZone");
+          return Err(Error::HabitableZoneContainedWithinDangerZone);
+        }
+        Ok(())
+      },
+      STypePrimary | STypeSecondary | STypeBoth => Ok(()),
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Indicate whether this star is capable of supporting conventional life.
+  #[named]
+  pub fn is_habitable(&self) -> bool {
+    trace_enter!();
+    let result = match self.check_habitable() {
+      Ok(()) => true,
+      Err(_) => false,
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
 }

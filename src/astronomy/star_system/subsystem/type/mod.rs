@@ -1,6 +1,7 @@
 use rand::prelude::*;
 
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
+use crate::astronomy::star_system::binary_configuration::BinaryConfiguration;
 use crate::astronomy::star_system::subsystem::constraints::Constraints;
 use crate::astronomy::star_system::subsystem::error::Error;
 use crate::astronomy::star_system::subsystem::Subsystem;
@@ -16,7 +17,7 @@ pub enum Type {
   /// A single star.  All subsystems ultimately decompose to this.
   Single(Star),
   /// Two subsystems.  Each can be a star or a subsystem.
-  Double(Box<Subsystem>, Box<Subsystem>),
+  Double(Box<BinaryConfiguration>),
 }
 
 impl Type {
@@ -35,163 +36,14 @@ impl Type {
       true => {
         let mut new_constraints = constraints.clone();
         new_constraints.maximum_depth = maximum_depth;
-        let sub_a = Subsystem::get_random_constrained(rng, &new_constraints)?;
-        let sub_b = Subsystem::get_random_constrained(rng, &new_constraints)?;
-        let sub_a_mass = sub_a.get_mass();
-        let sub_b_mass = sub_b.get_mass();
-        let first = Box::new(if sub_a_mass > sub_b_mass {
-          sub_a.clone()
-        } else {
-          sub_b.clone()
-        });
-        let second = Box::new(if sub_a_mass > sub_b_mass {
-          sub_b.clone()
-        } else {
-          sub_a.clone()
-        });
-        Type::Double(first, second)
+        let binary_configuration = BinaryConfiguration::get_random_constrained(rng, &new_constraints)?;
+        Type::Double(Box::new(binary_configuration))
       },
       false => Type::Single(Star::get_random_main_sequence_constrained(rng, &star_constraints)?),
     };
     trace_var!(result);
     trace_exit!();
     Ok(result)
-  }
-
-  /// Retrieve or calculate the total mass of the subsystem.
-  ///
-  /// Calculated in Msol.
-  #[named]
-  pub fn get_mass(&self) -> f64 {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(star) => star.mass,
-      Double(sub1, sub2) => sub1.get_mass() + sub2.get_mass(),
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Retrieve or calculate the total number of stars in the subsystem.
-  #[named]
-  pub fn get_count(&self) -> u8 {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(_) => 1,
-      Double(sub1, sub2) => sub1.get_count() + sub2.get_count(),
-    };
-    trace_u8!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Retrieve or calculate the total luminosity in the subsystem.
-  #[named]
-  pub fn get_luminosity(&self) -> f64 {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(star) => star.luminosity,
-      Double(sub1, sub2) => sub1.get_luminosity() + sub2.get_luminosity(),
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Retrieve or calculate the habitable zone of the subsystem.
-  #[named]
-  pub fn get_habitable_zone(&self) -> (f64, f64) {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(star) => star.habitable_zone,
-      Double(sub1, sub2) => {
-        let sub1_lum = sub1.get_luminosity();
-        let sub2_lum = sub2.get_luminosity();
-        let base = (sub1_lum + sub2_lum).sqrt();
-        let habitable_zone = (0.95 * base, 1.37 * base);
-        habitable_zone
-      },
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Retrieve or calculate the satellite bounds of the subsystem.
-  #[named]
-  pub fn get_satellite_bounds(&self) -> (f64, f64) {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(star) => star.satellite_bounds,
-      Double(sub1, sub2) => {
-        let sub1_mass = sub1.get_mass();
-        let sub2_mass = sub2.get_mass();
-        let total_mass = sub1_mass + sub2_mass;
-        let satellite_inner_bound = 0.1 * total_mass;
-        let satellite_outer_bound = 40.0 * total_mass;
-        (satellite_inner_bound, satellite_outer_bound)
-      },
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Retrieve or calculate the frost line of the subsystem.
-  #[named]
-  pub fn get_frost_line(&self) -> f64 {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(star) => star.frost_line,
-      Double(sub1, sub2) => {
-        let sub1_lum = sub1.get_luminosity();
-        let sub2_lum = sub2.get_luminosity();
-        let frost_line = 4.85 * (sub1_lum + sub2_lum).sqrt();
-        frost_line
-      },
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Indicate whether this star is capable of supporting conventional life.
-  #[named]
-  pub fn check_habitable(&self) -> Result<(), Error> {
-    trace_enter!();
-    use Type::*;
-    let result = match self {
-      Single(star) => Ok(star.check_habitable()?),
-      Double(sub1, sub2) => {
-        if !sub1.is_habitable() && !sub2.is_habitable() {
-          return Err(Error::NoHabitableZoneFound);
-        }
-        Ok(())
-      },
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
-  }
-
-  /// Indicate whether this star is capable of supporting conventional life.
-  #[named]
-  pub fn is_habitable(&self) -> bool {
-    trace_enter!();
-    let result = match self.check_habitable() {
-      Ok(()) => true,
-      Err(_) => false,
-    };
-    trace_var!(result);
-    trace_exit!();
-    result
   }
 }
 

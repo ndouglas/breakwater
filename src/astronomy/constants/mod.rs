@@ -51,7 +51,7 @@ pub const MINIMUM_BINARY_STAR_SEPARATION: f64 = 0.1;
 pub const MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 0.15;
 
 /// The maximum average separation of "close" binary stars, in AU.
-pub const MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 2.0;
+pub const MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION: f64 = 1.0;
 
 /// The minimum orbital eccentricity of "close" binary stars (unitless).
 pub const MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY: f64 = 0.4;

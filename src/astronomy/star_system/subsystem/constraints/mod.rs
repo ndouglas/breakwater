@@ -29,6 +29,8 @@ pub struct Constraints {
   pub star_constraints: Option<StarConstraints>,
   /// Maximum depth.
   pub maximum_depth: u8,
+  /// Enforce habitability (at the top level).
+  pub enforce_habitability: bool,
 }
 
 impl Constraints {
@@ -41,6 +43,7 @@ impl Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::main_sequence());
     let maximum_depth = MAXIMUM_STAR_SUBSYSTEM_RECURSION;
+    let enforce_habitability = false;
     Self {
       binary_probability,
       minimum_separation,
@@ -49,6 +52,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 
@@ -61,6 +65,7 @@ impl Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::habitable());
     let maximum_depth = MAXIMUM_STAR_SUBSYSTEM_RECURSION;
+    let enforce_habitability = true;
     Self {
       binary_probability,
       minimum_separation,
@@ -69,6 +74,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 
@@ -81,6 +87,7 @@ impl Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::habitable());
     let maximum_depth = MAXIMUM_STAR_SUBSYSTEM_RECURSION;
+    let enforce_habitability = true;
     Self {
       binary_probability,
       minimum_separation,
@@ -89,6 +96,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 
@@ -101,6 +109,7 @@ impl Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::habitable());
     let maximum_depth = MAXIMUM_STAR_SUBSYSTEM_RECURSION;
+    let enforce_habitability = true;
     Self {
       binary_probability,
       minimum_separation,
@@ -109,6 +118,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 
@@ -121,6 +131,7 @@ impl Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::habitable());
     let maximum_depth = MAXIMUM_STAR_SUBSYSTEM_RECURSION;
+    let enforce_habitability = true;
     Self {
       binary_probability,
       minimum_separation,
@@ -129,6 +140,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 
@@ -141,6 +153,7 @@ impl Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_DISTANT_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::habitable());
     let maximum_depth = MAXIMUM_STAR_SUBSYSTEM_RECURSION;
+    let enforce_habitability = true;
     Self {
       binary_probability,
       minimum_separation,
@@ -149,6 +162,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 }
@@ -163,6 +177,7 @@ impl Default for Constraints {
     let maximum_orbital_eccentricity = Some(MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     let star_constraints = Some(StarConstraints::default());
     let maximum_depth = 4;
+    let enforce_habitability = false;
     Self {
       binary_probability,
       minimum_separation,
@@ -171,6 +186,7 @@ impl Default for Constraints {
       maximum_orbital_eccentricity,
       star_constraints,
       maximum_depth,
+      enforce_habitability,
     }
   }
 }

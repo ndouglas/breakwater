@@ -5,19 +5,29 @@ use crate::astronomy::star_system::subsystem::constraints::Constraints as Subsys
 pub struct Constraints {
   /// Star subsystem creation constraints.
   pub subsystem_constraints: Option<SubsystemConstraints>,
+  /// Number of times to regenerate if requirements aren't met.
+  pub retries: Option<u8>,
 }
 
 impl Constraints {
   /// Generate a main-sequence star system.
   pub fn main_sequence() -> Self {
     let subsystem_constraints = Some(SubsystemConstraints::main_sequence());
-    Self { subsystem_constraints }
+    let retries = None;
+    Self {
+      subsystem_constraints,
+      retries,
+    }
   }
 
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
     let subsystem_constraints = Some(SubsystemConstraints::habitable_solitary_or_p_type_binary());
-    Self { subsystem_constraints }
+    let retries = Some(10);
+    Self {
+      subsystem_constraints,
+      retries,
+    }
   }
 }
 
@@ -25,6 +35,10 @@ impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
     let subsystem_constraints = Some(SubsystemConstraints::default());
-    Self { subsystem_constraints }
+    let retries = None;
+    Self {
+      subsystem_constraints,
+      retries,
+    }
   }
 }
