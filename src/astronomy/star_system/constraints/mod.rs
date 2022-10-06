@@ -1,36 +1,36 @@
-use crate::astronomy::star_system::Constraints as SubsystemConstraints;
+use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 
 /// Constraints for creating a star system.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct StarSystemConstraints {
+pub struct Constraints {
   /// Star subsystem creation constraints.
-  pub star_subsystem_constraints: Option<SubsystemConstraints>,
+  pub subsystem_constraints: Option<SubsystemConstraints>,
 }
 
-impl StarSystemConstraints {
+impl Constraints {
   /// Generate a main-sequence star system.
   pub fn main_sequence() -> Self {
-    let star_subsystem_constraints = Some(SubsystemConstraints::main_sequence());
+    let subsystem_constraints = Some(SubsystemConstraints::main_sequence());
     Self {
-      star_subsystem_constraints,
+      subsystem_constraints,
     }
   }
 
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
-    let star_subsystem_constraints = Some(SubsystemConstraints::habitable_solitary_or_p_type_binary());
+    let subsystem_constraints = Some(SubsystemConstraints::habitable_solitary_or_p_type_binary());
     Self {
-      star_subsystem_constraints,
+      subsystem_constraints,
     }
   }
 }
 
-impl Default for StarSystemConstraints {
+impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    let star_subsystem_constraints = Some(SubsystemConstraints::default());
+    let subsystem_constraints = Some(SubsystemConstraints::default());
     Self {
-      star_subsystem_constraints,
+      subsystem_constraints,
     }
   }
 }

@@ -1,7 +1,7 @@
 use rand::prelude::*;
 
 use crate::astronomy::AstronomicalError;
-use crate::astronomy::star_system::subsystem::StarSubsystem;
+use crate::astronomy::star_system::subsystem::Subsystem;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
@@ -43,8 +43,8 @@ impl BinaryConfiguration {
   #[named]
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    sub1: &StarSubsystem,
-    sub2: &StarSubsystem,
+    sub1: &Subsystem,
+    sub2: &Subsystem,
     constraints: &SubsystemConstraints,
   ) -> Result<BinaryConfiguration, AstronomicalError> {
     trace_enter!();

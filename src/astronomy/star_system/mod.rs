@@ -5,9 +5,9 @@ use crate::astronomy::star_system::subsystem::constraints::Constraints as Subsys
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
-pub use constraints::*;
+use constraints::*;
 pub mod subsystem;
-pub use subsystem::*;
+use subsystem::*;
 
 /// The `StarSystem` type.
 ///
@@ -24,7 +24,7 @@ pub use subsystem::*;
 #[derive(Clone, Debug, PartialEq)]
 pub struct StarSystem {
   /// The basic configuration of the host star(s).
-  pub stars: StarSubsystem,
+  pub subsystem: Subsystem,
 }
 
 impl StarSystem {
@@ -34,15 +34,15 @@ impl StarSystem {
   #[named]
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
-    constraints: &StarSystemConstraints,
+    constraints: &Constraints,
   ) -> Result<StarSystem, AstronomicalError> {
     trace_enter!();
-    let star_subsystem_constraints = constraints
-      .star_subsystem_constraints
+    let subsystem_constraints = constraints
+      .subsystem_constraints
       .unwrap_or(SubsystemConstraints::default());
-    let star_subsystem = StarSubsystem::get_random_constrained(rng, &star_subsystem_constraints)?;
-    trace_var!(star_subsystem);
-    let result = StarSystem { stars: star_subsystem };
+    let subsystem = Subsystem::get_random_constrained(rng, &subsystem_constraints)?;
+    trace_var!(subsystem);
+    let result = StarSystem { subsystem };
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -54,7 +54,7 @@ impl StarSystem {
   #[named]
   pub fn get_star_mass(&self) -> f64 {
     trace_enter!();
-    let result = self.stars.get_mass();
+    let result = self.subsystem.get_mass();
     trace_var!(result);
     trace_exit!();
     result
@@ -64,7 +64,7 @@ impl StarSystem {
   #[named]
   pub fn get_star_count(&self) -> u8 {
     trace_enter!();
-    let result = self.stars.get_count();
+    let result = self.subsystem.get_count();
     trace_u8!(result);
     trace_exit!();
     result
@@ -74,8 +74,7 @@ impl StarSystem {
   #[named]
   pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
     trace_enter!();
-    use StarSubsystemType::*;
-    let result = self.stars.check_habitable();
+    let result = self.subsystem.check_habitable();
     trace_var!(result);
     trace_exit!();
     result
@@ -111,7 +110,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = StarSystemConstraints::habitable();
+    let constraints = Constraints::habitable();
     let star_system = StarSystem::get_random_constrained(&mut rng, &constraints)?;
     trace_var!(star_system);
     // println!("{:#?}", star_system);

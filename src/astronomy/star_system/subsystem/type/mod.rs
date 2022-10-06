@@ -4,23 +4,23 @@ use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints;
-use crate::astronomy::StarSubsystem;
+use crate::astronomy::star_system::subsystem::Subsystem;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 
-/// The `StarSubsystemType` type.
+/// The `Type` type.
 ///
 /// A subsystem is either one or two subsystems.  Not three, because of the
 /// 3-body problem.
 #[derive(Clone, Debug, PartialEq)]
-pub enum StarSubsystemType {
+pub enum Type {
   /// A single star.  All subsystems ultimately decompose to this.
   Single(Star),
   /// Two subsystems.  Each can be a star or a subsystem.
-  Double(Box<StarSubsystem>, Box<StarSubsystem>),
+  Double(Box<Subsystem>, Box<Subsystem>),
 }
 
-impl StarSubsystemType {
+impl Type {
   /// Generate a random subsystem type with the specified constraints.
   ///
   /// This may or may not be habitable, depending on the constraints.
@@ -28,7 +28,7 @@ impl StarSubsystemType {
   pub fn get_random_constrained<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &Constraints,
-  ) -> Result<StarSubsystemType, AstronomicalError> {
+  ) -> Result<Type, AstronomicalError> {
     trace_enter!();
     let mut maximum_depth = constraints.maximum_depth;
     maximum_depth -= 1;
@@ -39,8 +39,8 @@ impl StarSubsystemType {
       true => {
         let mut new_constraints = constraints.clone();
         new_constraints.maximum_depth = maximum_depth;
-        let sub_a = StarSubsystem::get_random_constrained(rng, &new_constraints)?;
-        let sub_b = StarSubsystem::get_random_constrained(rng, &new_constraints)?;
+        let sub_a = Subsystem::get_random_constrained(rng, &new_constraints)?;
+        let sub_b = Subsystem::get_random_constrained(rng, &new_constraints)?;
         let sub_a_mass = sub_a.get_mass();
         let sub_b_mass = sub_b.get_mass();
         let first = Box::new(if sub_a_mass > sub_b_mass {
@@ -53,9 +53,9 @@ impl StarSubsystemType {
         } else {
           sub_a.clone()
         });
-        StarSubsystemType::Double(first, second)
+        Type::Double(first, second)
       },
-      false => StarSubsystemType::Single(Star::get_random_main_sequence_constrained(rng, &star_constraints)?),
+      false => Type::Single(Star::get_random_main_sequence_constrained(rng, &star_constraints)?),
     };
     trace_var!(result);
     trace_exit!();
@@ -68,7 +68,7 @@ impl StarSubsystemType {
   #[named]
   pub fn get_mass(&self) -> f64 {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(star) => star.mass,
       Double(sub1, sub2) => sub1.get_mass() + sub2.get_mass(),
@@ -82,7 +82,7 @@ impl StarSubsystemType {
   #[named]
   pub fn get_count(&self) -> u8 {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(_) => 1,
       Double(sub1, sub2) => sub1.get_count() + sub2.get_count(),
@@ -96,7 +96,7 @@ impl StarSubsystemType {
   #[named]
   pub fn get_luminosity(&self) -> f64 {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(star) => star.luminosity,
       Double(sub1, sub2) => sub1.get_luminosity() + sub2.get_luminosity(),
@@ -110,7 +110,7 @@ impl StarSubsystemType {
   #[named]
   pub fn get_habitable_zone(&self) -> (f64, f64) {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(star) => star.habitable_zone,
       Double(sub1, sub2) => {
@@ -130,7 +130,7 @@ impl StarSubsystemType {
   #[named]
   pub fn get_satellite_bounds(&self) -> (f64, f64) {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(star) => star.satellite_bounds,
       Double(sub1, sub2) => {
@@ -151,7 +151,7 @@ impl StarSubsystemType {
   #[named]
   pub fn get_frost_line(&self) -> f64 {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(star) => star.frost_line,
       Double(sub1, sub2) => {
@@ -170,7 +170,7 @@ impl StarSubsystemType {
   #[named]
   pub fn check_habitable(&self) -> Result<(), AstronomicalError> {
     trace_enter!();
-    use StarSubsystemType::*;
+    use Type::*;
     let result = match self {
       Single(star) => star.check_habitable(),
       Double(sub1, sub2) => {
@@ -216,9 +216,9 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable_solitary_or_p_type_binary();
-    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(star_subsystem_type);
-    // println!("{:#?}", star_subsystem_type);
+    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(r#type);
+    // println!("{:#?}", r#type);
     trace_exit!();
     Ok(())
   }
@@ -231,9 +231,9 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable_solitary_or_s_type_binary();
-    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(star_subsystem_type);
-    // println!("{:#?}", star_subsystem_type);
+    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(r#type);
+    // println!("{:#?}", r#type);
     trace_exit!();
     Ok(())
   }
@@ -246,9 +246,9 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable_p_type_binary();
-    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(star_subsystem_type);
-    // println!("{:#?}", star_subsystem_type);
+    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(r#type);
+    // println!("{:#?}", r#type);
     trace_exit!();
     Ok(())
   }
@@ -262,9 +262,9 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable_s_type_binary();
-    let star_subsystem_type = StarSubsystemType::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(star_subsystem_type);
-    // println!("{:#?}", star_subsystem_type);
+    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    trace_var!(r#type);
+    // println!("{:#?}", r#type);
     trace_exit!();
     Ok(())
   }

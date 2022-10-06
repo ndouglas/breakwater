@@ -4,7 +4,7 @@ use crate::astronomy::get_random_point_in_sphere;
 use crate::astronomy::AstronomicalError;
 use crate::astronomy::Star;
 use crate::astronomy::StarSystem;
-use crate::astronomy::StarSystemConstraints;
+use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
