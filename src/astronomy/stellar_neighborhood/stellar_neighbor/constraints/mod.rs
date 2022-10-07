@@ -1,7 +1,7 @@
 use std::default::Default;
 
+use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::star_system::constraints::Constraints as SystemConstraints;
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]

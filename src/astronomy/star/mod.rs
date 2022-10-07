@@ -1,10 +1,10 @@
 use rand::prelude::*;
 
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
-use crate::astronomy::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
-use crate::astronomy::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
-use crate::astronomy::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
+use crate::astronomy::constants::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
+use crate::astronomy::constants::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
+use crate::astronomy::constants::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
 
 pub mod constraints;
 use constraints::*;
@@ -15,7 +15,6 @@ use math::color::get_main_sequence_star_absolute_rgb_from_mass;
 use math::luminosity::get_main_sequence_star_luminosity_from_mass;
 use math::radius::get_main_sequence_star_radius_from_mass;
 use math::temperature::get_main_sequence_star_temperature_from_mass;
-use math::*;
 pub mod spectral_class;
 use spectral_class::*;
 

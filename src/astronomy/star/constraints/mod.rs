@@ -1,10 +1,10 @@
 use std::default::Default;
 
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
-use crate::astronomy::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
-use crate::astronomy::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
-use crate::astronomy::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
+use crate::astronomy::constants::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
+use crate::astronomy::constants::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
+use crate::astronomy::constants::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
 
 /// Constraints for creating a star.
 ///

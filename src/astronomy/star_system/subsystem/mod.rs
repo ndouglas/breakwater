@@ -1,19 +1,11 @@
 use rand::prelude::*;
 
-use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
-use crate::astronomy::Star;
-use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
-use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
-use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 
 pub mod constraints;
-use constraints::*;
 pub mod error;
 use error::*;
 pub mod binary_configuration;
-use binary_configuration::orbit_type::OrbitType;
-use binary_configuration::*;
 pub mod r#type;
 use r#type::*;
 
@@ -160,9 +152,8 @@ pub mod test {
       }
       subsystem
     };
-    trace_var!(subsystem);
+    info_var!(subsystem);
     assert!(subsystem.is_habitable());
-    // println!("{:#?}", subsystem);
     trace_exit!();
     Ok(())
   }
@@ -191,9 +182,8 @@ pub mod test {
       }
       subsystem
     };
-    trace_var!(subsystem);
+    info_var!(subsystem);
     assert!(subsystem.is_habitable());
-    // println!("{:#?}", subsystem);
     trace_exit!();
     Ok(())
   }
@@ -207,7 +197,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable_p_type_binary();
     let subsystem = {
-      let mut retries = 10;
+      let mut retries = 0;
       let subsystem;
       loop {
         let candidate_result = Subsystem::get_random_constrained(&mut rng, &constraints);
@@ -222,9 +212,8 @@ pub mod test {
       }
       subsystem
     };
-    trace_var!(subsystem);
+    info_var!(subsystem);
     assert!(subsystem.is_habitable());
-    // println!("{:#?}", subsystem);
     trace_exit!();
     Ok(())
   }
@@ -253,9 +242,8 @@ pub mod test {
       }
       subsystem
     };
-    trace_var!(subsystem);
+    info_var!(subsystem);
     assert!(subsystem.is_habitable());
-    // println!("{:#?}", subsystem);
     trace_exit!();
     Ok(())
   }

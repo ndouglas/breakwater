@@ -1,13 +1,13 @@
 use rand::prelude::*;
 
+use crate::astronomy::constants::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
+use crate::astronomy::constants::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
+use crate::astronomy::constants::MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION;
+use crate::astronomy::constants::MINIMUM_BINARY_STAR_SEPARATION;
+use crate::astronomy::constants::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
+use crate::astronomy::constants::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::star_system::subsystem::Subsystem;
-use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
-use crate::astronomy::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
-use crate::astronomy::MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION;
-use crate::astronomy::MINIMUM_BINARY_STAR_SEPARATION;
-use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
-use crate::astronomy::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 
 pub mod error;
 use error::*;
@@ -205,11 +205,9 @@ impl BinaryConfiguration {
       None => return Err(Error::NoHabitableZoneFound),
       PType => {
         if self.habitable_zone_is_forbidden {
-          println!("HabitableZoneContainedWithinForbiddenZone");
           return Err(Error::HabitableZoneContainedWithinForbiddenZone);
         }
         if self.habitable_zone_is_dangerous {
-          println!("HabitableZoneContainedWithinDangerZone");
           return Err(Error::HabitableZoneContainedWithinDangerZone);
         }
         Ok(())

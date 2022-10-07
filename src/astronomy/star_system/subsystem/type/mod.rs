@@ -1,12 +1,11 @@
 use rand::prelude::*;
 
+use crate::astronomy::constants::PROBABILITY_OF_BINARY_STARS;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
+use crate::astronomy::star::Star;
 use crate::astronomy::star_system::binary_configuration::BinaryConfiguration;
 use crate::astronomy::star_system::subsystem::constraints::Constraints;
 use crate::astronomy::star_system::subsystem::error::Error;
-use crate::astronomy::star_system::subsystem::Subsystem;
-use crate::astronomy::Star;
-use crate::astronomy::PROBABILITY_OF_BINARY_STARS;
 
 /// The `Type` type.
 ///
@@ -64,8 +63,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable_solitary_or_p_type_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(r#type);
-    // println!("{:#?}", r#type);
+    info_var!(r#type);
     trace_exit!();
     Ok(())
   }
@@ -79,8 +77,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable_solitary_or_s_type_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(r#type);
-    // println!("{:#?}", r#type);
+    info_var!(r#type);
     trace_exit!();
     Ok(())
   }
@@ -94,8 +91,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable_p_type_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(r#type);
-    // println!("{:#?}", r#type);
+    info_var!(r#type);
     trace_exit!();
     Ok(())
   }
@@ -109,8 +105,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable_s_type_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(r#type);
-    // println!("{:#?}", r#type);
+    info_var!(r#type);
     trace_exit!();
     Ok(())
   }

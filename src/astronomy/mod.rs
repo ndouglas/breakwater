@@ -1,10 +1,5 @@
 pub mod constants;
-use constants::*;
 pub mod math;
-use math::*;
-pub mod star_system;
-use star_system::*;
-pub mod stellar_neighborhood;
-use stellar_neighborhood::*;
 pub mod star;
-use star::*;
+pub mod star_system;
+pub mod stellar_neighborhood;

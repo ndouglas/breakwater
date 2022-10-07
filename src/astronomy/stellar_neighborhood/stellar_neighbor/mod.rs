@@ -1,11 +1,10 @@
 use rand::prelude::*;
 
+use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::math::point::get_random_point_in_sphere;
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
-use crate::astronomy::Star;
-use crate::astronomy::StarSystem;
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::star_system::StarSystem;
 
 pub mod constraints;
 use constraints::*;
@@ -100,8 +99,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::default();
     let stellar_neighbor = StellarNeighbor::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(stellar_neighbor);
-    // println!("{:#?}", stellar_neighbor);
+    info_var!(stellar_neighbor);
     trace_exit!();
     Ok(())
   }

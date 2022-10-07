@@ -1,7 +1,7 @@
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
 /// Get the RGB color of a main-sequence star based on its Msol.
 ///

@@ -1,6 +1,6 @@
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
+use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 use crate::astronomy::star::error::Error;
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 
 /// Get the luminosity of a main-sequence star in Lsol based on its Msol.
 #[named]

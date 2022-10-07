@@ -1,10 +1,10 @@
 use rand::prelude::*;
 use std::f64::consts::PI;
 
+use crate::astronomy::constants::DENSITY_OF_STELLAR_NEIGHBORHOOD;
+use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
-use crate::astronomy::DENSITY_OF_STELLAR_NEIGHBORHOOD;
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
 use constraints::*;
@@ -99,8 +99,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable();
     let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(stellar_neighborhood);
-    // println!("{:#?}", stellar_neighborhood);
+    info_var!(stellar_neighborhood);
     trace_exit!();
     Ok(())
   }

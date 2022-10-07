@@ -1,7 +1,6 @@
 use rand::prelude::*;
 
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
-use crate::astronomy::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 
 pub mod constraints;
 use constraints::*;
@@ -124,8 +123,7 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::habitable();
     let star_system = StarSystem::get_random_constrained(&mut rng, &constraints)?;
-    trace_var!(star_system);
-    // println!("{:#?}", star_system);
+    info_var!(star_system);
     trace_exit!();
     Ok(())
   }
