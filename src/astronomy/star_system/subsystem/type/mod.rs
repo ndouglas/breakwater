@@ -28,8 +28,24 @@ impl Type {
     trace_enter!();
     let mut maximum_depth = constraints.maximum_depth;
     maximum_depth -= 1;
+    let Constraints {
+      enable_close_binaries,
+      enable_distant_binaries,
+      force_solitary,
+      force_close_binary,
+      force_distant_binary,
+      ..
+    } = *constraints;
     let binary_probability = constraints.binary_probability.unwrap_or(PROBABILITY_OF_BINARY_STARS);
-    let is_binary = rng.gen_range(0.0..1.0) <= binary_probability;
+    let is_binary = {
+      if force_solitary || (!enable_close_binaries && !enable_distant_binaries) {
+        false
+      } else if force_close_binary || force_distant_binary {
+        true
+      } else {
+        rng.gen_range(0.0..1.0) <= binary_probability
+      }
+    };
     let star_constraints = constraints.star_constraints.unwrap_or(StarConstraints::default());
     let result = match is_binary && maximum_depth >= 1 {
       true => {
@@ -61,7 +77,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_p_type_binary();
+    let constraints = Constraints::habitable_solitary_or_close_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
     trace_exit!();
@@ -75,7 +91,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_s_type_binary();
+    let constraints = Constraints::habitable_solitary_or_distant_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
     trace_exit!();
@@ -89,7 +105,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_p_type_binary();
+    let constraints = Constraints::habitable_close_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
     trace_exit!();
@@ -103,7 +119,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_s_type_binary();
+    let constraints = Constraints::habitable_distant_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
     trace_exit!();

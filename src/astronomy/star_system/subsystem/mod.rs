@@ -135,7 +135,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_p_type_binary();
+    let constraints = Constraints::habitable_solitary_or_close_binary();
     let subsystem = {
       let mut retries = 10;
       let subsystem;
@@ -165,7 +165,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_s_type_binary();
+    let constraints = Constraints::habitable_solitary_or_distant_binary();
     let subsystem = {
       let mut retries = 10;
       let subsystem;
@@ -195,7 +195,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_p_type_binary();
+    let constraints = Constraints::habitable_close_binary();
     let subsystem = {
       let mut retries = 0;
       let subsystem;
@@ -225,7 +225,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_s_type_binary();
+    let constraints = Constraints::habitable_distant_binary();
     let subsystem = {
       let mut retries = 10;
       let subsystem;

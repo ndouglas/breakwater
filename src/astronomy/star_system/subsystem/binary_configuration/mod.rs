@@ -2,10 +2,12 @@ use rand::prelude::*;
 
 use crate::astronomy::constants::MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::constants::MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
+use crate::astronomy::constants::MAXIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::constants::MAXIMUM_HABITABLE_CLOSE_BINARY_STAR_SEPARATION;
 use crate::astronomy::constants::MINIMUM_BINARY_STAR_SEPARATION;
 use crate::astronomy::constants::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::constants::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
+use crate::astronomy::constants::MINIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
 use crate::astronomy::star_system::subsystem::Subsystem;
 
@@ -69,19 +71,61 @@ impl BinaryConfiguration {
     constraints: &SubsystemConstraints,
   ) -> Result<BinaryConfiguration, Error> {
     trace_enter!();
-    let minimum_separation_constraint = constraints
+    // Determine whether we're creating a close binary or a distant binary.
+    let SubsystemConstraints {
+      enable_close_binaries,
+      enable_distant_binaries,
+      force_close_binary,
+      force_distant_binary,
+      ..
+    } = *constraints;
+    let is_close_binary: bool = {
+      if force_close_binary || !enable_distant_binaries {
+        true
+      } else if force_distant_binary || !enable_close_binaries {
+        false
+      } else {
+        rng.gen()
+      }
+    };
+    trace_var!(is_close_binary);
+    // Prevent nesting more binaries within close binaries.
+    let mut forward_constraints = constraints.clone();
+    if is_close_binary {
+      forward_constraints.enable_close_binaries = false;
+    } else {
+      forward_constraints.enable_close_binaries = true;
+    }
+    forward_constraints.enable_distant_binaries = false;
+    let default_minimum_average_separation = {
+      if is_close_binary {
+        MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION
+      } else {
+        MINIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION
+      }
+    };
+    trace_var!(default_minimum_average_separation);
+    let default_maximum_average_separation = {
+      if is_close_binary {
+        MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION
+      } else {
+        MAXIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION
+      }
+    };
+    trace_var!(default_maximum_average_separation);
+    let minimum_separation_constraint = forward_constraints
       .minimum_separation
-      .unwrap_or(MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION);
+      .unwrap_or(default_minimum_average_separation);
     trace_var!(minimum_separation_constraint);
-    let maximum_separation_constraint = constraints
+    let maximum_separation_constraint = forward_constraints
       .maximum_separation
-      .unwrap_or(MAXIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION);
+      .unwrap_or(default_maximum_average_separation);
     trace_var!(maximum_separation_constraint);
-    let minimum_orbital_eccentricity = constraints
+    let minimum_orbital_eccentricity = forward_constraints
       .minimum_orbital_eccentricity
       .unwrap_or(MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     trace_var!(minimum_orbital_eccentricity);
-    let maximum_orbital_eccentricity = constraints
+    let maximum_orbital_eccentricity = forward_constraints
       .maximum_orbital_eccentricity
       .unwrap_or(MAXIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY);
     trace_var!(maximum_orbital_eccentricity);
@@ -90,8 +134,8 @@ impl BinaryConfiguration {
     let orbital_eccentricity = rng.gen_range(minimum_orbital_eccentricity..maximum_orbital_eccentricity);
     trace_var!(orbital_eccentricity);
     let (primary, secondary) = {
-      let sub_a = Subsystem::get_random_constrained(rng, constraints)?;
-      let sub_b = Subsystem::get_random_constrained(rng, constraints)?;
+      let sub_a = Subsystem::get_random_constrained(rng, &forward_constraints)?;
+      let sub_b = Subsystem::get_random_constrained(rng, &forward_constraints)?;
       let sub_a_mass = sub_a.mass;
       let sub_b_mass = sub_b.mass;
       let first = if sub_a_mass > sub_b_mass {
