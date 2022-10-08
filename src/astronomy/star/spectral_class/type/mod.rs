@@ -5,7 +5,7 @@ use rand::prelude::*;
 use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 use crate::astronomy::star::error::Error;
-use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
+use crate::astronomy::star::math::temperature::ms_star_mass_to_temperature;
 
 /// The `Type` type.
 ///
@@ -59,7 +59,7 @@ impl Type {
     if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
       return Err(Error::MassTooHighForMainSequence);
     }
-    let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
+    let temperature = ms_star_mass_to_temperature(mass)?;
     use Type::*;
     let result = match temperature {
       temperature if temperature < 3_700.0 => M,

@@ -24,4 +24,5 @@ Generation of the Planetary System begins with a Host Star.  This is what we'll 
   - [Lasthearth](https://github.com/ndouglas/lasthearth/): Embedded programming language and domain-specific library
   - [Breakwater](https://github.com/ndouglas/breakwater/): Environmental procedural content generation and tools
   - [Brownhollow](https://github.com/ndouglas/brownhollow/): Artificial life/social/factional/economic procedural content generation and tools
+  - [Honeyholt](https://github.com/ndouglas/honeyholt/): Tool for humanizing numbers, concepts, etc.
   - [Lemonwood](https://github.com/ndouglas/lemonwood/): Flexible and powerful test harness for roguelike projects.

@@ -12,3 +12,14 @@ pub enum Error {
   /// Higher than MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE.
   MassTooHighToSupportLife,
 }
+
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    MassTooLowForMainSequence => "its mass is too low to be a main-sequence star",
+    MassTooHighForMainSequence => "its mass is too high to be a main-sequence star",
+    TooYoungToSupportLife => "it is too young to support life",
+    MassTooLowToSupportLife => "its mass is too low to support life",
+    MassTooHighToSupportLife => "its mass is too high to support life",
+  }
+});

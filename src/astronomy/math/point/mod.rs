@@ -50,7 +50,7 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let point = get_random_point_in_sphere(&mut rng);
-    trace_var!(point);
+    info_var!(point);
     trace_exit!();
   }
 }

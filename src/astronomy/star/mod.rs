@@ -11,10 +11,10 @@ use constraints::*;
 pub mod error;
 use error::*;
 pub mod math;
-use math::color::get_main_sequence_star_absolute_rgb_from_mass;
-use math::luminosity::get_main_sequence_star_luminosity_from_mass;
-use math::radius::get_main_sequence_star_radius_from_mass;
-use math::temperature::get_main_sequence_star_temperature_from_mass;
+use math::color::ms_star_mass_to_rgb;
+use math::luminosity::ms_star_mass_to_luminosity;
+use math::radius::ms_star_mass_to_radius;
+use math::temperature::ms_star_mass_to_temperature;
 pub mod spectral_class;
 use spectral_class::*;
 
@@ -69,11 +69,11 @@ impl Star {
     trace_var!(upper_bound_mass);
     let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
     trace_var!(mass);
-    let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
+    let temperature = ms_star_mass_to_temperature(mass)?;
     trace_var!(temperature);
-    let luminosity = get_main_sequence_star_luminosity_from_mass(mass)?;
+    let luminosity = ms_star_mass_to_luminosity(mass)?;
     trace_var!(luminosity);
-    let radius = get_main_sequence_star_radius_from_mass(mass)?;
+    let radius = ms_star_mass_to_radius(mass)?;
     trace_var!(radius);
     let class = SpectralClass::get_main_sequence_from_mass(mass)?;
     trace_var!(class);
@@ -96,7 +96,7 @@ impl Star {
     let satellite_zone = (approximate_satellite_inner_bound, approximate_satellite_outer_bound);
     let frost_line = 4.85 * luminosity.sqrt();
     trace_var!(frost_line);
-    let absolute_rgb = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    let absolute_rgb = ms_star_mass_to_rgb(mass)?;
     let result = Star {
       class,
       mass,
@@ -142,14 +142,14 @@ impl Star {
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
-    if self.current_age < MINIMUM_STAR_AGE_TO_SUPPORT_LIFE {
-      return Err(Error::TooYoungToSupportLife);
-    }
     if self.mass < MINIMUM_STAR_MASS_TO_SUPPORT_LIFE {
       return Err(Error::MassTooLowToSupportLife);
     }
     if self.mass > MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE {
       return Err(Error::MassTooHighToSupportLife);
+    }
+    if self.current_age < MINIMUM_STAR_AGE_TO_SUPPORT_LIFE {
+      return Err(Error::TooYoungToSupportLife);
     }
     trace_exit!();
     Ok(())

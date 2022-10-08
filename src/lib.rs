@@ -1,5 +1,14 @@
 #![allow(unused_macros)]
 
+
+#[macro_use]
+extern crate assert_approx_eq;
+pub use assert_approx_eq::*;
+
+#[macro_use]
+extern crate honeyholt;
+pub use honeyholt::*;
+
 #[macro_use]
 extern crate volmark;
 pub use volmark::*;
@@ -10,10 +19,6 @@ pub mod astronomy;
 pub mod test {
 
   use std::env::set_var;
-
-  #[macro_use]
-  extern crate assert_approx_eq;
-  pub use assert_approx_eq::*;
 
   pub use super::*;
 

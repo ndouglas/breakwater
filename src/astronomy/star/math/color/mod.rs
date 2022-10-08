@@ -1,7 +1,7 @@
 use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
 use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 use crate::astronomy::star::error::Error;
-use crate::astronomy::star::math::temperature::get_main_sequence_star_temperature_from_mass;
+use crate::astronomy::star::math::temperature::ms_star_mass_to_temperature;
 
 /// Get the RGB color of a main-sequence star based on its Msol.
 ///
@@ -13,7 +13,7 @@ use crate::astronomy::star::math::temperature::get_main_sequence_star_temperatur
 ///
 /// This came from StackOverflow: https://stackoverflow.com/q/21977786
 #[named]
-pub fn get_main_sequence_star_absolute_rgb_from_mass(mass: f64) -> Result<(u8, u8, u8), Error> {
+pub fn ms_star_mass_to_rgb(mass: f64) -> Result<(u8, u8, u8), Error> {
   trace_enter!();
   trace_var!(mass);
   if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
@@ -22,7 +22,7 @@ pub fn get_main_sequence_star_absolute_rgb_from_mass(mass: f64) -> Result<(u8, u
   if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
     return Err(Error::MassTooHighForMainSequence);
   }
-  let temperature = get_main_sequence_star_temperature_from_mass(mass)?;
+  let temperature = ms_star_mass_to_temperature(mass)?;
   trace_var!(temperature);
   let x = match temperature {
     temperature if temperature >= 1_667.0 && temperature <= 4_000.0 => {
@@ -93,55 +93,53 @@ pub fn get_main_sequence_star_absolute_rgb_from_mass(mass: f64) -> Result<(u8, u
 #[cfg(test)]
 pub mod test {
 
-  use rand::prelude::*;
-
   use super::*;
   use crate::test::*;
 
   #[named]
   #[test]
-  pub fn test_get_main_sequence_star_absolute_rgb_from_mass() -> Result<(), Error> {
+  pub fn test_ms_star_mass_to_rgb() -> Result<(), Error> {
     init();
     trace_enter!();
     // Jolly ol' Sol
     let mut mass = 1.0;
     let mut expected = (255, 252, 245);
-    let mut actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    let mut actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // M1V
     mass = 0.40;
     expected = (255, 241, 165);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // K9V
     mass = 0.50;
     expected = (255, 245, 185);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // G7V
     mass = 0.90;
     expected = (255, 251, 237);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // F6V
     mass = 1.20;
     expected = (255, 253, 255);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // A6V
     mass = 1.70;
     expected = (246, 254, 255);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // B5V
     mass = 8.0;
     expected = (223, 253, 255);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     // O8V
     mass = 25.0;
     expected = (217, 253, 255);
-    actual = get_main_sequence_star_absolute_rgb_from_mass(mass)?;
+    actual = ms_star_mass_to_rgb(mass)?;
     assert_eq!(expected, actual);
     trace_exit!();
     Ok(())
