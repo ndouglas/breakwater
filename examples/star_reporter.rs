@@ -23,7 +23,7 @@ impl StarReporter {
   #[named]
   pub fn report(&self, star: &Star, indent: usize) {
     let new_indent = indent + 2;
-    self.report_string(new_indent, &format!("This is a {} class star.", star.class.string));
+    self.report_string(new_indent, &format!("This is a {} class star.", star.class));
     self.report_string(
       new_indent,
       &format!("It is about {:.0} times the mass of the sun.", star.mass),

@@ -2,7 +2,6 @@
 
 #[macro_use]
 extern crate assert_approx_eq;
-pub use assert_approx_eq::*;
 
 #[macro_use]
 extern crate honeyholt;

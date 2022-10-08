@@ -14,9 +14,8 @@ pub mod math;
 use math::color::ms_star_mass_to_rgb;
 use math::luminosity::ms_star_mass_to_luminosity;
 use math::radius::ms_star_mass_to_radius;
+use math::spectral_class::ms_star_mass_to_spectral_class;
 use math::temperature::ms_star_mass_to_temperature;
-pub mod spectral_class;
-use spectral_class::*;
 
 /// The `Star` type.
 ///
@@ -25,7 +24,7 @@ use spectral_class::*;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Star {
   /// Type, Decile, Luminosity class.
-  pub class: SpectralClass,
+  pub class: String,
   /// Measured in Msol.
   pub mass: f64,
   /// Measured in Kelvin.
@@ -75,7 +74,7 @@ impl Star {
     trace_var!(luminosity);
     let radius = ms_star_mass_to_radius(mass)?;
     trace_var!(radius);
-    let class = SpectralClass::get_main_sequence_from_mass(mass)?;
+    let class = ms_star_mass_to_spectral_class(mass)?;
     trace_var!(class);
     let life_expectancy = mass / luminosity * 10.0;
     trace_var!(life_expectancy);
