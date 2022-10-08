@@ -13,6 +13,7 @@ name = "breakwater"
 path = "src/main.rs"
 
 [dependencies]
+Inflector = "0.11.4"
 assert_approx_eq = "1.1.0"
 function_name = "0.3.0"
 log = { version = "0.4.17", features= ["max_level_trace", "release_max_level_warn"] }
@@ -31,6 +32,7 @@ bevy_fly_camera = "0.8.0"
 bevy_pancam = "0.2"
 bevy_egui = "0.12"
 derive_more = "*"
+plotters = "*"
 
 [dev-dependencies.bevy]
 version = "0.6.1"

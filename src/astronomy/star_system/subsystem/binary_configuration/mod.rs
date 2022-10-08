@@ -59,6 +59,8 @@ pub struct BinaryConfiguration {
   pub habitable_zone_is_forbidden: bool,
   /// Whether the habitable zone is contained within the danger zone.
   pub habitable_zone_is_dangerous: bool,
+  /// The name of the primary star in the system.
+  pub name: String,
 }
 
 impl BinaryConfiguration {
@@ -213,6 +215,8 @@ impl BinaryConfiguration {
     trace_var!(habitable_zone_is_forbidden);
     let habitable_zone_is_dangerous = habitable_zone.1 <= danger_zone.1;
     trace_var!(habitable_zone_is_dangerous);
+    let name = primary.name.clone();
+    trace_var!(name);
     let result = BinaryConfiguration {
       primary,
       secondary,
@@ -234,6 +238,7 @@ impl BinaryConfiguration {
       orbit_type,
       habitable_zone_is_forbidden,
       habitable_zone_is_dangerous,
+      name,
     };
     trace_var!(result);
     trace_exit!();

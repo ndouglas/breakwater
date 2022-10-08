@@ -29,6 +29,8 @@ pub struct Subsystem {
   pub satellite_zone: (f64, f64),
   /// The frost line of this subsystem, in AU.
   pub frost_line: f64,
+  /// The name of the primary star of this subsystem.
+  pub name: String,
 }
 
 impl Subsystem {
@@ -51,6 +53,7 @@ impl Subsystem {
     let frost_line;
     let habitable_zone;
     let satellite_zone;
+    let name;
     match &r#type {
       Single(star) => {
         star_count = 1;
@@ -59,6 +62,7 @@ impl Subsystem {
         frost_line = star.frost_line;
         habitable_zone = star.habitable_zone;
         satellite_zone = star.satellite_zone;
+        name = star.name.clone();
       },
       Double(binary) => {
         star_count = binary.star_count;
@@ -67,6 +71,7 @@ impl Subsystem {
         frost_line = binary.frost_line;
         habitable_zone = binary.habitable_zone;
         satellite_zone = binary.satellite_zone;
+        name = binary.name.clone();
       },
     };
     trace_var!(star_count);
@@ -75,6 +80,7 @@ impl Subsystem {
     trace_var!(frost_line);
     trace_var!(habitable_zone);
     trace_var!(satellite_zone);
+    trace_var!(name);
     let result = Subsystem {
       r#type,
       star_count,
@@ -83,6 +89,7 @@ impl Subsystem {
       habitable_zone,
       satellite_zone,
       frost_line,
+      name,
     };
     if constraints.enforce_habitability {
       result.check_habitable()?;

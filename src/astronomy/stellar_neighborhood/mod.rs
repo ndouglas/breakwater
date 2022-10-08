@@ -104,7 +104,7 @@ pub mod test {
     let constraints = Constraints::habitable();
     let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
     info_var!(stellar_neighborhood);
-    println!("{:#?}", stellar_neighborhood);
+    // println!("{:#?}", stellar_neighborhood);
     trace_exit!();
     Ok(())
   }

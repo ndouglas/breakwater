@@ -25,6 +25,8 @@ use subsystem::*;
 pub struct StarSystem {
   /// The basic configuration of the host star(s).
   pub subsystem: Subsystem,
+  /// The name of the primary star.
+  pub name: String,
 }
 
 impl StarSystem {
@@ -54,7 +56,9 @@ impl StarSystem {
       subsystem
     };
     trace_var!(subsystem);
-    let result = StarSystem { subsystem };
+    let name = subsystem.name.clone();
+    trace_var!(name);
+    let result = StarSystem { subsystem, name };
     trace_var!(result);
     trace_exit!();
     Ok(result)

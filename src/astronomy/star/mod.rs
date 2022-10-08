@@ -16,6 +16,8 @@ use math::luminosity::ms_star_mass_to_luminosity;
 use math::radius::ms_star_mass_to_radius;
 use math::spectral_class::ms_star_mass_to_spectral_class;
 use math::temperature::ms_star_mass_to_temperature;
+pub mod name;
+use name::generate_star_name;
 
 /// The `Star` type.
 ///
@@ -49,6 +51,8 @@ pub struct Star {
   pub frost_line: f64,
   /// The absolute color of this star in SRGB.
   pub absolute_rgb: (u8, u8, u8),
+  /// A generated name for this star.
+  pub name: String,
 }
 
 /// Implementation of SpectralClass.
@@ -96,6 +100,9 @@ impl Star {
     let frost_line = 4.85 * luminosity.sqrt();
     trace_var!(frost_line);
     let absolute_rgb = ms_star_mass_to_rgb(mass)?;
+    trace_3u8!(absolute_rgb);
+    let name = generate_star_name(rng);
+    trace_var!(name);
     let result = Star {
       class,
       mass,
@@ -109,6 +116,7 @@ impl Star {
       satellite_zone,
       frost_line,
       absolute_rgb,
+      name,
     };
     trace_var!(result);
     trace_exit!();
@@ -197,8 +205,9 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let star = Star::get_random_habitable(&mut rng)?;
-    trace_var!(star);
+    info_var!(star);
     assert!(star.is_habitable());
+    println!("{:#?}", star);
     trace_exit!();
     Ok(())
   }

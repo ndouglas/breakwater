@@ -23,6 +23,8 @@ pub struct StellarNeighbor {
   pub star_system: StarSystem,
   /// The distance from the origin.
   pub distance: f64,
+  /// The name of the primary star.
+  pub name: String,
 }
 
 impl StellarNeighbor {
@@ -53,10 +55,12 @@ impl StellarNeighbor {
       .unwrap_or(StarSystemConstraints::default());
     let star_system = StarSystem::get_random_constrained(rng, &system_constraints)?;
     trace_var!(star_system);
+    let name = star_system.name.clone();
     let result = StellarNeighbor {
       coordinates,
       star_system,
       distance,
+      name,
     };
     trace_var!(result);
     trace_exit!();
