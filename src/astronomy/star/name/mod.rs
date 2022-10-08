@@ -3,21 +3,23 @@ use rand::prelude::*;
 
 pub const PREFIX: &'static [&'static str] = &[
   "", "aga", "allo", "an", "andro", "anti", "ap", "aqui", "ar", "ara", "ba", "bacty", "bal", "baltara", "bali", "bara",
-  "bas", "bona", "cael", "can", "cap", "cas", "cen", "cepha", "cer", "ceta", "char", "cir", "co", "coil", "col", "cor",
-  "cra", "da", "del", "dor", "dra", "elda", "erra", "esse", "equi", "fel", "for", "fre", "ge", "glo", "hal", "hel",
-  "her", "horo", "hy", "hybore", "inno", "jan", "kar", "leo", "libo", "machre", "male", "mono", "na", "nigi", "nocto",
-  "nucre", "octa", "ori", "pega", "per", "pro", "psalta", "pura", "pyxa", "reti", "sagi", "scepta", "scoro", "ser",
-  "sol", "speci", "specu", "tar", "tau", "tele", "tria", "ty", "tza", "ur", "val",
+  "bas", "bona", "cael", "can", "cap", "cas", "cella", "cen", "cepha", "cer", "ceta", "char", "cir", "co", "coil",
+  "col", "cor", "cra", "da", "del", "dor", "dra", "elda", "erra", "esse", "equi", "fel", "for", "fre", "ge", "glo",
+  "hal", "hel", "her", "horo", "hy", "hybore", "inno", "jan", "kar", "leo", "libo", "machre", "male", "mono", "na",
+  "nigi", "nocto", "nucre", "octa", "ori", "pega", "per", "petra", "pro", "psalta", "pura", "pyxa", "reti", "sagi",
+  "scepta", "scoro", "ser", "sol", "speci", "specu", "tar", "tau", "tele", "tria", "ty", "tza", "uralo", "ur", "val",
+  "vir", "xer", "yetra",
 ];
 pub const INFIX: &'static [&'static str] = &[
-  "", "a", "alla", "arra", "attra", "bas", "bella", "beta", "boro", "calla", "cla", "cly", "cres", "cul", "cylor",
-  "dyro", "dro", "elter", "escher", "esther", "fenne", "for", "fra", "gelt", "got", "hela", "hera", "irra", "is",
-  "kry", "logi", "mely", "mekry", "mes", "met", "metro", "min", "nat", "net", "pat", "pet", "pret", "riota", "ser",
-  "sus", "syr", "tar", "tem", "ter", "tin", "tli", "tol",
+  "", "a", "alla", "arra", "attra", "bas", "bella", "beta", "boro", "calla", "cla", "cly", "cres", "cul", "cylandr",
+  "cylor", "dyro", "dro", "elter", "escher", "esther", "fenne", "for", "fra", "gelt", "got", "hela", "hera", "irra",
+  "is", "kry", "logi", "mely", "mekry", "mes", "met", "metro", "min", "nat", "net", "pat", "pet", "pret", "riota",
+  "ser", "sus", "syr", "tar", "tem", "ter", "tin", "tli", "tol",
 ];
 pub const SUFFIX: &'static [&'static str] = &[
-  "", "a", "an", "aura", "aurus", "elius", "eon", "ese", "eti", "etius", "i", "ion", "lon", "meda", "neda", "nia",
-  "olia", "on", "or", "oria", "orious", "ous", "os", "pia", "tor", "um", "us", "ux", "yria",
+  "", "a", "an", "aura", "aurus", "eda", "elius", "eon", "eontia", "ese", "eti", "etius", "i", "ion", "lon", "meda",
+  "neda", "nia", "olia", "oloria", "on", "ontia", "opia", "or", "oria", "orious", "ous", "os", "tor", "um", "us", "ux",
+  "yria",
 ];
 
 #[named]
