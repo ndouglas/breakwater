@@ -21,6 +21,8 @@ pub struct StellarNeighbor {
   pub coordinates: (f64, f64, f64),
   /// The details of this particular star system.
   pub star_system: StarSystem,
+  /// The distance from the origin.
+  pub distance: f64,
 }
 
 impl StellarNeighbor {
@@ -45,6 +47,7 @@ impl StellarNeighbor {
     trace_var!(z);
     let coordinates = (x, y, z);
     trace_var!(coordinates);
+    let distance = (x.powf(2.0) + y.powf(2.0) + z.powf(2.0)).sqrt();
     let system_constraints = constraints
       .system_constraints
       .unwrap_or(StarSystemConstraints::default());
@@ -53,6 +56,7 @@ impl StellarNeighbor {
     let result = StellarNeighbor {
       coordinates,
       star_system,
+      distance,
     };
     trace_var!(result);
     trace_exit!();

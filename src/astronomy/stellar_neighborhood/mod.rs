@@ -32,6 +32,8 @@ pub struct StellarNeighborhood {
   /// Stellar "neighbors", which is a glorified tuple of three-dimensional
   /// coordinates and a star system.
   pub neighbors: Vec<StellarNeighbor>,
+  /// The number of stars in this stellar neighborhood.
+  pub star_count: usize,
 }
 
 impl StellarNeighborhood {
@@ -56,7 +58,7 @@ impl StellarNeighborhood {
     trace_var!(number_of_stars);
     let mut neighbors = vec![];
     trace_var!(neighbors);
-    let mut star_counter = 0;
+    let mut star_count = 0;
     let neighbor_constraints = constraints.neighbor_constraints.unwrap_or(StellarNeighborConstraints {
       radius: Some(radius),
       system_constraints: Some(StarSystemConstraints::default()),
@@ -64,17 +66,19 @@ impl StellarNeighborhood {
     trace_var!(neighbor_constraints);
     loop {
       let neighbor = StellarNeighbor::get_random_constrained(rng, &neighbor_constraints)?;
-      star_counter += neighbor.get_star_count() as usize;
+      star_count += neighbor.get_star_count() as usize;
       neighbors.push(neighbor);
-      if star_counter > number_of_stars {
+      if star_count >= number_of_stars {
         break;
       }
     }
     trace_var!(neighbors);
+    trace_var!(star_count);
     let result = StellarNeighborhood {
       radius,
       density,
       neighbors,
+      star_count,
     };
     trace_var!(result);
     trace_exit!();
@@ -100,6 +104,7 @@ pub mod test {
     let constraints = Constraints::habitable();
     let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
     info_var!(stellar_neighborhood);
+    println!("{:#?}", stellar_neighborhood);
     trace_exit!();
     Ok(())
   }
