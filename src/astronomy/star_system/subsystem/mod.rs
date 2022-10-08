@@ -125,8 +125,8 @@ pub mod test {
 
   use rand::prelude::*;
 
-  use super::*;
   use super::constraints::Constraints;
+  use super::*;
   use crate::test::*;
 
   #[named]

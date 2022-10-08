@@ -30,4 +30,3 @@ pub fn watts_to_lsol(watts: f64) -> f64 {
 pub fn lsol_to_watts(lsol: f64) -> f64 {
   lsol * JOULES_PER_SEC_PER_LSOL
 }
-

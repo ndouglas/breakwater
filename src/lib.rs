@@ -1,6 +1,5 @@
 #![allow(unused_macros)]
 
-
 #[macro_use]
 extern crate assert_approx_eq;
 pub use assert_approx_eq::*;
