@@ -1,5 +1,5 @@
-use crate::astronomy::orbit::error::Error as OrbitError;
-use crate::astronomy::orbits::error::Error as OrbitsError;
+use super::orbit::error::Error as OrbitError;
+use super::orbits::error::Error as OrbitsError;
 
 /// Star-related errors.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]

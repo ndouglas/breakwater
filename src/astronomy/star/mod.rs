@@ -18,16 +18,20 @@ use math::radius::ms_star_mass_to_radius;
 use math::spectral_class::ms_star_mass_to_spectral_class;
 use math::temperature::ms_star_mass_to_temperature;
 pub mod name;
-use crate::astronomy::orbits::constraints::Constraints as OrbitsConstraints;
-use crate::astronomy::orbits::Orbits;
 use name::generate_star_name;
+pub mod orbit;
+pub mod orbits;
+use orbits::constraints::Constraints as OrbitsConstraints;
+use orbits::Orbits;
 pub mod r#type;
 use r#type::*;
 
 /// The `Star` type.
 ///
 /// This is intended to encompass the most useful information we can generate
-/// about stars, specifically main-sequence stars.
+/// about main-sequence stars.  Other types will use different structs; it's
+/// useful to view and treat these as the default sense of "star", given their
+/// centrality to our purpose.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Star {
   /// Type, Decile, Luminosity class.
