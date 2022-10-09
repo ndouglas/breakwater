@@ -1,6 +1,6 @@
 use rand::prelude::*;
 
-use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
 
 pub mod constraints;
 pub mod error;
@@ -11,8 +11,8 @@ use r#type::*;
 
 /// The `Subsystem` type.
 ///
-/// A subsystem is either one or two subsystems.  Not three, because of the
-/// 3-body problem.
+/// A subsystem is either one star or two subsystems.  Not three, because of
+/// the 3-body problem.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Subsystem {
   /// The specific configuration of this star subsystem.

@@ -8,8 +8,8 @@ use crate::astronomy::constants::MINIMUM_BINARY_STAR_SEPARATION;
 use crate::astronomy::constants::MINIMUM_CLOSE_BINARY_STAR_AVERAGE_SEPARATION;
 use crate::astronomy::constants::MINIMUM_CLOSE_BINARY_STAR_ORBITAL_ECCENTRICITY;
 use crate::astronomy::constants::MINIMUM_DISTANT_BINARY_STAR_AVERAGE_SEPARATION;
-use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
-use crate::astronomy::star_system::subsystem::Subsystem;
+use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_subsystem::Subsystem;
 
 pub mod error;
 use error::*;

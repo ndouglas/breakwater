@@ -1,4 +1,4 @@
-use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
 
 /// Constraints for creating a star system.
 #[derive(Clone, Copy, Debug, PartialEq)]

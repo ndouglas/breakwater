@@ -18,15 +18,11 @@ use math::radius::ms_star_mass_to_radius;
 use math::spectral_class::ms_star_mass_to_spectral_class;
 use math::temperature::ms_star_mass_to_temperature;
 pub mod name;
+use crate::astronomy::orbits::constraints::Constraints as OrbitsConstraints;
+use crate::astronomy::orbits::Orbits;
 use name::generate_star_name;
-pub mod orbit;
-use orbit::constraints::Constraints as OrbitConstraints;
-pub mod orbits;
-use orbits::constraints::Constraints as OrbitsConstraints;
-use orbits::Orbits;
 pub mod r#type;
 use r#type::*;
-
 
 /// The `Star` type.
 ///

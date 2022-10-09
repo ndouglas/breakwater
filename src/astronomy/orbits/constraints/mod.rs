@@ -33,7 +33,6 @@ impl Constraints {
       ..Constraints::default()
     }
   }
-
 }
 
 impl Default for Constraints {

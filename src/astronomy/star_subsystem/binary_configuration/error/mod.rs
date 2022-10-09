@@ -1,5 +1,5 @@
 use crate::astronomy::star::error::Error as StarError;
-use crate::astronomy::star_system::subsystem::error::Error as SubsystemError;
+use crate::astronomy::star_subsystem::error::Error as SubsystemError;
 
 /// Binary star subsystem configuration errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]

@@ -3,9 +3,9 @@ use rand::prelude::*;
 use crate::astronomy::constants::PROBABILITY_OF_BINARY_STARS;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star::Star;
-use crate::astronomy::star_system::binary_configuration::BinaryConfiguration;
-use crate::astronomy::star_system::subsystem::constraints::Constraints;
-use crate::astronomy::star_system::subsystem::error::Error;
+use crate::astronomy::star_subsystem::binary_configuration::BinaryConfiguration;
+use crate::astronomy::star_subsystem::constraints::Constraints;
+use crate::astronomy::star_subsystem::error::Error;
 
 /// The `Type` type.
 ///

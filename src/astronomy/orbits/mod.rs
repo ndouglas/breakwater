@@ -7,8 +7,8 @@ use error::*;
 
 use crate::astronomy::star::math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 
-use super::orbit::Orbit;
 use super::orbit::constraints::Constraints as OrbitConstraints;
+use super::orbit::Orbit;
 
 /// A set of potential (or actual) orbits for a star.
 ///
@@ -41,7 +41,7 @@ impl Orbits {
       trace_var!(orbit);
       exclusions.push(orbit.distance);
       assert!(orbit.is_in_habitable_zone);
-      orbits.push(orbit);  
+      orbits.push(orbit);
     }
     let approximate_satellite_inner_bound = get_approximate_innermost_orbit(mass);
     trace_var!(approximate_satellite_inner_bound);
@@ -51,7 +51,7 @@ impl Orbits {
     trace_var!(minimum);
     let distance_limit = approximate_satellite_outer_bound;
     trace_var!(distance_limit);
-    let mut growth_factor = 0.3;
+    let growth_factor = 0.3;
     trace_var!(growth_factor);
     let mut orbital_distance = minimum;
     let mut index = 0;
@@ -83,16 +83,13 @@ impl Orbits {
       }
     }
     trace_var!(orbits);
-    orbits.sort_by(|a, b| a.distance.partial_cmp(&b.distance).unwrap());      
+    orbits.sort_by(|a, b| a.distance.partial_cmp(&b.distance).unwrap());
     trace_var!(orbits);
-    let result = Orbits {
-      orbits,
-    };
+    let result = Orbits { orbits };
     trace_var!(result);
     trace_exit!();
     Ok(result)
   }
-
 }
 
 #[cfg(test)]
@@ -131,5 +128,4 @@ pub mod test {
     trace_exit!();
     Ok(())
   }
-
 }

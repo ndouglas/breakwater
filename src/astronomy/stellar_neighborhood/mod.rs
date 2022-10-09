@@ -5,12 +5,11 @@ use crate::astronomy::constants::DENSITY_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
+use crate::astronomy::stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
+use crate::astronomy::stellar_neighbor::*;
 
 pub mod constraints;
 use constraints::*;
-pub mod stellar_neighbor;
-use stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
-use stellar_neighbor::*;
 
 /// The `StellarNeighborhood` type.
 ///

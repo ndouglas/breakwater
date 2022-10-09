@@ -1,7 +1,7 @@
 use std::convert::From;
 
 use crate::astronomy::star::error::Error as StarError;
-use crate::astronomy::star_system::subsystem::error::Error as SubsystemError;
+use crate::astronomy::star_subsystem::error::Error as SubsystemError;
 
 /// Star system errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]

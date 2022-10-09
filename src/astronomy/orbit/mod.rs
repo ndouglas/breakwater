@@ -1,9 +1,9 @@
 use rand::prelude::*;
 
-use super::math::luminosity::ms_star_mass_to_luminosity;
-use super::math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
-use super::math::frost_line::ms_star_luminosity_to_frost_line;
-use super::math::habitable_zone::ms_star_luminosity_to_habitable_zone;
+use crate::astronomy::star::math::frost_line::ms_star_luminosity_to_frost_line;
+use crate::astronomy::star::math::habitable_zone::ms_star_luminosity_to_habitable_zone;
+use crate::astronomy::star::math::luminosity::ms_star_mass_to_luminosity;
+use crate::astronomy::star::math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 
 pub mod constraints;
 use constraints::Constraints;
@@ -28,9 +28,13 @@ impl Orbit {
   #[named]
   pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, mass: f64, constraints: &Constraints) -> Result<Self, Error> {
     trace_enter!();
-    let minimum_distance = constraints.minimum_distance.unwrap_or(get_approximate_innermost_orbit(mass));
+    let minimum_distance = constraints
+      .minimum_distance
+      .unwrap_or(get_approximate_innermost_orbit(mass));
     trace_var!(minimum_distance);
-    let maximum_distance = constraints.maximum_distance.unwrap_or(get_approximate_outermost_orbit(mass));
+    let maximum_distance = constraints
+      .maximum_distance
+      .unwrap_or(get_approximate_outermost_orbit(mass));
     trace_var!(maximum_distance);
     let enforce_habitability = constraints.enforce_habitability;
     trace_var!(enforce_habitability);
@@ -106,5 +110,4 @@ pub mod test {
     trace_exit!();
     Ok(())
   }
-
 }

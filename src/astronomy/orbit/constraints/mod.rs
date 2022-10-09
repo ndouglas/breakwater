@@ -1,7 +1,7 @@
 use std::default::Default;
 
-use super::super::math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 use super::error::Error;
+use crate::astronomy::star::math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 
 /// Constraints for creating an orbit about a star.
 ///

@@ -20,6 +20,9 @@ honeyholt_define_brief!(Error, |error: &Error| {
   use Error::*;
   match error {
     UnknownError => "we encountered an unknown error calculating orbits".to_string(),
-    OrbitError(orbit_error) => format!("we encountered an error calculating an orbit ({})", honeyholt_brief!(orbit_error)),
+    OrbitError(orbit_error) => format!(
+      "we encountered an error calculating an orbit ({})",
+      honeyholt_brief!(orbit_error)
+    ),
   }
 });

@@ -1,13 +1,12 @@
 use rand::prelude::*;
 
-use crate::astronomy::star_system::subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_subsystem::*;
 
 pub mod constraints;
 use constraints::*;
 pub mod error;
 use error::*;
-pub mod subsystem;
-use subsystem::*;
 
 /// The `StarSystem` type.
 ///
