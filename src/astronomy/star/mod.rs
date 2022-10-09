@@ -13,11 +13,15 @@ use error::*;
 pub mod math;
 use math::color::ms_star_mass_to_rgb;
 use math::luminosity::ms_star_mass_to_luminosity;
+use math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 use math::radius::ms_star_mass_to_radius;
 use math::spectral_class::ms_star_mass_to_spectral_class;
 use math::temperature::ms_star_mass_to_temperature;
 pub mod name;
 use name::generate_star_name;
+pub mod orbit;
+use orbit::constraints::Constraints as OrbitConstraints;
+use orbit::Orbit;
 
 /// The `Star` type.
 ///
@@ -53,6 +57,8 @@ pub struct Star {
   pub absolute_rgb: (u8, u8, u8),
   /// A generated name for this star.
   pub name: String,
+  /// Possible orbits for this star, measured in AU.
+  pub possible_orbits: Vec<Orbit>,
 }
 
 /// Implementation of SpectralClass.
@@ -92,9 +98,9 @@ impl Star {
     trace_var!(density);
     let habitable_zone = ((luminosity / 1.1).sqrt(), (luminosity / 0.53).sqrt());
     trace_var!(habitable_zone);
-    let approximate_satellite_inner_bound = 0.1 * mass;
+    let approximate_satellite_inner_bound = get_approximate_innermost_orbit(mass);
     trace_var!(approximate_satellite_inner_bound);
-    let approximate_satellite_outer_bound = 40.0 * mass;
+    let approximate_satellite_outer_bound = get_approximate_outermost_orbit(mass);
     trace_var!(approximate_satellite_outer_bound);
     let satellite_zone = (approximate_satellite_inner_bound, approximate_satellite_outer_bound);
     let frost_line = 4.85 * luminosity.sqrt();
@@ -103,6 +109,69 @@ impl Star {
     trace_3u8!(absolute_rgb);
     let name = generate_star_name(rng);
     trace_var!(name);
+    let possible_orbits = {
+      let mut orbits = Vec::new();
+      let mut exclusions: Vec<f64> = vec![];
+      if constraints.generate_primary_gas_giant {
+        let gas_giant = Orbit::from_constraint(rng, mass, &OrbitConstraints::primary_gas_giant())?;
+        trace_var!(gas_giant);
+        exclusions.push(gas_giant.distance);
+        orbits.push(gas_giant);
+      }
+      if constraints.generate_habitable_planet {
+        let planet = Orbit::from_constraint(rng, mass, &OrbitConstraints::habitable())?;
+        trace_var!(planet);
+        exclusions.push(planet.distance);
+        orbits.push(planet);
+      }
+      let minimum = 1.5 * approximate_satellite_inner_bound;
+      trace_var!(minimum);
+      let limit = approximate_satellite_outer_bound;
+      trace_var!(limit);
+      let count_limit = rng.gen_range(20..26) + orbits.len() + 20;
+      trace_var!(count_limit);
+      let mut factor = 1.0;
+      trace_var!(factor);
+      let mut orbital_distance = minimum * factor;
+      loop {
+        let min_unwrapped = orbital_distance / 1.2;
+        let max_unwrapped = orbital_distance * 1.2;
+        if !exclusions
+          .iter()
+          .any(|&exclusion| exclusion > min_unwrapped && exclusion < max_unwrapped)
+        {
+          let minimum_distance = Some(min_unwrapped);
+          let maximum_distance = Some(max_unwrapped);
+          let orbit = Orbit::from_constraint(
+            rng,
+            mass,
+            &OrbitConstraints {
+              minimum_distance,
+              maximum_distance,
+              ..OrbitConstraints::default()
+            },
+          )?;
+          orbits.push(orbit);
+        }
+        if factor <= 1.9 {
+          factor += rng.gen_range(0.1..0.4);
+        }
+        println!("FACTOR: {:#?}", factor);
+        orbital_distance *= factor;
+        println!("ORBITAL DISTANCE: {:#?}", orbital_distance);
+        if orbital_distance > limit || orbits.len() >= count_limit {
+          println!(
+            "EXITING BECAUSE {:#?}, {:#?}",
+            orbital_distance > limit,
+            orbits.len() >= count_limit
+          );
+          break;
+        }
+      }
+      orbits.sort_by(|a, b| a.distance.partial_cmp(&b.distance).unwrap());
+      orbits
+    };
+    trace_var!(possible_orbits);
     let result = Star {
       class,
       mass,
@@ -117,6 +186,7 @@ impl Star {
       frost_line,
       absolute_rgb,
       name,
+      possible_orbits,
     };
     trace_var!(result);
     trace_exit!();

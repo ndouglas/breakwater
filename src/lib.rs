@@ -1,5 +1,6 @@
 #![allow(unused_macros)]
 
+#[allow(unused_imports)]
 #[macro_use]
 extern crate assert_approx_eq;
 
