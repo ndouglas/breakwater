@@ -161,6 +161,7 @@ pub mod test {
       subsystem
     };
     info_var!(subsystem);
+    print_var!(subsystem);
     assert!(subsystem.is_habitable());
     trace_exit!();
     Ok(())
@@ -191,6 +192,7 @@ pub mod test {
       subsystem
     };
     info_var!(subsystem);
+    print_var!(subsystem);
     assert!(subsystem.is_habitable());
     trace_exit!();
     Ok(())
@@ -221,6 +223,7 @@ pub mod test {
       subsystem
     };
     info_var!(subsystem);
+    print_var!(subsystem);
     assert!(subsystem.is_habitable());
     trace_exit!();
     Ok(())
@@ -251,6 +254,7 @@ pub mod test {
       subsystem
     };
     info_var!(subsystem);
+    print_var!(subsystem);
     assert!(subsystem.is_habitable());
     trace_exit!();
     Ok(())

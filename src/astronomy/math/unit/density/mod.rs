@@ -25,6 +25,7 @@ pub mod test {
     let actual = grams_to_dsol(1.41);
     info_var!(actual);
     assert_approx_eq!(expected, actual, 1E-3);
+    print_var!(actual);
     trace_exit!();
   }
 }

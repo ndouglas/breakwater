@@ -51,6 +51,7 @@ pub mod test {
     trace_var!(rng);
     let point = get_random_point_in_sphere(&mut rng);
     info_var!(point);
+    print_var!(point);
     trace_exit!();
   }
 }

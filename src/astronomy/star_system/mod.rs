@@ -128,6 +128,7 @@ pub mod test {
     let constraints = Constraints::habitable();
     let star_system = StarSystem::get_random_constrained(&mut rng, &constraints)?;
     info_var!(star_system);
+    print_var!(star_system);
     trace_exit!();
     Ok(())
   }

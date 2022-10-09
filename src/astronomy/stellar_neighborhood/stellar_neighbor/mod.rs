@@ -108,6 +108,7 @@ pub mod test {
     let constraints = Constraints::default();
     let stellar_neighbor = StellarNeighbor::get_random_constrained(&mut rng, &constraints)?;
     info_var!(stellar_neighbor);
+    print_var!(stellar_neighbor);
     trace_exit!();
     Ok(())
   }

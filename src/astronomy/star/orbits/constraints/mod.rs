@@ -5,7 +5,9 @@ use std::default::Default;
 /// This is intended to ease creating planetary systems.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
-  /// Enforce a maximum number of planets.
+  /// Enforce a minimum number of orbits.
+  pub minimum_orbits: Option<usize>,
+  /// Enforce a maximum number of orbits.
   pub maximum_orbits: Option<usize>,
   /// Enforce a minimum distance from the host star, in AU.
   pub minimum_distance: Option<f64>,
@@ -18,12 +20,14 @@ pub struct Constraints {
 }
 
 impl Constraints {
-  /// Generate an orbit in the habitable zone around a star.
+  /// Generate a set of orbits including habitable conditions.
   #[named]
   pub fn habitable() -> Self {
+    let minimum_orbits = Some(2);
     let include_habitable_planet = Some(true);
     let include_primary_gas_giant = Some(true);
     Self {
+      minimum_orbits,
       include_habitable_planet,
       include_primary_gas_giant,
       ..Constraints::default()
@@ -36,12 +40,14 @@ impl Default for Constraints {
   /// No constraints, just let it all hang out.
   #[named]
   fn default() -> Self {
+    let minimum_orbits = None;
     let maximum_orbits = None;
     let minimum_distance = None;
     let maximum_distance = None;
     let include_habitable_planet = None;
     let include_primary_gas_giant = None;
     Self {
+      minimum_orbits,
       maximum_orbits,
       minimum_distance,
       maximum_distance,

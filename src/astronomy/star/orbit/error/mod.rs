@@ -8,6 +8,6 @@ pub enum Error {
 honeyholt_define_brief!(Error, |error: &Error| {
   use Error::*;
   match error {
-    UnknownError => "we encountered an unknown error",
+    UnknownError => "we encountered an unknown error calculating an orbit",
   }
 });

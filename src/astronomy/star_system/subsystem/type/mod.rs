@@ -80,6 +80,7 @@ pub mod test {
     let constraints = Constraints::habitable_solitary_or_close_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
+    print_var!(r#type);
     trace_exit!();
     Ok(())
   }
@@ -94,6 +95,7 @@ pub mod test {
     let constraints = Constraints::habitable_solitary_or_distant_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
+    print_var!(r#type);
     trace_exit!();
     Ok(())
   }
@@ -108,6 +110,7 @@ pub mod test {
     let constraints = Constraints::habitable_close_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
+    print_var!(r#type);
     trace_exit!();
     Ok(())
   }
@@ -122,6 +125,7 @@ pub mod test {
     let constraints = Constraints::habitable_distant_binary();
     let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
     info_var!(r#type);
+    print_var!(r#type);
     trace_exit!();
     Ok(())
   }

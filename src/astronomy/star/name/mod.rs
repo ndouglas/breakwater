@@ -51,6 +51,7 @@ pub mod test {
     trace_var!(rng);
     let name = generate_star_name(&mut rng);
     trace_var!(name);
+    print_var!(name);
     trace_exit!();
   }
 }

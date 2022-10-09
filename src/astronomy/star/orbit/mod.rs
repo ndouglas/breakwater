@@ -26,7 +26,7 @@ pub struct Orbit {
 impl Orbit {
   /// Generate from a constraint.
   #[named]
-  pub fn from_constraint<R: Rng + ?Sized>(rng: &mut R, mass: f64, constraints: &Constraints) -> Result<Self, Error> {
+  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, mass: f64, constraints: &Constraints) -> Result<Self, Error> {
     trace_enter!();
     let minimum_distance = constraints.minimum_distance.unwrap_or(get_approximate_innermost_orbit(mass));
     trace_var!(minimum_distance);
@@ -52,12 +52,12 @@ impl Orbit {
     trace_var!(outer_bound);
     let distance = rng.gen_range(inner_bound..outer_bound);
     trace_var!(distance);
+    let eccentricity = rng.gen_range(0.02..0.06);
+    trace_var!(eccentricity);
     let is_in_habitable_zone = distance > habitable_zone.0 && distance < habitable_zone.1;
     trace_var!(is_in_habitable_zone);
     let is_outside_frost_line = distance > frost_line;
     trace_var!(is_outside_frost_line);
-    let eccentricity = rng.gen_range(0.02..0.06);
-    trace_var!(eccentricity);
     let result = Orbit {
       distance,
       eccentricity,
@@ -68,4 +68,43 @@ impl Orbit {
     trace_exit!();
     Ok(result)
   }
+}
+
+#[cfg(test)]
+pub mod test {
+
+  use rand::prelude::*;
+
+  use super::*;
+  use crate::test::*;
+
+  #[named]
+  #[test]
+  pub fn test_from_constraints() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let orbit = Orbit::from_constraints(&mut rng, 1.0, &Constraints::default())?;
+    trace_var!(orbit);
+    print_var!(orbit);
+    trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  #[test]
+  pub fn test_from_constraints2() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let orbit = Orbit::from_constraints(&mut rng, 1.5, &Constraints::habitable())?;
+    trace_var!(orbit);
+    print_var!(orbit);
+    assert!(orbit.is_in_habitable_zone);
+    trace_exit!();
+    Ok(())
+  }
+
 }
