@@ -22,6 +22,7 @@ impl StarReporter {
 
   #[named]
   pub fn report(&self, star: &Star, indent: usize) {
+    trace_enter!();
     let new_indent = indent + 2;
     self.report_string(new_indent, &format!("This is a {} class star.", star.class));
     self.report_string(
@@ -52,6 +53,7 @@ impl StarReporter {
       }
     }
     println!("{:#?}", star);
+    trace_exit!();
   }
 }
 

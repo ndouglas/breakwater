@@ -1,5 +1,4 @@
 use plotters::prelude::*;
-use rand::prelude::*;
 const OUT_FILE_NAME: &'static str = "examples/output-stellar-neighborhood.svg";
 
 use breakwater::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
@@ -46,7 +45,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         (10, 0),
         ("sans-serif", 10).into_font(),
       );
-  }));
+  }))?;
   chart.configure_series_labels().border_style(&BLACK).draw()?;
   area.present().expect("Unable to write result to file!");
   println!("Result has been saved to {}", OUT_FILE_NAME);

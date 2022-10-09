@@ -9,12 +9,10 @@ use rand::prelude::*;
 pub struct StarSystemReporter {}
 
 impl StarSystemReporter {
-  #[named]
   pub fn new() -> Self {
     Self {}
   }
 
-  #[named]
   pub fn report(&self, star_system: &StarSystem) {
     println!("{:#?}", star_system);
   }
