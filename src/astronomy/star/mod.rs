@@ -24,6 +24,8 @@ use orbit::constraints::Constraints as OrbitConstraints;
 pub mod orbits;
 use orbits::constraints::Constraints as OrbitsConstraints;
 use orbits::Orbits;
+pub mod r#type;
+use r#type::*;
 
 
 /// The `Star` type.
@@ -34,6 +36,8 @@ use orbits::Orbits;
 pub struct Star {
   /// Type, Decile, Luminosity class.
   pub class: String,
+  /// Broad classification of star (human-friendly luminosity class).
+  pub r#type: Type,
   /// Measured in Msol.
   pub mass: f64,
   /// Measured in Kelvin.
@@ -115,8 +119,11 @@ impl Star {
     let orbits_constraints = constraints.orbits_constraints.unwrap_or(OrbitsConstraints::default());
     let possible_orbits = Orbits::from_constraints(rng, mass, &orbits_constraints)?;
     trace_var!(possible_orbits);
+    let r#type = Type::MainSequence;
+    trace_var!(r#type);
     let result = Star {
       class,
+      r#type,
       mass,
       luminosity,
       radius,

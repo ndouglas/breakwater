@@ -35,7 +35,7 @@ pub fn ms_star_mass_to_spectral_class(mass: f64) -> Result<String, Error> {
     temperature if temperature < 95_000.0 => (10.0 * (1.0 - ((temperature - 33_000.0) / 62_000.0))),
     _ => unreachable!(),
   };
-  let result = format!("{}{}V", spectral_type, decile);
+  let result = format!("{}{}V", spectral_type, format!("{:.0}", decile));
   trace_var!(result);
   trace_exit!();
   Ok(result)
