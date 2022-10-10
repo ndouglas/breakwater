@@ -22,10 +22,6 @@ rand = "0.8.5"
 volmark = { path = "../volmark" }
 honeyholt = { path = "../honeyholt" }
 
-[[example]]
-name = "star_visualizer"
-path = "examples/star_visualizer.rs"
-
 [dev-dependencies]
 bevy_prototype_lyon = "0.4.0"
 bevy_fly_camera = "0.8.0"

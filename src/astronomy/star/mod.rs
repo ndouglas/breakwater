@@ -13,16 +13,12 @@ use error::*;
 pub mod math;
 use math::color::ms_star_mass_to_rgb;
 use math::luminosity::ms_star_mass_to_luminosity;
-use math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 use math::radius::ms_star_mass_to_radius;
+use math::satellite_zone::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 use math::spectral_class::ms_star_mass_to_spectral_class;
 use math::temperature::ms_star_mass_to_temperature;
 pub mod name;
 use name::generate_star_name;
-pub mod orbit;
-pub mod orbits;
-use orbits::constraints::Constraints as OrbitsConstraints;
-use orbits::Orbits;
 
 /// The `Star` type.
 ///
@@ -60,26 +56,14 @@ pub struct Star {
   pub absolute_rgb: (u8, u8, u8),
   /// A generated name for this star.
   pub name: String,
-  /// Possible orbits for this star, measured in AU.
-  pub possible_orbits: Orbits,
 }
 
-/// Implementation of SpectralClass.
+/// Implementation of Star.
 impl Star {
-  /// Generate a random main-sequence star with specified constraints.
-  ///
-  /// This may or may not be habitable.
+  /// Generate a random main-sequence star from a given mass.
   #[named]
-  pub fn from_constraints<R: Rng + ?Sized>(
-    rng: &mut R,
-    constraints: &Constraints,
-  ) -> Result<Star, Error> {
+  pub fn from_mass<R: Rng + ?Sized>(rng: &mut R, mass: f64) -> Result<Star, Error> {
     trace_enter!();
-    let lower_bound_mass = constraints.minimum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
-    trace_var!(lower_bound_mass);
-    let upper_bound_mass = constraints.maximum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND);
-    trace_var!(upper_bound_mass);
-    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
     trace_var!(mass);
     let temperature = ms_star_mass_to_temperature(mass)?;
     trace_var!(temperature);
@@ -91,9 +75,9 @@ impl Star {
     trace_var!(class);
     let life_expectancy = mass / luminosity * 10.0;
     trace_var!(life_expectancy);
-    let lower_bound_age = constraints.minimum_age.unwrap_or(0.1 * life_expectancy);
+    let lower_bound_age = 0.1 * life_expectancy;
     trace_var!(lower_bound_age);
-    let upper_bound_age = constraints.maximum_age.unwrap_or(0.9 * life_expectancy);
+    let upper_bound_age = 0.9 * life_expectancy;
     trace_var!(upper_bound_age);
     let current_age = rng.gen_range(lower_bound_age..upper_bound_age);
     trace_var!(current_age);
@@ -101,20 +85,17 @@ impl Star {
     trace_var!(density);
     let habitable_zone = ((luminosity / 1.1).sqrt(), (luminosity / 0.53).sqrt());
     trace_var!(habitable_zone);
-    let approximate_satellite_inner_bound = get_approximate_innermost_orbit(mass);
-    trace_var!(approximate_satellite_inner_bound);
-    let approximate_satellite_outer_bound = get_approximate_outermost_orbit(mass);
-    trace_var!(approximate_satellite_outer_bound);
-    let satellite_zone = (approximate_satellite_inner_bound, approximate_satellite_outer_bound);
+    let satellite_inner_bound = get_approximate_innermost_orbit(mass);
+    trace_var!(satellite_inner_bound);
+    let satellite_outer_bound = get_approximate_outermost_orbit(mass);
+    trace_var!(satellite_outer_bound);
+    let satellite_zone = (satellite_inner_bound, satellite_outer_bound);
     let frost_line = 4.85 * luminosity.sqrt();
     trace_var!(frost_line);
     let absolute_rgb = ms_star_mass_to_rgb(mass)?;
     trace_3u8!(absolute_rgb);
     let name = generate_star_name(rng);
     trace_var!(name);
-    let orbits_constraints = constraints.orbits_constraints.unwrap_or(OrbitsConstraints::default());
-    let possible_orbits = Orbits::from_constraints(rng, mass, &orbits_constraints)?;
-    trace_var!(possible_orbits);
     let result = Star {
       class,
       mass,
@@ -129,8 +110,30 @@ impl Star {
       frost_line,
       absolute_rgb,
       name,
-      possible_orbits,
     };
+    trace_var!(result);
+    trace_exit!();
+    Ok(result)
+  }
+
+  /// Generate a random main-sequence star with specified constraints.
+  ///
+  /// This may or may not be habitable.
+  #[named]
+  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<Star, Error> {
+    trace_enter!();
+    let lower_bound_mass = constraints.minimum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
+    trace_var!(lower_bound_mass);
+    let upper_bound_mass = constraints.maximum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND);
+    trace_var!(upper_bound_mass);
+    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
+    trace_var!(mass);
+    let mut result = Self::from_mass(rng, mass)?;
+    let minimum_age = constraints.minimum_age.unwrap_or(0.1 * result.life_expectancy);
+    trace_var!(minimum_age);
+    let maximum_age = constraints.maximum_age.unwrap_or(0.9 * result.life_expectancy);
+    trace_var!(maximum_age);
+    result.current_age = rng.gen_range(minimum_age..maximum_age);
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -199,6 +202,7 @@ pub mod test {
     let star = Star::from_constraints(&mut rng, &Constraints::habitable())?;
     info_var!(star);
     print_var!(star);
+    star.check_habitable()?;
     assert!(star.is_habitable());
     trace_exit!();
     Ok(())

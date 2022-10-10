@@ -1,30 +1,29 @@
 use std::convert::From;
 
-use crate::astronomy::star::error::Error as StarError;
-use crate::astronomy::star_subsystem::binary_configuration::error::Error as BinaryConfigurationError;
+use crate::astronomy::distant_binary_star::error::Error as DistantBinaryStarError;
+use crate::astronomy::planetary_system::error::Error as PlanetarySystemError;
 
 /// Star system errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
-  /// Star Error.
-  StarError(StarError),
-  /// Binary configuration error.
-  BinaryConfigurationError(BinaryConfigurationError),
-  /// Unable to generate binary subsystem after a number of tries.
-  UnableToGenerateBinaryConfiguration,
+  /// Wrap a Distant Binary Star error.
+  DistantBinaryStarError(DistantBinaryStarError),
+  /// Wrap a Planetary System error.
+  PlanetarySystemError(PlanetarySystemError),
+  /// Unknown
+  UnknownError,
 }
 
-/// Allow seamlessly converting Star errors into Star System errors.
-impl From<StarError> for Error {
+impl From<DistantBinaryStarError> for Error {
   #[named]
-  fn from(error: StarError) -> Self {
-    Error::StarError(error)
+  fn from(error: DistantBinaryStarError) -> Self {
+    Error::DistantBinaryStarError(error)
   }
 }
 
-impl From<BinaryConfigurationError> for Error {
+impl From<PlanetarySystemError> for Error {
   #[named]
-  fn from(error: BinaryConfigurationError) -> Self {
-    Error::BinaryConfigurationError(error)
+  fn from(error: PlanetarySystemError) -> Self {
+    Error::PlanetarySystemError(error)
   }
 }
