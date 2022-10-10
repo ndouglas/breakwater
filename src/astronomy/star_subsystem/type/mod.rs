@@ -24,7 +24,7 @@ impl Type {
   ///
   /// This may or may not be habitable, depending on the constraints.
   #[named]
-  pub fn get_random_constrained<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<Type, Error> {
+  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<Type, Error> {
     trace_enter!();
     let mut maximum_depth = constraints.maximum_depth;
     maximum_depth -= 1;
@@ -51,10 +51,10 @@ impl Type {
       true => {
         let mut new_constraints = constraints.clone();
         new_constraints.maximum_depth = maximum_depth;
-        let binary_configuration = BinaryConfiguration::get_random_constrained(rng, &new_constraints)?;
+        let binary_configuration = BinaryConfiguration::from_constraints(rng, &new_constraints)?;
         Type::Double(Box::new(binary_configuration))
       },
-      false => Type::Single(Star::get_random_main_sequence_constrained(rng, &star_constraints)?),
+      false => Type::Single(Star::from_constraints(rng, &star_constraints)?),
     };
     trace_var!(result);
     trace_exit!();
@@ -77,8 +77,8 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_close_binary();
-    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    let constraints = Constraints::default();
+    let r#type = Type::from_constraints(&mut rng, &constraints)?;
     info_var!(r#type);
     print_var!(r#type);
     trace_exit!();
@@ -92,8 +92,8 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_distant_binary();
-    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    let constraints = Constraints::habitable_solitary();
+    let r#type = Type::from_constraints(&mut rng, &constraints)?;
     info_var!(r#type);
     print_var!(r#type);
     trace_exit!();
@@ -108,7 +108,7 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable_close_binary();
-    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    let r#type = Type::from_constraints(&mut rng, &constraints)?;
     info_var!(r#type);
     print_var!(r#type);
     trace_exit!();
@@ -123,7 +123,7 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable_distant_binary();
-    let r#type = Type::get_random_constrained(&mut rng, &constraints)?;
+    let r#type = Type::from_constraints(&mut rng, &constraints)?;
     info_var!(r#type);
     print_var!(r#type);
     trace_exit!();

@@ -12,7 +12,7 @@ pub struct Constraints {
 impl Constraints {
   /// Generate a main-sequence star system.
   pub fn main_sequence() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::main_sequence());
+    let subsystem_constraints = Some(SubsystemConstraints::default());
     let retries = None;
     Self {
       subsystem_constraints,
@@ -22,7 +22,7 @@ impl Constraints {
 
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable_solitary_or_close_binary());
+    let subsystem_constraints = Some(SubsystemConstraints::habitable_solitary());
     let retries = Some(10);
     Self {
       subsystem_constraints,

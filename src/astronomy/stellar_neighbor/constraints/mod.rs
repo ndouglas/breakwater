@@ -13,23 +13,12 @@ pub struct Constraints {
 }
 
 impl Constraints {
-  /// Generate a main-sequence star system.
-  pub fn main_sequence() -> Self {
-    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let system_constraints = Some(SystemConstraints::main_sequence());
-    Self {
-      radius,
-      system_constraints,
-    }
-  }
-
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
-    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
     let system_constraints = Some(SystemConstraints::habitable());
     Self {
-      radius,
       system_constraints,
+      .. Constraints::default()
     }
   }
 }

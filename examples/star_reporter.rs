@@ -62,8 +62,8 @@ fn main() -> Result<(), Error> {
   init_pretty_env_logger();
   trace_enter!();
   let mut rng = rand::thread_rng();
-  let constraints = Constraints::main_sequence();
-  let star = Star::get_random_main_sequence_constrained(&mut rng, &constraints)?;
+  let constraints = Constraints::default();
+  let star = Star::from_constraints(&mut rng, &constraints)?;
   let reporter = StarReporter::new();
   reporter.report(&star, 2);
   trace_exit!();

@@ -23,8 +23,6 @@ pub mod orbit;
 pub mod orbits;
 use orbits::constraints::Constraints as OrbitsConstraints;
 use orbits::Orbits;
-pub mod r#type;
-use r#type::*;
 
 /// The `Star` type.
 ///
@@ -36,8 +34,6 @@ use r#type::*;
 pub struct Star {
   /// Type, Decile, Luminosity class.
   pub class: String,
-  /// Broad classification of star (human-friendly luminosity class).
-  pub r#type: Type,
   /// Measured in Msol.
   pub mass: f64,
   /// Measured in Kelvin.
@@ -74,7 +70,7 @@ impl Star {
   ///
   /// This may or may not be habitable.
   #[named]
-  pub fn get_random_main_sequence_constrained<R: Rng + ?Sized>(
+  pub fn from_constraints<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &Constraints,
   ) -> Result<Star, Error> {
@@ -119,11 +115,8 @@ impl Star {
     let orbits_constraints = constraints.orbits_constraints.unwrap_or(OrbitsConstraints::default());
     let possible_orbits = Orbits::from_constraints(rng, mass, &orbits_constraints)?;
     trace_var!(possible_orbits);
-    let r#type = Type::MainSequence;
-    trace_var!(r#type);
     let result = Star {
       class,
-      r#type,
       mass,
       luminosity,
       radius,
@@ -138,28 +131,6 @@ impl Star {
       name,
       possible_orbits,
     };
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-
-  /// Generate a random main-sequence star.
-  ///
-  /// This may or may not be habitable.
-  #[named]
-  pub fn get_random_main_sequence<R: Rng + ?Sized>(rng: &mut R) -> Result<Star, Error> {
-    trace_enter!();
-    let result = Star::get_random_main_sequence_constrained(rng, &Constraints::main_sequence())?;
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-
-  /// Generate a random habitable main-sequence star.
-  #[named]
-  pub fn get_random_habitable<R: Rng + ?Sized>(rng: &mut R) -> Result<Star, Error> {
-    trace_enter!();
-    let result = Star::get_random_main_sequence_constrained(rng, &Constraints::habitable())?;
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -211,7 +182,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let star = Star::get_random_main_sequence(&mut rng)?;
+    let star = Star::from_constraints(&mut rng, &Constraints::default())?;
     trace_var!(star);
     print_var!(star);
     trace_exit!();
@@ -225,7 +196,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let star = Star::get_random_habitable(&mut rng)?;
+    let star = Star::from_constraints(&mut rng, &Constraints::habitable())?;
     info_var!(star);
     print_var!(star);
     assert!(star.is_habitable());

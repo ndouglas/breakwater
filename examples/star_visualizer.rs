@@ -141,7 +141,7 @@ fn setup_many_orbits(
     let mut rng = rand::thread_rng();
     let center = Vec3::new(0.0, 0.0, 10.0);
     let constraints = Constraints::habitable_close_binary();
-    if let Ok(star_system) = StarSystem::get_random_constrained(&mut rng, &constraints) {
+    if let Ok(star_system) = StarSystem::from_constraints(&mut rng, &constraints) {
       let subsystem = &star_system.subsystem;
       spawn_subsystem(
         &mut commands,

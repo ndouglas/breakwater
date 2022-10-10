@@ -68,7 +68,7 @@ impl BinaryConfiguration {
   ///
   /// This may or may not be habitable, depending on the constraints.
   #[named]
-  pub fn get_random_constrained<R: Rng + ?Sized>(
+  pub fn from_constraints<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &SubsystemConstraints,
   ) -> Result<BinaryConfiguration, Error> {
@@ -136,8 +136,8 @@ impl BinaryConfiguration {
     let orbital_eccentricity = rng.gen_range(minimum_orbital_eccentricity..maximum_orbital_eccentricity);
     trace_var!(orbital_eccentricity);
     let (primary, secondary) = {
-      let sub_a = Subsystem::get_random_constrained(rng, &forward_constraints)?;
-      let sub_b = Subsystem::get_random_constrained(rng, &forward_constraints)?;
+      let sub_a = Subsystem::from_constraints(rng, &forward_constraints)?;
+      let sub_b = Subsystem::from_constraints(rng, &forward_constraints)?;
       let sub_a_mass = sub_a.mass;
       let sub_b_mass = sub_b.mass;
       let first = if sub_a_mass > sub_b_mass {

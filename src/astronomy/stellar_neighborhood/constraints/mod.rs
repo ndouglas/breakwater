@@ -14,27 +14,12 @@ pub struct Constraints {
 }
 
 impl Constraints {
-  /// Generate a main-sequence star system.
-  pub fn main_sequence() -> Self {
-    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let density = Some(DENSITY_OF_STELLAR_NEIGHBORHOOD);
-    let neighbor_constraints = Some(StellarNeighborConstraints::main_sequence());
-    Self {
-      radius,
-      density,
-      neighbor_constraints,
-    }
-  }
-
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
-    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let density = Some(DENSITY_OF_STELLAR_NEIGHBORHOOD);
     let neighbor_constraints = Some(StellarNeighborConstraints::habitable());
     Self {
-      radius,
-      density,
       neighbor_constraints,
+      .. Constraints::default()
     }
   }
 }

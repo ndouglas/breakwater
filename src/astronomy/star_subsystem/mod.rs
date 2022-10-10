@@ -38,14 +38,14 @@ impl Subsystem {
   ///
   /// This may or may not be habitable, depending on the constraints.
   #[named]
-  pub fn get_random_constrained<R: Rng + ?Sized>(
+  pub fn from_constraints<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &SubsystemConstraints,
   ) -> Result<Subsystem, Error> {
     use Type::*;
     trace_enter!();
     trace_var!(constraints);
-    let r#type = Type::get_random_constrained(rng, constraints)?;
+    let r#type = Type::from_constraints(rng, constraints)?;
     trace_var!(r#type);
     let star_count;
     let mass;
@@ -143,12 +143,12 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_close_binary();
+    let constraints = Constraints::default();
     let subsystem = {
       let mut retries = 10;
       let subsystem;
       loop {
-        let candidate_result = Subsystem::get_random_constrained(&mut rng, &constraints);
+        let candidate_result = Subsystem::from_constraints(&mut rng, &constraints);
         if let Ok(candidate) = candidate_result {
           subsystem = candidate;
           break;
@@ -162,7 +162,6 @@ pub mod test {
     };
     info_var!(subsystem);
     print_var!(subsystem);
-    assert!(subsystem.is_habitable());
     trace_exit!();
     Ok(())
   }
@@ -174,12 +173,12 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable_solitary_or_distant_binary();
+    let constraints = Constraints::habitable_distant_binary();
     let subsystem = {
       let mut retries = 10;
       let subsystem;
       loop {
-        let candidate_result = Subsystem::get_random_constrained(&mut rng, &constraints);
+        let candidate_result = Subsystem::from_constraints(&mut rng, &constraints);
         if let Ok(candidate) = candidate_result {
           subsystem = candidate;
           break;
@@ -210,7 +209,7 @@ pub mod test {
       let mut retries = 10;
       let subsystem;
       loop {
-        let candidate_result = Subsystem::get_random_constrained(&mut rng, &constraints);
+        let candidate_result = Subsystem::from_constraints(&mut rng, &constraints);
         if let Ok(candidate) = candidate_result {
           subsystem = candidate;
           break;
@@ -241,7 +240,7 @@ pub mod test {
       let mut retries = 10;
       let subsystem;
       loop {
-        let candidate_result = Subsystem::get_random_constrained(&mut rng, &constraints);
+        let candidate_result = Subsystem::from_constraints(&mut rng, &constraints);
         if let Ok(candidate) = candidate_result {
           subsystem = candidate;
           break;

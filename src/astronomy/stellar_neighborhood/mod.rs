@@ -40,7 +40,7 @@ impl StellarNeighborhood {
   ///
   /// This may or may not be habitable.
   #[named]
-  pub fn get_random_constrained<R: Rng + ?Sized>(
+  pub fn from_constraints<R: Rng + ?Sized>(
     rng: &mut R,
     constraints: &Constraints,
   ) -> Result<StellarNeighborhood, Error> {
@@ -64,7 +64,7 @@ impl StellarNeighborhood {
     });
     trace_var!(neighbor_constraints);
     loop {
-      let neighbor = StellarNeighbor::get_random_constrained(rng, &neighbor_constraints)?;
+      let neighbor = StellarNeighbor::from_constraints(rng, &neighbor_constraints)?;
       star_count += neighbor.get_star_count() as usize;
       neighbors.push(neighbor);
       if star_count >= number_of_stars {
@@ -101,7 +101,7 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable();
-    let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints)?;
+    let stellar_neighborhood = StellarNeighborhood::from_constraints(&mut rng, &constraints)?;
     info_var!(stellar_neighborhood);
     print_var!(stellar_neighborhood);
     trace_exit!();

@@ -33,7 +33,7 @@ impl StarSystem {
   ///
   /// This may or may not be habitable.
   #[named]
-  pub fn get_random_constrained<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<StarSystem, Error> {
+  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<StarSystem, Error> {
     trace_enter!();
     let subsystem_constraints = constraints
       .subsystem_constraints
@@ -42,7 +42,7 @@ impl StarSystem {
       let mut retries = constraints.retries.unwrap_or(10);
       let subsystem;
       loop {
-        let candidate_result = Subsystem::get_random_constrained(rng, &subsystem_constraints);
+        let candidate_result = Subsystem::from_constraints(rng, &subsystem_constraints);
         if let Ok(candidate) = candidate_result {
           subsystem = candidate;
           break;
@@ -125,7 +125,7 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let constraints = Constraints::habitable();
-    let star_system = StarSystem::get_random_constrained(&mut rng, &constraints)?;
+    let star_system = StarSystem::from_constraints(&mut rng, &constraints)?;
     info_var!(star_system);
     print_var!(star_system);
     trace_exit!();

@@ -18,7 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   let z_axis = (-radius..radius).step(1.0);
 
   let mut rng = rand::thread_rng();
-  let stellar_neighborhood = StellarNeighborhood::get_random_constrained(&mut rng, &constraints).unwrap();
+  let stellar_neighborhood = StellarNeighborhood::from_constraints(&mut rng, &constraints).unwrap();
   let points = stellar_neighborhood
     .neighbors
     .iter()

@@ -24,7 +24,7 @@ fn main() -> Result<(), Error> {
   trace_enter!();
   let mut rng = rand::thread_rng();
   let constraints = Constraints::main_sequence();
-  let star_system = StarSystem::get_random_constrained(&mut rng, &constraints)?;
+  let star_system = StarSystem::from_constraints(&mut rng, &constraints)?;
   let reporter = StarSystemReporter::new();
   reporter.report(&star_system);
   trace_exit!();
