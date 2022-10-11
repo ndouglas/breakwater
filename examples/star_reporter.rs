@@ -63,7 +63,7 @@ fn main() -> Result<(), Error> {
   trace_enter!();
   let mut rng = rand::thread_rng();
   let constraints = Constraints::default();
-  let star = Star::from_constraints(&mut rng, &constraints)?;
+  let star = constraints.generate(&mut rng)?;
   let reporter = StarReporter::new();
   reporter.report(&star, 2);
   trace_exit!();
