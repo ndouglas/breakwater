@@ -45,8 +45,8 @@ impl HostStar {
     trace_enter!();
     use HostStar::*;
     let result = match &self {
-      Star(star) => 1,
-      CloseBinaryStar(close_binary_star) => 2,
+      Star(_) => 1,
+      CloseBinaryStar(_) => 2,
     };
     trace_var!(result);
     trace_exit!();

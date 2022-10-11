@@ -6,7 +6,6 @@ use crate::astronomy::host_star::constants::*;
 use crate::astronomy::host_star::error::Error;
 use crate::astronomy::host_star::HostStar;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
-use crate::astronomy::star_subsystem::Subsystem;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]

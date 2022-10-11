@@ -1,5 +1,6 @@
 use crate::astronomy::planetary_system::PlanetarySystem;
 
+pub mod constants;
 pub mod constraints;
 pub mod error;
 use error::Error;

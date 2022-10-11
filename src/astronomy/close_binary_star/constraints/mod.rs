@@ -3,26 +3,21 @@ use std::default::Default;
 
 use crate::astronomy::star::Star;
 
-use crate::astronomy::close_binary_star::constants::MAXIMUM_AVERAGE_SEPARATION;
-use crate::astronomy::close_binary_star::constants::MAXIMUM_COMBINED_MASS;
-use crate::astronomy::close_binary_star::constants::MAXIMUM_HABITABLE_COMBINED_MASS;
-use crate::astronomy::close_binary_star::constants::MAXIMUM_HABITABLE_INDIVIDUAL_MASS;
-use crate::astronomy::close_binary_star::constants::MAXIMUM_HABITABLE_SEPARATION;
-use crate::astronomy::close_binary_star::constants::MAXIMUM_INDIVIDUAL_MASS;
-use crate::astronomy::close_binary_star::constants::MAXIMUM_ORBITAL_ECCENTRICITY;
-use crate::astronomy::close_binary_star::constants::MINIMUM_AVERAGE_SEPARATION;
-use crate::astronomy::close_binary_star::constants::MINIMUM_COMBINED_MASS;
-use crate::astronomy::close_binary_star::constants::MINIMUM_HABITABLE_AGE;
-use crate::astronomy::close_binary_star::constants::MINIMUM_HABITABLE_COMBINED_MASS;
-use crate::astronomy::close_binary_star::constants::MINIMUM_HABITABLE_INDIVIDUAL_MASS;
-use crate::astronomy::close_binary_star::constants::MINIMUM_INDIVIDUAL_MASS;
-use crate::astronomy::close_binary_star::constants::MINIMUM_MAIN_SEQUENCE_STAR_MASS;
-use crate::astronomy::close_binary_star::constants::MINIMUM_ORBITAL_ECCENTRICITY;
-
+use crate::astronomy::close_binary_star::constants::*;
 use crate::astronomy::close_binary_star::error::Error;
 use crate::astronomy::close_binary_star::CloseBinaryStar;
 
-/// Constraints for creating a main-sequence star.
+/// Constraints for creating a binary star.
+///
+/// As it turns out, randomly generating a habitable binary star is HARD.
+///
+/// The dwarf stars that are best for habitability cause an inward pressure
+/// on the habitable zone, but the gravitational field of the stars is very
+/// dangerous and chips away at the habitable zone from inside.
+///
+/// After beating my head against this for a while, I think the best approach
+/// is to contort the parameters to give a high rate of success, while sadly
+/// acknowledging that a lot of the potential variety has been squashed :(
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
   /// The minimum combined mass of the stars, in Msol.
@@ -58,7 +53,9 @@ impl Constraints {
     let maximum_combined_mass = Some(MAXIMUM_HABITABLE_COMBINED_MASS);
     let minimum_individual_mass = Some(MINIMUM_HABITABLE_INDIVIDUAL_MASS);
     let maximum_individual_mass = Some(MAXIMUM_HABITABLE_INDIVIDUAL_MASS);
-    let maximum_average_separation = Some(MAXIMUM_HABITABLE_SEPARATION);
+    let minimum_orbital_eccentricity = Some(MINIMUM_HABITABLE_ORBITAL_ECCENTRICITY);
+    let maximum_orbital_eccentricity = Some(MAXIMUM_HABITABLE_ORBITAL_ECCENTRICITY);
+    let maximum_average_separation = Some(MAXIMUM_HABITABLE_AVERAGE_SEPARATION);
     let minimum_age = Some(MINIMUM_HABITABLE_AGE);
     let enforce_habitability = true;
     let result = Self {
@@ -67,6 +64,8 @@ impl Constraints {
       minimum_individual_mass,
       maximum_individual_mass,
       maximum_average_separation,
+      minimum_orbital_eccentricity,
+      maximum_orbital_eccentricity,
       minimum_age,
       enforce_habitability,
       ..Constraints::default()
@@ -108,13 +107,16 @@ impl Constraints {
     let primary_mass;
     let secondary_mass;
     if self.enforce_habitability {
-      minimum_combined_mass =
+      let bare_minimum =
         (1.1 * (4.0 * maximum_average_separation * (1.0 + orbital_eccentricity)).powf(2.0)).powf(1.0 / 4.0);
+      if minimum_combined_mass < bare_minimum {
+        minimum_combined_mass = bare_minimum;
+      }
     }
     let (primary, secondary) = {
       combined_mass = rng.gen_range(minimum_combined_mass..maximum_combined_mass);
       let half = combined_mass / 2.0;
-      let top = combined_mass - MINIMUM_MAIN_SEQUENCE_STAR_MASS;
+      let top = combined_mass - MINIMUM_HABITABLE_INDIVIDUAL_MASS;
       primary_mass = rng.gen_range(half..top);
       secondary_mass = combined_mass - primary_mass;
       let primary = Star::from_mass(rng, primary_mass)?;
@@ -195,7 +197,7 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let mut success = 0;
-    let trials = 10;
+    let trials = 10000;
     let mut counter = 0;
     loop {
       match &Constraints::habitable().generate(&mut rng) {

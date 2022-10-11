@@ -18,7 +18,6 @@
 /// STELLAR_NEIGHBORHOOD = [STELLAR_NEIGHBOR]
 /// GALAXY = (STELLAR_NEIGHBORHOOD)
 pub mod close_binary_star;
-pub mod constants;
 pub mod distant_binary_star;
 pub mod galaxy;
 pub mod host_star;

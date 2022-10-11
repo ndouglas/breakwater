@@ -1,8 +1,5 @@
-use rand::prelude::*;
-
 use crate::astronomy::distant_binary_star::DistantBinaryStar;
 use crate::astronomy::planetary_system::PlanetarySystem;
-use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
 
 pub mod constraints;
 pub mod error;
@@ -97,6 +94,8 @@ pub mod test {
     trace_var!(rng);
     let constraints = Constraints::default();
     let result = constraints.generate(&mut rng)?;
+    trace_var!(result);
+    print_var!(result);
     trace_exit!();
     Ok(())
   }

@@ -1,7 +1,5 @@
-use std::convert::From;
-
-use crate::astronomy::distant_binary_star::error::Error as DistantBinaryStarError;
-use crate::astronomy::planetary_system::error::Error as PlanetarySystemError;
+// use crate::astronomy::distant_binary_star::error::Error as DistantBinaryStarError;
+// use crate::astronomy::planetary_system::error::Error as PlanetarySystemError;
 
 /// Star system errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
