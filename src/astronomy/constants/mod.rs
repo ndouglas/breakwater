@@ -1,8 +1,3 @@
-/// The probability that a given star subsystem will be binary.
-///
-/// This probability might be slightly lower than actual.
-pub const PROBABILITY_OF_BINARY_STARS: f64 = 0.25;
-
 /// The minimum separation of binary stars, in AU.
 pub const MINIMUM_BINARY_STAR_SEPARATION: f64 = 0.04;
 

@@ -2,6 +2,7 @@ use rand::prelude::*;
 use std::default::Default;
 
 use crate::astronomy::close_binary_star::constraints::Constraints as CloseBinaryStarConstraints;
+use crate::astronomy::host_star::constants::*;
 use crate::astronomy::host_star::error::Error;
 use crate::astronomy::host_star::HostStar;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
@@ -29,7 +30,7 @@ impl Constraints {
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<HostStar, Error> {
     trace_enter!();
     use HostStar::*;
-    let is_solitary: bool = rng.gen();
+    let is_solitary: bool = rng.gen_range(0.0..=1.0) > BINARY_STAR_PROBABILITY;
     let result;
     if is_solitary {
       let constraints = StarConstraints::default();
