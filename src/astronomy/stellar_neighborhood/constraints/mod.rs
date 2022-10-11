@@ -19,7 +19,7 @@ impl Constraints {
     let neighbor_constraints = Some(StellarNeighborConstraints::habitable());
     Self {
       neighbor_constraints,
-      .. Constraints::default()
+      ..Constraints::default()
     }
   }
 }

@@ -1,5 +1,4 @@
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
+use crate::astronomy::star::constants::*;
 use crate::astronomy::star::error::Error;
 
 pub const ERGS_PER_SEC_PER_LSOL: f64 = 3.826E33;
@@ -40,17 +39,17 @@ pub fn lsol_to_watts(lsol: f64) -> f64 {
 pub fn ms_star_mass_to_luminosity(mass: f64) -> Result<f64, Error> {
   trace_enter!();
   trace_var!(mass);
-  if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
+  if mass <= MINIMUM_MASS {
     return Err(Error::MassTooLowForMainSequence);
   }
-  if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
+  if mass >= MAXIMUM_MASS {
     return Err(Error::MassTooHighForMainSequence);
   }
   let result = match mass {
     mass if mass < 0.43 => 0.23 * mass.powf(2.3),
     mass if mass < 2.0 => mass.powf(4.0),
     mass if mass < 55.0 => 1.4 * mass.powf(3.5),
-    mass if mass < MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND => 32_000.0 * mass,
+    mass if mass < MAXIMUM_MASS => 32_000.0 * mass,
     _ => unreachable!(),
   };
   trace_var!(result);

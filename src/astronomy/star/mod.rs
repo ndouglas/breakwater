@@ -1,11 +1,7 @@
 use rand::prelude::*;
 
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
-use crate::astronomy::constants::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
-use crate::astronomy::constants::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
-use crate::astronomy::constants::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
-
+pub mod constants;
+use constants::*;
 pub mod constraints;
 use constraints::*;
 pub mod error;
@@ -122,9 +118,9 @@ impl Star {
   #[named]
   pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<Star, Error> {
     trace_enter!();
-    let lower_bound_mass = constraints.minimum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
+    let lower_bound_mass = constraints.minimum_mass.unwrap_or(MINIMUM_MASS);
     trace_var!(lower_bound_mass);
-    let upper_bound_mass = constraints.maximum_mass.unwrap_or(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND);
+    let upper_bound_mass = constraints.maximum_mass.unwrap_or(MAXIMUM_MASS);
     trace_var!(upper_bound_mass);
     let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
     trace_var!(mass);
@@ -143,13 +139,13 @@ impl Star {
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
-    if self.mass < MINIMUM_STAR_MASS_TO_SUPPORT_LIFE {
+    if self.mass < MINIMUM_HABITABLE_MASS {
       return Err(Error::MassTooLowToSupportLife);
     }
-    if self.mass > MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE {
+    if self.mass > MAXIMUM_HABITABLE_MASS {
       return Err(Error::MassTooHighToSupportLife);
     }
-    if self.current_age < MINIMUM_STAR_AGE_TO_SUPPORT_LIFE {
+    if self.current_age < MINIMUM_HABITABLE_AGE {
       return Err(Error::TooYoungToSupportLife);
     }
     trace_exit!();

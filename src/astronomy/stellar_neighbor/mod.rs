@@ -10,7 +10,6 @@ use constraints::*;
 pub mod math;
 use math::point::get_random_point_in_sphere;
 
-
 /// The `StellarNeighbor` class.
 ///
 /// No, not someone who brings you brownies when you move into the area.
@@ -34,10 +33,7 @@ impl StellarNeighbor {
   ///
   /// This may or may not be habitable.
   #[named]
-  pub fn from_constraints<R: Rng + ?Sized>(
-    rng: &mut R,
-    constraints: &Constraints,
-  ) -> Result<StellarNeighbor, Error> {
+  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<StellarNeighbor, Error> {
     trace_enter!();
     let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
     trace_var!(radius);

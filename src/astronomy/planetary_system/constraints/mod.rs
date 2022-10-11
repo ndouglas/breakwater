@@ -3,11 +3,11 @@ use std::default::Default;
 
 use crate::astronomy::distant_binary_star::constraints::Constraints as DistantBinaryStarConstraints;
 use crate::astronomy::host_star::constraints::Constraints as HostStarConstraints;
+use crate::astronomy::planetary_system::error::Error;
+use crate::astronomy::planetary_system::PlanetarySystem;
 use crate::astronomy::satellite_systems::constraints::Constraints as SatelliteSystemsConstraints;
 use crate::astronomy::star_subsystem::error::Error as StarSubsystemError;
 use crate::astronomy::star_subsystem::Subsystem;
-use crate::astronomy::planetary_system::PlanetarySystem;
-use crate::astronomy::planetary_system::error::Error;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -40,7 +40,7 @@ impl Constraints {
     trace_var!(satellite_systems);
     let result = PlanetarySystem {
       host_star,
-      satellite_systems,      
+      satellite_systems,
     };
     trace_var!(result);
     trace_exit!();

@@ -1,9 +1,9 @@
 use rand::prelude::*;
 use std::default::Default;
 
-use crate::astronomy::planetary_system::constraints::Constraints as PlanetarySystemConstraints;
-use crate::astronomy::distant_binary_star::DistantBinaryStar;
 use crate::astronomy::distant_binary_star::error::Error;
+use crate::astronomy::distant_binary_star::DistantBinaryStar;
+use crate::astronomy::planetary_system::constraints::Constraints as PlanetarySystemConstraints;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -34,10 +34,7 @@ impl Constraints {
     trace_var!(secondary_constraints);
     let secondary = secondary_constraints.generate(rng)?;
     trace_var!(secondary);
-    let result = DistantBinaryStar {
-      primary,
-      secondary,
-    };
+    let result = DistantBinaryStar { primary, secondary };
     trace_var!(result);
     trace_exit!();
     Ok(result)

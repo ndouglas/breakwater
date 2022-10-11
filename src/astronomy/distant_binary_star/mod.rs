@@ -49,7 +49,6 @@ impl DistantBinaryStar {
     result
   }
 
-
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.
@@ -71,5 +70,4 @@ impl DistantBinaryStar {
     trace_exit!();
     result
   }
-
 }

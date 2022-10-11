@@ -40,7 +40,6 @@ impl PlanetarySystem {
     result
   }
 
-
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.
@@ -62,5 +61,4 @@ impl PlanetarySystem {
     trace_exit!();
     result
   }
-
 }

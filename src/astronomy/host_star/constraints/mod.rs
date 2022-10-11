@@ -2,10 +2,10 @@ use rand::prelude::*;
 use std::default::Default;
 
 use crate::astronomy::close_binary_star::constraints::Constraints as CloseBinaryStarConstraints;
+use crate::astronomy::host_star::error::Error;
+use crate::astronomy::host_star::HostStar;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_subsystem::Subsystem;
-use crate::astronomy::host_star::HostStar;
-use crate::astronomy::host_star::error::Error;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]

@@ -77,7 +77,6 @@ impl Subsystem {
     trace_exit!();
     result
   }
-
 }
 
 #[cfg(test)]

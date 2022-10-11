@@ -1,14 +1,9 @@
 use rand::prelude::*;
 use std::default::Default;
 
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
-use crate::astronomy::constants::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
-use crate::astronomy::constants::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
-use crate::astronomy::constants::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
-
-use crate::astronomy::star::Star;
+use crate::astronomy::star::constants::*;
 use crate::astronomy::star::error::Error;
+use crate::astronomy::star::Star;
 
 /// Constraints for creating a main-sequence star.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,9 +21,9 @@ pub struct Constraints {
 impl Constraints {
   /// Generate a habitable star.
   pub fn habitable() -> Self {
-    let minimum_mass = Some(MINIMUM_STAR_MASS_TO_SUPPORT_LIFE);
-    let maximum_mass = Some(MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE);
-    let minimum_age = Some(MINIMUM_STAR_AGE_TO_SUPPORT_LIFE);
+    let minimum_mass = Some(MINIMUM_HABITABLE_MASS);
+    let maximum_mass = Some(MAXIMUM_HABITABLE_MASS);
+    let minimum_age = Some(MINIMUM_HABITABLE_AGE);
     Self {
       minimum_mass,
       maximum_mass,
@@ -53,8 +48,8 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    let minimum_mass = Some(MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND);
-    let maximum_mass = Some(MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND);
+    let minimum_mass = Some(MINIMUM_MASS);
+    let maximum_mass = Some(MAXIMUM_MASS);
     let minimum_age = None;
     let maximum_age = None;
     Self {

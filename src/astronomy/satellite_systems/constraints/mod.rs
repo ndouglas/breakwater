@@ -1,8 +1,8 @@
 use rand::prelude::*;
 use std::default::Default;
 
-use crate::astronomy::satellite_systems::SatelliteSystems;
 use crate::astronomy::satellite_systems::error::Error;
+use crate::astronomy::satellite_systems::SatelliteSystems;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,9 +26,7 @@ impl Constraints {
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<SatelliteSystems, Error> {
     trace_enter!();
     let satellite_systems = vec![];
-    let result = SatelliteSystems {
-      satellite_systems,
-    };
+    let result = SatelliteSystems { satellite_systems };
     trace_var!(result);
     trace_exit!();
     Ok(result)

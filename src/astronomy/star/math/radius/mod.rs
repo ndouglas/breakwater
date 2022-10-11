@@ -1,5 +1,4 @@
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
+use crate::astronomy::star::constants::*;
 use crate::astronomy::star::error::Error;
 
 /// Get the radius of a main-sequence star in Rsol based on its Msol.
@@ -7,10 +6,10 @@ use crate::astronomy::star::error::Error;
 pub fn ms_star_mass_to_radius(mass: f64) -> Result<f64, Error> {
   trace_enter!();
   trace_var!(mass);
-  if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
+  if mass <= MINIMUM_MASS {
     return Err(Error::MassTooLowForMainSequence);
   }
-  if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
+  if mass >= MAXIMUM_MASS {
     return Err(Error::MassTooHighForMainSequence);
   }
   let result = match mass {

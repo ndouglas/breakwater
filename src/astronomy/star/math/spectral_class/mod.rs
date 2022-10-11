@@ -1,5 +1,4 @@
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
-use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
+use crate::astronomy::star::constants::*;
 use crate::astronomy::star::error::Error;
 use crate::astronomy::star::math::temperature::ms_star_mass_to_temperature;
 
@@ -8,10 +7,10 @@ use crate::astronomy::star::math::temperature::ms_star_mass_to_temperature;
 pub fn ms_star_mass_to_spectral_class(mass: f64) -> Result<String, Error> {
   trace_enter!();
   trace_var!(mass);
-  if mass <= MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND {
+  if mass <= MINIMUM_MASS {
     return Err(Error::MassTooLowForMainSequence);
   }
-  if mass >= MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND {
+  if mass >= MAXIMUM_MASS {
     return Err(Error::MassTooHighForMainSequence);
   }
   let temperature = ms_star_mass_to_temperature(mass)?;

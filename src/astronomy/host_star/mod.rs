@@ -22,7 +22,6 @@ pub enum HostStar {
 }
 
 impl HostStar {
-
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.

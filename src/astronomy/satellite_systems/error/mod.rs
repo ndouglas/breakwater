@@ -16,11 +16,11 @@ pub enum Error {
 //     Error::DistantBinaryStarError(error)
 //   }
 // }
-// 
+//
 // impl From<PlanetarySystemError> for Error {
 //   #[named]
 //   fn from(error: PlanetarySystemError) -> Self {
 //     Error::PlanetarySystemError(error)
 //   }
 // }
-// 
+//

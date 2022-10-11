@@ -18,7 +18,7 @@ impl Constraints {
     let system_constraints = Some(SystemConstraints::habitable());
     Self {
       system_constraints,
-      .. Constraints::default()
+      ..Constraints::default()
     }
   }
 }
