@@ -5,6 +5,8 @@ use crate::astronomy::moon::error::Error as MoonError;
 pub enum Error {
   /// Moon Error.
   MoonError(MoonError),
+  /// Unknown.
+  UnknownError,
 }
 
 impl From<MoonError> for Error {

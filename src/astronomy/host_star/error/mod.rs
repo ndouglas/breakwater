@@ -8,6 +8,8 @@ pub enum Error {
   CloseBinaryStarError(CloseBinaryStarError),
   /// Star Error
   StarError(StarError),
+  /// Unknown.
+  UnknownError,
 }
 
 impl From<StarError> for Error {
