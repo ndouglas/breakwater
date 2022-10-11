@@ -47,6 +47,37 @@ impl Subsystem {
     trace_exit!();
     result
   }
+
+  /// Retrieve or calculate the total mass of the stars.
+  ///
+  /// Calculated in Msol.
+  #[named]
+  pub fn get_stellar_mass(&self) -> f64 {
+    trace_enter!();
+    use Subsystem::*;
+    let result = match &self {
+      DistantBinaryStar(distant_binary_star) => distant_binary_star.get_stellar_mass(),
+      PlanetarySystem(planetary_system) => planetary_system.get_stellar_mass(),
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Retrieve or calculate the total number of stars in the system.
+  #[named]
+  pub fn get_stellar_count(&self) -> u8 {
+    trace_enter!();
+    use Subsystem::*;
+    let result = match &self {
+      DistantBinaryStar(distant_binary_star) => distant_binary_star.get_stellar_count(),
+      PlanetarySystem(planetary_system) => planetary_system.get_stellar_count(),
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
 }
 
 #[cfg(test)]

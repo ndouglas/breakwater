@@ -128,9 +128,11 @@ impl CloseBinaryStar {
     Ok(result)
   }
 
-  /// Measured in Msol.
+  /// Retrieve or calculate the total mass of the stars.
+  ///
+  /// Calculated in Msol.
   #[named]
-  pub fn get_mass(&self) -> f64 {
+  pub fn get_stellar_mass(&self) -> f64 {
     trace_enter!();
     let result = self.primary.mass + self.secondary.mass;
     trace_var!(result);

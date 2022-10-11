@@ -4,14 +4,13 @@ use bevy_egui::{egui, EguiContext, EguiPlugin};
 use bevy_fly_camera::{FlyCamera2d, FlyCameraPlugin};
 use bevy_prototype_lyon::prelude::*;
 use breakwater::astronomy::star::Star;
-use breakwater::astronomy::star_subsystem::r#type::Type as SubsystemType;
 use breakwater::astronomy::star_subsystem::Subsystem;
 use breakwater::astronomy::star_system::constraints::Constraints;
 use breakwater::astronomy::star_system::StarSystem;
 use derive_more::Deref;
 use std::collections::HashMap;
 use std::f32::consts::PI;
-
+/* REWRITE
 #[derive(Default)]
 struct Stats {
   frame_number: usize,
@@ -271,7 +270,8 @@ pub fn game() {
     .insert_resource(stats)
     .run();
 }
+*/
 
 pub fn main() {
-  game()
+//  game()
 }

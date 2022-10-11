@@ -65,7 +65,7 @@ impl StellarNeighborhood {
     trace_var!(neighbor_constraints);
     loop {
       let neighbor = StellarNeighbor::from_constraints(rng, &neighbor_constraints)?;
-      star_count += neighbor.get_star_count() as usize;
+      star_count += neighbor.get_stellar_count() as usize;
       neighbors.push(neighbor);
       if star_count >= number_of_stars {
         break;

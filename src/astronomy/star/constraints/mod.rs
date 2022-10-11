@@ -1,3 +1,4 @@
+use rand::prelude::*;
 use std::default::Default;
 
 use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_LOWER_BOUND;
@@ -5,6 +6,9 @@ use crate::astronomy::constants::MAIN_SEQUENCE_STAR_MASS_UPPER_BOUND;
 use crate::astronomy::constants::MAXIMUM_STAR_MASS_TO_SUPPORT_LIFE;
 use crate::astronomy::constants::MINIMUM_STAR_AGE_TO_SUPPORT_LIFE;
 use crate::astronomy::constants::MINIMUM_STAR_MASS_TO_SUPPORT_LIFE;
+
+use crate::astronomy::star::Star;
+use crate::astronomy::star::error::Error;
 
 /// Constraints for creating a main-sequence star.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -31,6 +35,18 @@ impl Constraints {
       minimum_age,
       ..Constraints::default()
     }
+  }
+
+  /// Generate a star from our settings.
+
+  /// Generate.
+  #[named]
+  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<Star, Error> {
+    trace_enter!();
+    let result = Star::from_constraints(rng, self)?;
+    trace_var!(result);
+    trace_exit!();
+    Ok(result)
   }
 }
 

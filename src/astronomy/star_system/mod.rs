@@ -42,7 +42,7 @@ impl StarSystem {
       let mut retries = constraints.retries.unwrap_or(10);
       let subsystem;
       loop {
-        let candidate_result = Subsystem::from_constraints(rng, &subsystem_constraints);
+        let candidate_result = subsystem_constraints.generate(rng);
         if let Ok(candidate) = candidate_result {
           subsystem = candidate;
           break;
@@ -55,7 +55,7 @@ impl StarSystem {
       subsystem
     };
     trace_var!(subsystem);
-    let name = subsystem.name.clone();
+    let name = "Steve".to_string();
     trace_var!(name);
     let result = StarSystem { subsystem, name };
     trace_var!(result);
@@ -67,9 +67,9 @@ impl StarSystem {
   ///
   /// Calculated in Msol.
   #[named]
-  pub fn get_star_mass(&self) -> f64 {
+  pub fn get_stellar_mass(&self) -> f64 {
     trace_enter!();
-    let result = self.subsystem.mass;
+    let result = self.subsystem.get_stellar_mass();
     trace_var!(result);
     trace_exit!();
     result
@@ -77,9 +77,9 @@ impl StarSystem {
 
   /// Retrieve or calculate the total number of stars in the system.
   #[named]
-  pub fn get_star_count(&self) -> u8 {
+  pub fn get_stellar_count(&self) -> u8 {
     trace_enter!();
-    let result = self.subsystem.star_count;
+    let result = self.subsystem.get_stellar_count();
     trace_u8!(result);
     trace_exit!();
     result

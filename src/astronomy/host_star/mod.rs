@@ -1,6 +1,7 @@
 use crate::astronomy::close_binary_star::CloseBinaryStar;
 use crate::astronomy::star::Star;
 
+pub mod constraints;
 pub mod error;
 use error::Error;
 
@@ -21,13 +22,31 @@ pub enum HostStar {
 }
 
 impl HostStar {
+
+  /// Retrieve or calculate the total mass of the stars.
+  ///
+  /// Calculated in Msol.
   #[named]
-  pub fn get_star_count(&self) -> usize {
+  pub fn get_stellar_mass(&self) -> f64 {
     trace_enter!();
     use HostStar::*;
     let result = match &self {
-      Star(_) => 1,
-      CloseBinaryStar(_) => 2,
+      Star(star) => star.mass,
+      CloseBinaryStar(close_binary_star) => close_binary_star.get_stellar_mass(),
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Retrieve or calculate the total number of stars in the system.
+  #[named]
+  pub fn get_stellar_count(&self) -> u8 {
+    trace_enter!();
+    use HostStar::*;
+    let result = match &self {
+      Star(star) => 1,
+      CloseBinaryStar(close_binary_star) => 2,
     };
     trace_var!(result);
     trace_exit!();

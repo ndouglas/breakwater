@@ -1,10 +1,11 @@
 use rand::prelude::*;
 use std::default::Default;
 
-use crate::astronomy::distant_binary_star::constraints::Constraints as DistantBinaryStarConstraints;
-use crate::astronomy::planetary_system::constraints::Constraints as PlanetarySystemConstraints;
-use crate::astronomy::star_subsystem::error::Error;
+use crate::astronomy::close_binary_star::constraints::Constraints as CloseBinaryStarConstraints;
+use crate::astronomy::star::constraints::Constraints as StarConstraints;
 use crate::astronomy::star_subsystem::Subsystem;
+use crate::astronomy::host_star::HostStar;
+use crate::astronomy::host_star::error::Error;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -25,17 +26,17 @@ impl Constraints {
 
   /// Generate.
   #[named]
-  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<Subsystem, Error> {
+  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<HostStar, Error> {
     trace_enter!();
-    use Subsystem::*;
-    let generate_planetary_system: bool = rng.gen();
+    use HostStar::*;
+    let is_solitary: bool = rng.gen();
     let result;
-    if generate_planetary_system {
-      let constraints = PlanetarySystemConstraints::default();
-      result = PlanetarySystem(constraints.generate(rng)?);
+    if is_solitary {
+      let constraints = StarConstraints::default();
+      result = Star(constraints.generate(rng)?);
     } else {
-      let constraints = DistantBinaryStarConstraints::default();
-      result = DistantBinaryStar(constraints.generate(rng)?);
+      let constraints = CloseBinaryStarConstraints::default();
+      result = CloseBinaryStar(constraints.generate(rng)?);
     }
     trace_var!(result);
     trace_exit!();

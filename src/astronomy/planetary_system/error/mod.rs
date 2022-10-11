@@ -1,12 +1,15 @@
 use std::convert::From;
 
 use crate::astronomy::host_star::error::Error as HostStarError;
-// use crate::astronomy::planetary_system::error::Error as PlanetarySystemError;
+use crate::astronomy::satellite_systems::error::Error as SatelliteSystemsError;
 
 /// Star system errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
+  /// Host Star
   HostStarError(HostStarError),
+  /// Satellite Systems
+  SatelliteSystemsError(SatelliteSystemsError),
 }
 
 impl From<HostStarError> for Error {
@@ -16,9 +19,9 @@ impl From<HostStarError> for Error {
   }
 }
 
-// impl From<PlanetarySystemError> for Error {
-//   #[named]
-//   fn from(error: PlanetarySystemError) -> Self {
-//     Error::PlanetarySystemError(error)
-//   }
-// }
+impl From<SatelliteSystemsError> for Error {
+  #[named]
+  fn from(error: SatelliteSystemsError) -> Self {
+    Error::SatelliteSystemsError(error)
+  }
+}

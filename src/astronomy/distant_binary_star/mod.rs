@@ -1,5 +1,6 @@
 use crate::astronomy::planetary_system::PlanetarySystem;
 
+pub mod constraints;
 pub mod error;
 use error::Error;
 
@@ -47,4 +48,28 @@ impl DistantBinaryStar {
     trace_exit!();
     result
   }
+
+
+  /// Retrieve or calculate the total mass of the stars.
+  ///
+  /// Calculated in Msol.
+  #[named]
+  pub fn get_stellar_mass(&self) -> f64 {
+    trace_enter!();
+    let result = self.primary.get_stellar_mass() + self.secondary.get_stellar_mass();
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Retrieve or calculate the total number of stars in the system.
+  #[named]
+  pub fn get_stellar_count(&self) -> u8 {
+    trace_enter!();
+    let result = self.primary.get_stellar_count() + self.secondary.get_stellar_count();
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
 }

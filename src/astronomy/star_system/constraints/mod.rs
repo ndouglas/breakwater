@@ -22,7 +22,7 @@ impl Constraints {
 
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable_solitary());
+    let subsystem_constraints = Some(SubsystemConstraints::habitable());
     let retries = Some(10);
     Self {
       subsystem_constraints,
@@ -32,7 +32,7 @@ impl Constraints {
 
   /// Generate a habitable star system.
   pub fn habitable_close_binary() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable_close_binary());
+    let subsystem_constraints = Some(SubsystemConstraints::habitable());
     let retries = Some(10);
     Self {
       subsystem_constraints,
@@ -42,7 +42,7 @@ impl Constraints {
 
   /// Generate a habitable star system.
   pub fn habitable_distant_binary() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable_distant_binary());
+    let subsystem_constraints = Some(SubsystemConstraints::habitable());
     let retries = Some(10);
     Self {
       subsystem_constraints,
