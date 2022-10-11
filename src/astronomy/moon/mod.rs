@@ -12,7 +12,7 @@ pub mod error;
 /// that moons are just celestial features.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Moon {
-  /// The mass of this body.
+  /// The mass of this moon.
   pub mass: f64,
   /// The albedo (geometric) of this moon.
   pub albedo: f64,

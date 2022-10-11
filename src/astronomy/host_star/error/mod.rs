@@ -1,9 +1,7 @@
-use std::convert::From;
-
 use crate::astronomy::close_binary_star::error::Error as CloseBinaryStarError;
 use crate::astronomy::star::error::Error as StarError;
 
-/// Host Star errors.
+/// Moons errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
   /// Close Binary Star Error
