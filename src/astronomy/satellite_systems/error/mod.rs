@@ -1,24 +1,17 @@
-// use crate::astronomy::distant_binary_star::error::Error as DistantBinaryStarError;
-// use crate::astronomy::planetary_system::error::Error as PlanetarySystemError;
+use crate::astronomy::satellite_system::error::Error as SatelliteSystemError;
 
-/// Star system errors.
+/// Satellite systems errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
+  /// Satellite System.
+  SatelliteSystemError(SatelliteSystemError),
   /// Unknown
   UnknownError,
 }
 
-// impl From<DistantBinaryStarError> for Error {
-//   #[named]
-//   fn from(error: DistantBinaryStarError) -> Self {
-//     Error::DistantBinaryStarError(error)
-//   }
-// }
-//
-// impl From<PlanetarySystemError> for Error {
-//   #[named]
-//   fn from(error: PlanetarySystemError) -> Self {
-//     Error::PlanetarySystemError(error)
-//   }
-// }
-//
+impl From<SatelliteSystemError> for Error {
+  #[named]
+  fn from(error: SatelliteSystemError) -> Self {
+    Error::SatelliteSystemError(error)
+  }
+}
