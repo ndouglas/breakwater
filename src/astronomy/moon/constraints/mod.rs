@@ -7,9 +7,13 @@ use crate::astronomy::moon::Moon;
 /// Constraints for creating a moon.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
+  /// The minimum mass.
   pub minimum_mass: Option<f64>,
+  /// The maximum mass.
   pub maximum_mass: Option<f64>,
+  /// The minimum albedo.
   pub minimum_albedo: Option<f64>,
+  /// The maximum albedo.
   pub maximum_albedo: Option<f64>,
 }
 

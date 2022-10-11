@@ -1,5 +1,3 @@
-use std::convert::From;
-
 use crate::astronomy::host_star::error::Error as HostStarError;
 use crate::astronomy::satellite_systems::error::Error as SatelliteSystemsError;
 

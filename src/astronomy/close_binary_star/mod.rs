@@ -200,7 +200,7 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn get_random_main_sequence() -> Result<(), Error> {
+  pub fn test_whatever() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
@@ -208,22 +208,6 @@ pub mod test {
     let star = &Constraints::default().generate(&mut rng)?;
     trace_var!(star);
     print_var!(star);
-    trace_exit!();
-    Ok(())
-  }
-
-  #[named]
-  #[test]
-  pub fn get_random_habitable() -> Result<(), Error> {
-    init();
-    trace_enter!();
-    let mut rng = thread_rng();
-    trace_var!(rng);
-    let star = &Constraints::habitable().generate(&mut rng)?;
-    info_var!(star);
-    print_var!(star);
-    star.check_habitable()?;
-    assert!(star.is_habitable());
     trace_exit!();
     Ok(())
   }
