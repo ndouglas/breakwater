@@ -13,16 +13,18 @@ pub const MAXIMUM_AVERAGE_SEPARATION: f64 = 6.0;
 /// The minimum orbital eccentricity of "close" binary stars (unitless).
 pub const MINIMUM_ORBITAL_ECCENTRICITY: f64 = 0.1;
 
-/// The maximum orbital eccentricity of "close" binary stars (unitless).
+/// The maximum orbital eccentricity of "close" binarsy stars (unitless).
 pub const MAXIMUM_ORBITAL_ECCENTRICITY: f64 = 0.7;
 
 /// The minimum combined mass of a binary system.
-/// Set it to 2 * minimum main-sequence star mass.
-pub const MINIMUM_COMBINED_MASS: f64 = 2.0 * MINIMUM_STAR_MASS;
+/// Set it to 4 * minimum main-sequence star mass.
+/// We don't want it to be too small.
+pub const MINIMUM_COMBINED_MASS: f64 = 4.0 * MINIMUM_STAR_MASS;
 
 /// The maximum combined mass of a binary system.
-/// Set it to 2 * maximum main-sequence star mass.
-pub const MAXIMUM_COMBINED_MASS: f64 = 2.0 * MAXIMUM_STAR_MASS;
+/// Set it to maximum main-sequence star mass.
+/// We don't need binary supergiants.
+pub const MAXIMUM_COMBINED_MASS: f64 = MAXIMUM_STAR_MASS;
 
 /// The minimum individual mass of a binary system member.
 /// Set it to 1 * minimum main-sequence star mass.
@@ -57,7 +59,7 @@ pub const MAXIMUM_HABITABLE_ORBITAL_ECCENTRICITY: f64 = 0.6;
 
 /// Below this is probably too low to support conventional life.
 /// Measured in Msol, or solar mass equivalents.
-pub const MINIMUM_HABITABLE_COMBINED_MASS: f64 = 0.4;
+pub const MINIMUM_HABITABLE_COMBINED_MASS: f64 = 0.6;
 
 /// Above this is probably too high to support conventional life.
 /// Measured in Msol, or solar mass equivalents.

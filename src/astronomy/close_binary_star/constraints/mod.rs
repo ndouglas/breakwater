@@ -177,6 +177,20 @@ pub mod test {
 
   #[named]
   #[test]
+  pub fn test_default() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let binary = &Constraints::default().generate(&mut rng)?;
+    trace_var!(binary);
+    print_var!(binary);
+    trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  #[test]
   pub fn test_habitable() -> Result<(), Error> {
     init();
     trace_enter!();
@@ -191,16 +205,16 @@ pub mod test {
 
   #[named]
   #[test]
-  pub fn test_habitable_bulk() -> Result<(), Error> {
+  pub fn test_default_bulk() -> Result<(), Error> {
     init();
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
     let mut success = 0;
-    let trials = 10000;
+    let trials = 1000;
     let mut counter = 0;
     loop {
-      match &Constraints::habitable().generate(&mut rng) {
+      match &Constraints::default().generate(&mut rng) {
         Ok(_binary) => success += 1,
         Err(error) => println!("ERROR: {:#?}", error),
       }
@@ -209,7 +223,32 @@ pub mod test {
         break;
       }
     }
-    assert_eq!(success, trials);
+    print_var!(success);
+    trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  #[test]
+  pub fn test_habitable_bulk() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let mut success = 0;
+    let trials = 1000;
+    let mut counter = 0;
+    loop {
+      match &Constraints::habitable().generate(&mut rng) {
+        Ok(_binary) => success += 1,
+        Err(error) => print_var!(error),
+      }
+      counter += 1;
+      if counter >= trials {
+        break;
+      }
+    }
+    print_var!(success);
     trace_exit!();
     Ok(())
   }

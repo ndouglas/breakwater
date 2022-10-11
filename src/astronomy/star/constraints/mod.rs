@@ -38,7 +38,18 @@ impl Constraints {
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<Star, Error> {
     trace_enter!();
-    let result = Star::from_constraints(rng, self)?;
+    let lower_bound_mass = self.minimum_mass.unwrap_or(MINIMUM_MASS);
+    trace_var!(lower_bound_mass);
+    let upper_bound_mass = self.maximum_mass.unwrap_or(MAXIMUM_MASS);
+    trace_var!(upper_bound_mass);
+    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
+    trace_var!(mass);
+    let mut result = Star::from_mass(rng, mass)?;
+    let minimum_age = self.minimum_age.unwrap_or(0.1 * result.life_expectancy);
+    trace_var!(minimum_age);
+    let maximum_age = self.maximum_age.unwrap_or(0.9 * result.life_expectancy);
+    trace_var!(maximum_age);
+    result.current_age = rng.gen_range(minimum_age..maximum_age);
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -58,5 +69,28 @@ impl Default for Constraints {
       minimum_age,
       maximum_age,
     }
+  }
+}
+
+#[cfg(test)]
+pub mod test {
+
+  use rand::prelude::*;
+
+  use super::*;
+  use crate::test::*;
+
+  #[named]
+  #[test]
+  pub fn get_random_main_sequence() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let star = Constraints::default().generate(&mut rng)?;
+    trace_var!(star);
+    print_var!(star);
+    trace_exit!();
+    Ok(())
   }
 }

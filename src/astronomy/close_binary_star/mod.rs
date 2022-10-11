@@ -3,7 +3,7 @@ use rand::prelude::*;
 use crate::astronomy::star::Star;
 
 pub mod constants;
-use constants::MINIMUM_SEPARATION;
+use constants::*;
 pub mod constraints;
 pub mod error;
 use error::Error;
@@ -21,7 +21,7 @@ use math::separation::get_minimum_separation;
 /// this is that habitable planets can be in a circumbinary orbit around a
 /// `CloseBinaryStar`, but can only be in an orbit around one member of a
 /// `DistantBinaryStar`.  As a result, we handle `DistantBinaryStar` objects
-/// with a distinct class.
+/// with a different class.
 #[derive(Clone, Debug, PartialEq)]
 pub struct CloseBinaryStar {
   /// The primary star is the one with greater mass.

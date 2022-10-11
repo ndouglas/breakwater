@@ -2,7 +2,6 @@ use rand::prelude::*;
 
 use crate::astronomy::moons::constraints::Constraints as MoonsConstraints;
 use crate::astronomy::planet::constraints::Constraints as PlanetConstraints;
-use crate::astronomy::satellite_system::constants::*;
 use crate::astronomy::satellite_system::error::Error;
 use crate::astronomy::satellite_system::SatelliteSystem;
 

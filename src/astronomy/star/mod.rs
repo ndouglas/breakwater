@@ -3,7 +3,6 @@ use rand::prelude::*;
 pub mod constants;
 use constants::*;
 pub mod constraints;
-use constraints::*;
 pub mod error;
 use error::*;
 pub mod math;
@@ -112,29 +111,6 @@ impl Star {
     Ok(result)
   }
 
-  /// Generate a random main-sequence star with specified constraints.
-  ///
-  /// This may or may not be habitable.
-  #[named]
-  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<Star, Error> {
-    trace_enter!();
-    let lower_bound_mass = constraints.minimum_mass.unwrap_or(MINIMUM_MASS);
-    trace_var!(lower_bound_mass);
-    let upper_bound_mass = constraints.maximum_mass.unwrap_or(MAXIMUM_MASS);
-    trace_var!(upper_bound_mass);
-    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
-    trace_var!(mass);
-    let mut result = Self::from_mass(rng, mass)?;
-    let minimum_age = constraints.minimum_age.unwrap_or(0.1 * result.life_expectancy);
-    trace_var!(minimum_age);
-    let maximum_age = constraints.maximum_age.unwrap_or(0.9 * result.life_expectancy);
-    trace_var!(maximum_age);
-    result.current_age = rng.gen_range(minimum_age..maximum_age);
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
@@ -171,6 +147,7 @@ pub mod test {
 
   use rand::prelude::*;
 
+  use super::constraints::Constraints;
   use super::*;
   use crate::test::*;
 
@@ -181,25 +158,9 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let star = Star::from_constraints(&mut rng, &Constraints::default())?;
+    let star = Constraints::default().generate(&mut rng)?;
     trace_var!(star);
     print_var!(star);
-    trace_exit!();
-    Ok(())
-  }
-
-  #[named]
-  #[test]
-  pub fn get_random_habitable() -> Result<(), Error> {
-    init();
-    trace_enter!();
-    let mut rng = thread_rng();
-    trace_var!(rng);
-    let star = Star::from_constraints(&mut rng, &Constraints::habitable())?;
-    info_var!(star);
-    print_var!(star);
-    star.check_habitable()?;
-    assert!(star.is_habitable());
     trace_exit!();
     Ok(())
   }

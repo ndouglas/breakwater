@@ -8,7 +8,12 @@ use crate::astronomy::satellite_systems::constraints::Constraints as SatelliteSy
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Constraints {}
+pub struct Constraints {
+  /// Host Star constraints.
+  pub host_star_constraints: Option<HostStarConstraints>,
+  /// Satellite Systems constraints.
+  pub satellite_systems_constraints: Option<SatelliteSystemsConstraints>,
+}
 
 impl Constraints {
   /// Generate a habitable star subsystem.
@@ -27,9 +32,11 @@ impl Constraints {
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<PlanetarySystem, Error> {
     trace_enter!();
-    let host_star_constraints = HostStarConstraints::default();
+    let host_star_constraints = self.host_star_constraints.unwrap_or(HostStarConstraints::default());
     trace_var!(host_star_constraints);
-    let satellite_systems_constraints = SatelliteSystemsConstraints::default();
+    let satellite_systems_constraints = self
+      .satellite_systems_constraints
+      .unwrap_or(SatelliteSystemsConstraints::default());
     trace_var!(satellite_systems_constraints);
     let host_star = host_star_constraints.generate(rng)?;
     trace_var!(host_star);
@@ -48,6 +55,34 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    Self {}
+    let host_star_constraints = None;
+    let satellite_systems_constraints = None;
+    Self {
+      host_star_constraints,
+      satellite_systems_constraints,
+    }
+  }
+}
+
+#[cfg(test)]
+pub mod test {
+
+  use rand::prelude::*;
+
+  use super::*;
+  use crate::test::*;
+
+  #[named]
+  #[test]
+  pub fn test_generate() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let planetary_system = Constraints::default().generate(&mut rng)?;
+    trace_var!(planetary_system);
+    print_var!(planetary_system);
+    trace_exit!();
+    Ok(())
   }
 }
