@@ -1,10 +1,6 @@
-use rand::prelude::*;
-
-use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
-use crate::astronomy::star_subsystem::*;
+use crate::astronomy::star_subsystem::Subsystem;
 
 pub mod constraints;
-use constraints::*;
 pub mod error;
 use error::*;
 
@@ -29,40 +25,6 @@ pub struct StarSystem {
 }
 
 impl StarSystem {
-  /// Generate a random star system with the specified constraints.
-  ///
-  /// This may or may not be habitable.
-  #[named]
-  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<StarSystem, Error> {
-    trace_enter!();
-    let subsystem_constraints = constraints
-      .subsystem_constraints
-      .unwrap_or(SubsystemConstraints::default());
-    let subsystem = {
-      let mut retries = constraints.retries.unwrap_or(10);
-      let subsystem;
-      loop {
-        let candidate_result = subsystem_constraints.generate(rng);
-        if let Ok(candidate) = candidate_result {
-          subsystem = candidate;
-          break;
-        }
-        if retries == 0 {
-          return Err(Error::NoSuitableSubsystemsCouldBeGenerated);
-        }
-        retries -= 1;
-      }
-      subsystem
-    };
-    trace_var!(subsystem);
-    let name = "Steve".to_string();
-    trace_var!(name);
-    let result = StarSystem { subsystem, name };
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.
@@ -114,6 +76,7 @@ pub mod test {
 
   use rand::prelude::*;
 
+  use super::constraints::Constraints;
   use super::*;
   use crate::test::*;
 
@@ -124,8 +87,7 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let constraints = Constraints::habitable();
-    let star_system = StarSystem::from_constraints(&mut rng, &constraints)?;
+    let star_system = Constraints::habitable().generate(&mut rng)?;
     info_var!(star_system);
     print_var!(star_system);
     trace_exit!();

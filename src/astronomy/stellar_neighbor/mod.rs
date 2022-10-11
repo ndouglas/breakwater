@@ -52,7 +52,7 @@ impl StellarNeighbor {
     let system_constraints = constraints
       .system_constraints
       .unwrap_or(StarSystemConstraints::default());
-    let star_system = StarSystem::from_constraints(rng, &system_constraints)?;
+    let star_system = system_constraints.generate(rng)?;
     trace_var!(star_system);
     let name = star_system.name.clone();
     let result = StellarNeighbor {

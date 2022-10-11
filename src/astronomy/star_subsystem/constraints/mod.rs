@@ -66,7 +66,6 @@ impl Default for Constraints {
     let distant_binary_probability = Some(DISTANT_BINARY_PROBABILITY);
     let distant_binary_star_constraints = None;
     let planetary_system_constraints = None;
-
     Self {
       distant_binary_probability,
       distant_binary_star_constraints,
