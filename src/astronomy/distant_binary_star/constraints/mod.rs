@@ -66,3 +66,26 @@ impl Default for Constraints {
     }
   }
 }
+
+#[cfg(test)]
+pub mod test {
+
+  use rand::prelude::*;
+
+  use super::*;
+  use crate::test::*;
+
+  #[named]
+  #[test]
+  pub fn test_generate() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let distant_binary_star = Constraints::default().generate(&mut rng)?;
+    trace_var!(distant_binary_star);
+    print_var!(distant_binary_star);
+    trace_exit!();
+    Ok(())
+  }
+}
