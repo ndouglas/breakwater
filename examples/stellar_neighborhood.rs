@@ -1,7 +1,7 @@
 use plotters::prelude::*;
 const OUT_FILE_NAME: &'static str = "examples/output-stellar-neighborhood.svg";
 
-use breakwater::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
+use breakwater::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 use breakwater::astronomy::stellar_neighborhood::constraints::Constraints as StellarNeighborhoodConstraints;
 use breakwater::astronomy::stellar_neighborhood::StellarNeighborhood;
 
@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   area.fill(&WHITE)?;
 
   let constraints = StellarNeighborhoodConstraints::habitable();
-  let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+  let radius = constraints.radius.unwrap_or(STELLAR_NEIGHBORHOOD_RADIUS);
 
   let x_axis = (-radius..radius).step(1.0);
   let y_axis = (-radius..radius).step(1.0);

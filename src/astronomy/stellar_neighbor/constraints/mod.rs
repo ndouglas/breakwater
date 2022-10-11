@@ -1,7 +1,7 @@
 use std::default::Default;
 
-use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::star_system::constraints::Constraints as SystemConstraints;
+use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -26,7 +26,7 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    let radius = Some(STELLAR_NEIGHBORHOOD_RADIUS);
     let system_constraints = Some(SystemConstraints::default());
     Self {
       radius,

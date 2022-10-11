@@ -1,13 +1,13 @@
 use rand::prelude::*;
 use std::f64::consts::PI;
 
-use crate::astronomy::constants::DENSITY_OF_STELLAR_NEIGHBORHOOD;
-use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
 use crate::astronomy::stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
 use crate::astronomy::stellar_neighbor::*;
 
+pub mod constants;
+use constants::*;
 pub mod constraints;
 use constraints::*;
 
@@ -45,9 +45,9 @@ impl StellarNeighborhood {
     constraints: &Constraints,
   ) -> Result<StellarNeighborhood, Error> {
     trace_enter!();
-    let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    let radius = constraints.radius.unwrap_or(STELLAR_NEIGHBORHOOD_RADIUS);
     trace_var!(radius);
-    let density = constraints.density.unwrap_or(DENSITY_OF_STELLAR_NEIGHBORHOOD);
+    let density = constraints.density.unwrap_or(STELLAR_NEIGHBORHOOD_DENSITY);
     trace_var!(density);
     let volume = (4.0 / 3.0) * PI * radius.powf(3.0);
     trace_var!(volume);

@@ -1,9 +1,9 @@
 use rand::prelude::*;
 
-use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
 use crate::astronomy::star_system::error::Error;
 use crate::astronomy::star_system::StarSystem;
+use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 
 pub mod constraints;
 use constraints::*;
@@ -35,7 +35,8 @@ impl StellarNeighbor {
   #[named]
   pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<StellarNeighbor, Error> {
     trace_enter!();
-    let radius = constraints.radius.unwrap_or(RADIUS_OF_STELLAR_NEIGHBORHOOD);
+    // @todo: move this into stellar neighborhood, probably.
+    let radius = constraints.radius.unwrap_or(STELLAR_NEIGHBORHOOD_RADIUS);
     trace_var!(radius);
     let raw_coordinates = get_random_point_in_sphere(rng);
     trace_var!(raw_coordinates);

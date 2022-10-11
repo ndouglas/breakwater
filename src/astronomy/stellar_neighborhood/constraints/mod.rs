@@ -1,6 +1,6 @@
-use crate::astronomy::constants::DENSITY_OF_STELLAR_NEIGHBORHOOD;
-use crate::astronomy::constants::RADIUS_OF_STELLAR_NEIGHBORHOOD;
 use crate::astronomy::stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
+use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_DENSITY;
+use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -27,8 +27,8 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    let radius = Some(RADIUS_OF_STELLAR_NEIGHBORHOOD);
-    let density = Some(DENSITY_OF_STELLAR_NEIGHBORHOOD);
+    let radius = Some(STELLAR_NEIGHBORHOOD_RADIUS);
+    let density = Some(STELLAR_NEIGHBORHOOD_DENSITY);
     let neighbor_constraints = Some(StellarNeighborConstraints::default());
     Self {
       radius,
