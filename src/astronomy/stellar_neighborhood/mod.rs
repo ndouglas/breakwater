@@ -1,15 +1,8 @@
-use rand::prelude::*;
-use std::f64::consts::PI;
-
-use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
-use crate::astronomy::star_system::error::Error;
-use crate::astronomy::stellar_neighbor::constraints::Constraints as StellarNeighborConstraints;
 use crate::astronomy::stellar_neighbor::*;
 
 pub mod constants;
-use constants::*;
 pub mod constraints;
-use constraints::*;
+pub mod error;
 
 /// The `StellarNeighborhood` type.
 ///
@@ -36,75 +29,5 @@ pub struct StellarNeighborhood {
 }
 
 impl StellarNeighborhood {
-  /// Generate a random stellar neighborhood with the specified constraints.
-  ///
-  /// This may or may not be habitable.
-  #[named]
-  pub fn from_constraints<R: Rng + ?Sized>(
-    rng: &mut R,
-    constraints: &Constraints,
-  ) -> Result<StellarNeighborhood, Error> {
-    trace_enter!();
-    let radius = constraints.radius.unwrap_or(STELLAR_NEIGHBORHOOD_RADIUS);
-    trace_var!(radius);
-    let density = constraints.density.unwrap_or(STELLAR_NEIGHBORHOOD_DENSITY);
-    trace_var!(density);
-    let volume = (4.0 / 3.0) * PI * radius.powf(3.0);
-    trace_var!(volume);
-    let average_stars = density * volume;
-    trace_var!(average_stars);
-    let number_of_stars = rng.gen_range((0.875 * average_stars)..(1.125 * average_stars)) as usize;
-    trace_var!(number_of_stars);
-    let mut neighbors = vec![];
-    trace_var!(neighbors);
-    let mut star_count = 0;
-    let neighbor_constraints = constraints.neighbor_constraints.unwrap_or(StellarNeighborConstraints {
-      radius: Some(radius),
-      system_constraints: Some(StarSystemConstraints::default()),
-    });
-    trace_var!(neighbor_constraints);
-    loop {
-      let neighbor = StellarNeighbor::from_constraints(rng, &neighbor_constraints)?;
-      star_count += neighbor.get_stellar_count() as usize;
-      neighbors.push(neighbor);
-      if star_count >= number_of_stars {
-        break;
-      }
-    }
-    trace_var!(neighbors);
-    trace_var!(star_count);
-    let result = StellarNeighborhood {
-      radius,
-      density,
-      neighbors,
-      star_count,
-    };
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-}
 
-#[cfg(test)]
-pub mod test {
-
-  use rand::prelude::*;
-
-  use super::*;
-  use crate::test::*;
-
-  #[named]
-  #[test]
-  pub fn get_random() -> Result<(), Error> {
-    init();
-    trace_enter!();
-    let mut rng = thread_rng();
-    trace_var!(rng);
-    let constraints = Constraints::habitable();
-    let stellar_neighborhood = StellarNeighborhood::from_constraints(&mut rng, &constraints)?;
-    info_var!(stellar_neighborhood);
-    print_var!(stellar_neighborhood);
-    trace_exit!();
-    Ok(())
-  }
 }

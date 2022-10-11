@@ -1,5 +1,3 @@
-use std::convert::From;
-
 use crate::astronomy::star::error::Error as StarError;
 use crate::astronomy::star_subsystem::error::Error as SubsystemError;
 

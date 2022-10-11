@@ -1,14 +1,8 @@
-use rand::prelude::*;
-
-use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
-use crate::astronomy::star_system::error::Error;
 use crate::astronomy::star_system::StarSystem;
-use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 
 pub mod constraints;
-use constraints::*;
+pub mod error;
 pub mod math;
-use math::point::get_random_point_in_sphere;
 
 /// The `StellarNeighbor` class.
 ///
@@ -29,43 +23,6 @@ pub struct StellarNeighbor {
 }
 
 impl StellarNeighbor {
-  /// Generate a random stellar neighborhood with the specified constraints.
-  ///
-  /// This may or may not be habitable.
-  #[named]
-  pub fn from_constraints<R: Rng + ?Sized>(rng: &mut R, constraints: &Constraints) -> Result<StellarNeighbor, Error> {
-    trace_enter!();
-    // @todo: move this into stellar neighborhood, probably.
-    let radius = constraints.radius.unwrap_or(STELLAR_NEIGHBORHOOD_RADIUS);
-    trace_var!(radius);
-    let raw_coordinates = get_random_point_in_sphere(rng);
-    trace_var!(raw_coordinates);
-    let x = raw_coordinates.0 * radius;
-    trace_var!(x);
-    let y = raw_coordinates.1 * radius;
-    trace_var!(y);
-    let z = raw_coordinates.2 * radius;
-    trace_var!(z);
-    let coordinates = (x, y, z);
-    trace_var!(coordinates);
-    let distance = (x.powf(2.0) + y.powf(2.0) + z.powf(2.0)).sqrt();
-    let system_constraints = constraints
-      .system_constraints
-      .unwrap_or(StarSystemConstraints::default());
-    let star_system = system_constraints.generate(rng)?;
-    trace_var!(star_system);
-    let name = star_system.name.clone();
-    let result = StellarNeighbor {
-      coordinates,
-      star_system,
-      distance,
-      name,
-    };
-    trace_var!(result);
-    trace_exit!();
-    Ok(result)
-  }
-
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.
@@ -86,29 +43,5 @@ impl StellarNeighbor {
     trace_u8!(result);
     trace_exit!();
     result
-  }
-}
-
-#[cfg(test)]
-pub mod test {
-
-  use rand::prelude::*;
-
-  use super::*;
-  use crate::test::*;
-
-  #[named]
-  #[test]
-  pub fn get_random() -> Result<(), Error> {
-    init();
-    trace_enter!();
-    let mut rng = thread_rng();
-    trace_var!(rng);
-    let constraints = Constraints::default();
-    let stellar_neighbor = StellarNeighbor::from_constraints(&mut rng, &constraints)?;
-    info_var!(stellar_neighbor);
-    print_var!(stellar_neighbor);
-    trace_exit!();
-    Ok(())
   }
 }

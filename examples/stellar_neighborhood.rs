@@ -3,7 +3,6 @@ const OUT_FILE_NAME: &'static str = "examples/output-stellar-neighborhood.svg";
 
 use breakwater::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 use breakwater::astronomy::stellar_neighborhood::constraints::Constraints as StellarNeighborhoodConstraints;
-use breakwater::astronomy::stellar_neighborhood::StellarNeighborhood;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
   let area = SVGBackend::new(OUT_FILE_NAME, (1024, 760)).into_drawing_area();
@@ -18,7 +17,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   let z_axis = (-radius..radius).step(1.0);
 
   let mut rng = rand::thread_rng();
-  let stellar_neighborhood = StellarNeighborhood::from_constraints(&mut rng, &constraints).unwrap();
+  let stellar_neighborhood = constraints.generate(&mut rng).unwrap();
   let points = stellar_neighborhood
     .neighbors
     .iter()

@@ -1,5 +1,9 @@
 use crate::astronomy::stellar_neighborhood::StellarNeighborhood;
 
+pub mod constants;
+pub mod constraints;
+pub mod error;
+
 /// A `Galaxy` is the "outermost" or largest-scale object.
 ///
 /// It's a wrapper around `StellarNeighborhood`.
