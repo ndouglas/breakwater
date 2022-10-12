@@ -105,4 +105,27 @@ pub mod test {
     trace_exit!();
     Ok(())
   }
+
+  #[named]
+  #[test]
+  pub fn find_habitable() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let mut habitable_count = 0;
+    for _ in 1..10000 {
+      if let Ok(host_star) = Constraints::default().generate(&mut rng) {
+        trace_var!(host_star);
+        if host_star.is_habitable() {
+          habitable_count += 1;
+          print_var!(host_star);
+        }
+      }
+    }
+    print_var!(habitable_count);
+    trace_exit!();
+    Ok(())
+  }
+
 }

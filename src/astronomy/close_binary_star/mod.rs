@@ -169,6 +169,8 @@ impl CloseBinaryStar {
     if self.habitable_zone_is_dangerous {
       return Err(Error::HabitableZoneContainedWithinDangerZone);
     }
+    self.primary.check_habitable()?;
+    self.secondary.check_habitable()?;
     let result = Ok(());
     trace_var!(result);
     trace_exit!();

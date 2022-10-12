@@ -131,7 +131,6 @@ impl Constraints {
         top = maximum_individual_mass;
       }
       primary_mass = rng.gen_range(half..top);
-      print_var!(primary_mass);
       secondary_mass = combined_mass - primary_mass;
       primary_constraints.minimum_mass = Some(primary_mass - 0.01);
       primary_constraints.maximum_mass = Some(primary_mass + 0.01);
