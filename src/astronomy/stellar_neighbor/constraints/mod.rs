@@ -2,10 +2,10 @@ use rand::prelude::*;
 use std::default::Default;
 
 use crate::astronomy::star_system::constraints::Constraints as StarSystemConstraints;
-use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
-use crate::astronomy::stellar_neighbor::StellarNeighbor;
 use crate::astronomy::stellar_neighbor::error::Error;
 use crate::astronomy::stellar_neighbor::math::point::get_random_point_in_sphere;
+use crate::astronomy::stellar_neighbor::StellarNeighbor;
+use crate::astronomy::stellar_neighborhood::constants::STELLAR_NEIGHBORHOOD_RADIUS;
 
 /// Constraints for creating a stellar neighborhood.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -49,9 +49,7 @@ impl Constraints {
     let coordinates = (x, y, z);
     trace_var!(coordinates);
     let distance = (x.powf(2.0) + y.powf(2.0) + z.powf(2.0)).sqrt();
-    let system_constraints = self
-      .system_constraints
-      .unwrap_or(StarSystemConstraints::default());
+    let system_constraints = self.system_constraints.unwrap_or(StarSystemConstraints::default());
     let star_system = system_constraints.generate(rng)?;
     trace_var!(star_system);
     let name = star_system.name.clone();
@@ -65,7 +63,6 @@ impl Constraints {
     trace_exit!();
     Ok(result)
   }
-
 }
 
 impl Default for Constraints {

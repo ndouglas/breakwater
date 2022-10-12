@@ -72,7 +72,6 @@ impl Constraints {
     trace_exit!();
     Ok(result)
   }
-
 }
 
 impl Default for Constraints {

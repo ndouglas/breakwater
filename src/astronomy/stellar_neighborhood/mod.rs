@@ -28,6 +28,4 @@ pub struct StellarNeighborhood {
   pub star_count: usize,
 }
 
-impl StellarNeighborhood {
-
-}
+impl StellarNeighborhood {}

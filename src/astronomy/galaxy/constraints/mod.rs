@@ -1,9 +1,9 @@
 use rand::prelude::*;
 
-use crate::astronomy::stellar_neighborhood::constraints::Constraints as StellarNeighborhoodConstraints;
 use crate::astronomy::galaxy::constants::*;
 use crate::astronomy::galaxy::error::*;
 use crate::astronomy::galaxy::Galaxy;
+use crate::astronomy::stellar_neighborhood::constraints::Constraints as StellarNeighborhoodConstraints;
 
 /// Constraints for creating a galaxy.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -28,17 +28,16 @@ impl Constraints {
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<Galaxy, Error> {
     trace_enter!();
-    let stellar_neighborhood_constraints = self.stellar_neighborhood_constraints.unwrap_or(StellarNeighborhoodConstraints::default());
+    let stellar_neighborhood_constraints = self
+      .stellar_neighborhood_constraints
+      .unwrap_or(StellarNeighborhoodConstraints::default());
     trace_var!(stellar_neighborhood_constraints);
     let stellar_neighborhood = stellar_neighborhood_constraints.generate(rng)?;
-    let result = Galaxy {
-      stellar_neighborhood,
-    };
+    let result = Galaxy { stellar_neighborhood };
     trace_var!(result);
     trace_exit!();
     Ok(result)
   }
-
 }
 
 impl Default for Constraints {
