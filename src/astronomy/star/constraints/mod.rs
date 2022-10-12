@@ -45,6 +45,7 @@ impl Constraints {
     let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
     trace_var!(mass);
     let mut result = Star::from_mass(rng, mass)?;
+    trace_var!(result);
     let minimum_age = self.minimum_age.unwrap_or(0.1 * result.life_expectancy);
     trace_var!(minimum_age);
     let maximum_age = self.maximum_age.unwrap_or(0.9 * result.life_expectancy);

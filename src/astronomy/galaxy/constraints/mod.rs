@@ -1,6 +1,5 @@
 use rand::prelude::*;
 
-use crate::astronomy::galaxy::constants::*;
 use crate::astronomy::galaxy::error::*;
 use crate::astronomy::galaxy::Galaxy;
 use crate::astronomy::stellar_neighborhood::constraints::Constraints as StellarNeighborhoodConstraints;

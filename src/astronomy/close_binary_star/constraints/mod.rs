@@ -1,11 +1,10 @@
 use rand::prelude::*;
 use std::default::Default;
 
-use crate::astronomy::star::Star;
-
 use crate::astronomy::close_binary_star::constants::*;
 use crate::astronomy::close_binary_star::error::Error;
 use crate::astronomy::close_binary_star::CloseBinaryStar;
+use crate::astronomy::star::constraints::Constraints as StarConstraints;
 
 /// Constraints for creating a binary star.
 ///
@@ -42,6 +41,8 @@ pub struct Constraints {
   pub maximum_age: Option<f64>,
   /// Enforce habitability.
   pub enforce_habitability: bool,
+  /// Star constraints.
+  pub star_constraints: Option<StarConstraints>,
 }
 
 impl Constraints {
@@ -58,6 +59,7 @@ impl Constraints {
     let maximum_average_separation = Some(MAXIMUM_HABITABLE_AVERAGE_SEPARATION);
     let minimum_age = Some(MINIMUM_HABITABLE_AGE);
     let enforce_habitability = true;
+    let star_constraints = Some(StarConstraints::habitable());
     let result = Self {
       minimum_combined_mass,
       maximum_combined_mass,
@@ -68,6 +70,7 @@ impl Constraints {
       maximum_orbital_eccentricity,
       minimum_age,
       enforce_habitability,
+      star_constraints,
       ..Constraints::default()
     };
     trace_var!(result);
@@ -106,21 +109,36 @@ impl Constraints {
     let combined_mass;
     let primary_mass;
     let secondary_mass;
+    let mut primary_constraints;
+    let mut secondary_constraints;
     if self.enforce_habitability {
       let bare_minimum =
         (1.1 * (4.0 * maximum_average_separation * (1.0 + orbital_eccentricity)).powf(2.0)).powf(1.0 / 4.0);
       if minimum_combined_mass < bare_minimum {
         minimum_combined_mass = bare_minimum;
       }
+      primary_constraints = self.star_constraints.unwrap_or(StarConstraints::habitable());
+      secondary_constraints = self.star_constraints.unwrap_or(StarConstraints::habitable());
+    } else {
+      primary_constraints = self.star_constraints.unwrap_or(StarConstraints::default());
+      secondary_constraints = self.star_constraints.unwrap_or(StarConstraints::default());
     }
     let (primary, secondary) = {
       combined_mass = rng.gen_range(minimum_combined_mass..maximum_combined_mass);
       let half = combined_mass / 2.0;
-      let top = combined_mass - MINIMUM_HABITABLE_INDIVIDUAL_MASS;
+      let mut top = combined_mass - MINIMUM_HABITABLE_INDIVIDUAL_MASS;
+      if self.enforce_habitability && top > maximum_individual_mass {
+        top = maximum_individual_mass;
+      }
       primary_mass = rng.gen_range(half..top);
+      print_var!(primary_mass);
       secondary_mass = combined_mass - primary_mass;
-      let primary = Star::from_mass(rng, primary_mass)?;
-      let secondary = Star::from_mass(rng, secondary_mass)?;
+      primary_constraints.minimum_mass = Some(primary_mass - 0.01);
+      primary_constraints.maximum_mass = Some(primary_mass + 0.01);
+      secondary_constraints.minimum_mass = Some(secondary_mass - 0.01);
+      secondary_constraints.maximum_mass = Some(secondary_mass + 0.01);
+      let primary = primary_constraints.generate(rng)?;
+      let secondary = secondary_constraints.generate(rng)?;
       (primary, secondary)
     };
     trace_var!(primary);
@@ -148,6 +166,7 @@ impl Default for Constraints {
     let minimum_age = None;
     let maximum_age = None;
     let enforce_habitability = false;
+    let star_constraints = None;
     let result = Self {
       minimum_combined_mass,
       maximum_combined_mass,
@@ -160,6 +179,7 @@ impl Default for Constraints {
       minimum_age,
       maximum_age,
       enforce_habitability,
+      star_constraints,
     };
     trace_var!(result);
     trace_exit!();
