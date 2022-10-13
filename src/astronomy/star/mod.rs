@@ -6,12 +6,12 @@ pub mod constraints;
 pub mod error;
 use error::*;
 pub mod math;
-use math::color::ms_star_mass_to_rgb;
-use math::luminosity::ms_star_mass_to_luminosity;
-use math::radius::ms_star_mass_to_radius;
+use math::color::star_mass_to_rgb;
+use math::luminosity::star_mass_to_luminosity;
+use math::radius::star_mass_to_radius;
 use math::satellite_zone::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
-use math::spectral_class::ms_star_mass_to_spectral_class;
-use math::temperature::ms_star_mass_to_temperature;
+use math::spectral_class::star_mass_to_spectral_class;
+use math::temperature::star_mass_to_temperature;
 pub mod name;
 use name::generate_star_name;
 
@@ -60,13 +60,13 @@ impl Star {
   pub fn from_mass<R: Rng + ?Sized>(rng: &mut R, mass: f64) -> Result<Star, Error> {
     trace_enter!();
     trace_var!(mass);
-    let temperature = ms_star_mass_to_temperature(mass)?;
+    let temperature = star_mass_to_temperature(mass)?;
     trace_var!(temperature);
-    let luminosity = ms_star_mass_to_luminosity(mass)?;
+    let luminosity = star_mass_to_luminosity(mass)?;
     trace_var!(luminosity);
-    let radius = ms_star_mass_to_radius(mass)?;
+    let radius = star_mass_to_radius(mass)?;
     trace_var!(radius);
-    let class = ms_star_mass_to_spectral_class(mass)?;
+    let class = star_mass_to_spectral_class(mass)?;
     trace_var!(class);
     let life_expectancy = mass / luminosity * 10.0;
     trace_var!(life_expectancy);
@@ -87,7 +87,7 @@ impl Star {
     let satellite_zone = (satellite_inner_bound, satellite_outer_bound);
     let frost_line = 4.85 * luminosity.sqrt();
     trace_var!(frost_line);
-    let absolute_rgb = ms_star_mass_to_rgb(mass)?;
+    let absolute_rgb = star_mass_to_rgb(mass)?;
     trace_3u8!(absolute_rgb);
     let name = generate_star_name(rng);
     trace_var!(name);

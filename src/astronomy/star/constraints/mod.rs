@@ -1,54 +1,61 @@
+use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 use std::default::Default;
 
 use crate::astronomy::star::constants::*;
 use crate::astronomy::star::error::Error;
+use crate::astronomy::star::math::spectral_class::*;
 use crate::astronomy::star::Star;
 
 /// Constraints for creating a main-sequence star.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
-  /// The minimum mass of the star, in Msol.
-  pub minimum_mass: Option<f64>,
-  /// The maximum mass of the star, in Msol.
-  pub maximum_mass: Option<f64>,
-  /// The minimum age of the star, in Gyr.
-  pub minimum_age: Option<f64>,
-  /// The maximum age of the star, in Gyr.
-  pub maximum_age: Option<f64>,
+  /// Ensure this star is habitable.
+  pub make_habitable: bool,
 }
 
 impl Constraints {
   /// Generate a habitable star.
   pub fn habitable() -> Self {
-    let minimum_mass = Some(MINIMUM_HABITABLE_MASS);
-    let maximum_mass = Some(MAXIMUM_HABITABLE_MASS);
-    let minimum_age = Some(MINIMUM_HABITABLE_AGE);
+    let make_habitable = true;
     Self {
-      minimum_mass,
-      maximum_mass,
-      minimum_age,
+      make_habitable,
       ..Constraints::default()
     }
   }
-
-  /// Generate a star from our settings.
 
   /// Generate.
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<Star, Error> {
     trace_enter!();
-    let lower_bound_mass = self.minimum_mass.unwrap_or(MINIMUM_MASS);
-    trace_var!(lower_bound_mass);
-    let upper_bound_mass = self.maximum_mass.unwrap_or(MAXIMUM_MASS);
-    trace_var!(upper_bound_mass);
-    let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
+    let mass = {
+      let random_spectral_class = match self.make_habitable {
+        false => get_random_spectral_class(rng),
+        true => get_random_habitable_spectral_class(rng),
+      };
+      trace_var!(random_spectral_class);
+      let random_range = match self.make_habitable {
+        false => spectral_class_to_mass_range(random_spectral_class),
+        true => spectral_class_to_habitable_mass_range(random_spectral_class),
+      };
+      trace_var!(random_range);
+      let lower_bound_mass = random_range.start;
+      trace_var!(lower_bound_mass);
+      let upper_bound_mass = random_range.end;
+      trace_var!(upper_bound_mass);
+      let mass = rng.gen_range(lower_bound_mass..upper_bound_mass);
+      mass
+    };
     trace_var!(mass);
+    print_var!(mass);
     let mut result = Star::from_mass(rng, mass)?;
     trace_var!(result);
-    let minimum_age = self.minimum_age.unwrap_or(0.1 * result.life_expectancy);
+    let minimum_age = match self.make_habitable {
+      true => MINIMUM_HABITABLE_AGE,
+      false => 0.1 * result.life_expectancy,
+    };
     trace_var!(minimum_age);
-    let maximum_age = self.maximum_age.unwrap_or(0.9 * result.life_expectancy);
+    let maximum_age = 0.9 * result.life_expectancy;
     trace_var!(maximum_age);
     result.current_age = rng.gen_range(minimum_age..maximum_age);
     trace_var!(result);
@@ -60,16 +67,8 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    let minimum_mass = Some(MINIMUM_MASS);
-    let maximum_mass = Some(MAXIMUM_MASS);
-    let minimum_age = None;
-    let maximum_age = None;
-    Self {
-      minimum_mass,
-      maximum_mass,
-      minimum_age,
-      maximum_age,
-    }
+    let make_habitable = false;
+    Self { make_habitable }
   }
 }
 

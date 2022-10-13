@@ -1,4 +1,8 @@
+use rand::distributions::{Distribution, Standard};
+use rand::prelude::*;
+
 pub mod constants;
+use constants::*;
 pub mod constraints;
 pub mod error;
 
@@ -16,4 +20,13 @@ pub struct Moon {
   pub mass: f64,
   /// The albedo (geometric) of this moon.
   pub albedo: f64,
+}
+
+impl Distribution<Moon> for Standard {
+  #[named]
+  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Moon {
+    let mass = rng.gen_range(MINIMUM_MASS..MAXIMUM_MASS);
+    let albedo = rng.gen_range(MINIMUM_ALBEDO..MAXIMUM_ALBEDO);
+    Moon { mass, albedo }
+  }
 }

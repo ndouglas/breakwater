@@ -21,7 +21,11 @@ impl Constraints {
   #[named]
   pub fn habitable() -> Self {
     trace_enter!();
+    let star_constraints = Some(StarConstraints::habitable());
+    let close_binary_star_constraints = Some(CloseBinaryStarConstraints::habitable());
     let result = Self {
+      star_constraints,
+      close_binary_star_constraints,
       ..Constraints::default()
     };
     trace_var!(result);
@@ -114,12 +118,16 @@ pub mod test {
     let mut rng = thread_rng();
     trace_var!(rng);
     let mut habitable_count = 0;
-    for _ in 1..10000 {
-      if let Ok(host_star) = Constraints::default().generate(&mut rng) {
+    for _ in 1..1000 {
+      if let Ok(host_star) = Constraints::habitable().generate(&mut rng) {
         trace_var!(host_star);
         if host_star.is_habitable() {
           habitable_count += 1;
+        } else {
           print_var!(host_star);
+          if let Err(error) = host_star.check_habitable() {
+            print_var!(error);
+          }
         }
       }
     }
@@ -127,5 +135,4 @@ pub mod test {
     trace_exit!();
     Ok(())
   }
-
 }

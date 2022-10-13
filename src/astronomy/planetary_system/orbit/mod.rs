@@ -1,8 +1,8 @@
 use rand::prelude::*;
 
-use crate::astronomy::star::math::frost_line::ms_star_luminosity_to_frost_line;
-use crate::astronomy::star::math::habitable_zone::ms_star_luminosity_to_habitable_zone;
-use crate::astronomy::star::math::luminosity::ms_star_mass_to_luminosity;
+use crate::astronomy::star::math::frost_line::star_luminosity_to_frost_line;
+use crate::astronomy::star::math::habitable_zone::star_luminosity_to_habitable_zone;
+use crate::astronomy::star::math::luminosity::star_mass_to_luminosity;
 use crate::astronomy::star::math::orbit::{get_approximate_innermost_orbit, get_approximate_outermost_orbit};
 
 pub mod constraints;
@@ -44,11 +44,11 @@ impl Orbit {
     trace_var!(enforce_outside_frost_line);
     let make_primary_gas_giant = constraints.make_primary_gas_giant;
     trace_var!(make_primary_gas_giant);
-    let luminosity = ms_star_mass_to_luminosity(mass).unwrap();
+    let luminosity = star_mass_to_luminosity(mass).unwrap();
     trace_var!(luminosity);
-    let habitable_zone = ms_star_luminosity_to_habitable_zone(luminosity);
+    let habitable_zone = star_luminosity_to_habitable_zone(luminosity);
     trace_var!(habitable_zone);
-    let frost_line = ms_star_luminosity_to_frost_line(luminosity);
+    let frost_line = star_luminosity_to_frost_line(luminosity);
     trace_var!(frost_line);
     let inner_bound = constraints.get_final_minimum_distance(mass, habitable_zone, frost_line)?;
     trace_var!(inner_bound);

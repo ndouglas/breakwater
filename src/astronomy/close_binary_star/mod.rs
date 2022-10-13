@@ -1,5 +1,6 @@
 use rand::prelude::*;
 
+use crate::astronomy::star::error::Error as StarError;
 use crate::astronomy::star::Star;
 
 pub mod constants;
@@ -170,7 +171,12 @@ impl CloseBinaryStar {
       return Err(Error::HabitableZoneContainedWithinDangerZone);
     }
     self.primary.check_habitable()?;
-    self.secondary.check_habitable()?;
+    // Secondary stars can be very low mass or young but still habitable.
+    match self.secondary.check_habitable() {
+      Err(StarError::MassTooLowToSupportLife) => {},
+      Ok(_) => {},
+      Err(error) => return Err(error.into()),
+    }
     let result = Ok(());
     trace_var!(result);
     trace_exit!();

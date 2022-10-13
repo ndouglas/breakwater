@@ -22,3 +22,24 @@ pub const MAXIMUM_HABITABLE_MASS: f64 = 1.25;
 ///
 /// Measured in Gyr, or billions of years.
 pub const MINIMUM_HABITABLE_AGE: f64 = 4.0;
+
+/// The probability of generating an O-class star.
+pub const CLASS_O_WEIGHT: f64 = 0.00003;
+
+/// The probability of generating a B-class star.
+pub const CLASS_B_WEIGHT: f64 = 0.13;
+
+/// The probability of generating an A-class star.
+pub const CLASS_A_WEIGHT: f64 = 0.6;
+
+/// The probability of generating an F-class star.
+pub const CLASS_F_WEIGHT: f64 = 3.0;
+
+/// The probability of generating a G-class star.
+pub const CLASS_G_WEIGHT: f64 = 7.6;
+
+/// The probability of generating a K-class star.
+pub const CLASS_K_WEIGHT: f64 = 12.1;
+
+/// The probability of generating an M-class star.
+pub const CLASS_M_WEIGHT: f64 = 76.45;

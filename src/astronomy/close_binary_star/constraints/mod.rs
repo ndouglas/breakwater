@@ -5,6 +5,7 @@ use crate::astronomy::close_binary_star::constants::*;
 use crate::astronomy::close_binary_star::error::Error;
 use crate::astronomy::close_binary_star::CloseBinaryStar;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
+use crate::astronomy::star::Star;
 
 /// Constraints for creating a binary star.
 ///
@@ -115,7 +116,7 @@ impl Constraints {
       let bare_minimum =
         (1.1 * (4.0 * maximum_average_separation * (1.0 + orbital_eccentricity)).powf(2.0)).powf(1.0 / 4.0);
       if minimum_combined_mass < bare_minimum {
-        minimum_combined_mass = bare_minimum;
+        minimum_combined_mass = 1.1 * bare_minimum;
       }
       primary_constraints = self.star_constraints.unwrap_or(StarConstraints::habitable());
       secondary_constraints = self.star_constraints.unwrap_or(StarConstraints::habitable());
@@ -132,12 +133,19 @@ impl Constraints {
       }
       primary_mass = rng.gen_range(half..top);
       secondary_mass = combined_mass - primary_mass;
-      primary_constraints.minimum_mass = Some(primary_mass - 0.01);
-      primary_constraints.maximum_mass = Some(primary_mass + 0.01);
-      secondary_constraints.minimum_mass = Some(secondary_mass - 0.01);
-      secondary_constraints.maximum_mass = Some(secondary_mass + 0.01);
-      let primary = primary_constraints.generate(rng)?;
-      let secondary = secondary_constraints.generate(rng)?;
+      let mut primary = Star::from_mass(rng, primary_mass)?;
+      let mut secondary = Star::from_mass(rng, secondary_mass)?;
+      let minimum_age = match self.enforce_habitability {
+        true => MINIMUM_HABITABLE_AGE,
+        false => 0.1 * primary.life_expectancy,
+      };
+      trace_var!(minimum_age);
+      let maximum_age = 0.9 * primary.life_expectancy;
+      trace_var!(maximum_age);
+      let current_age = rng.gen_range(minimum_age..maximum_age);
+      trace_var!(current_age);
+      primary.current_age = current_age;
+      secondary.current_age = current_age;
       (primary, secondary)
     };
     trace_var!(primary);
