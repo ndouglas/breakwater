@@ -12,6 +12,8 @@ pub mod math;
 use math::barycenter::get_average_distances_from_barycenter;
 use math::barycenter::get_maximum_distances_from_barycenter;
 use math::barycenter::get_minimum_distances_from_barycenter;
+use math::frost_line::get_frost_line;
+use math::habitable_zone::get_habitable_zone;
 use math::separation::get_maximum_separation;
 use math::separation::get_minimum_separation;
 
@@ -94,13 +96,12 @@ impl CloseBinaryStar {
     trace_var!(forbidden_zone);
     let danger_zone = (0.0, maximum_separation * 4.0);
     trace_var!(danger_zone);
-    let luminosity = primary.luminosity + secondary.luminosity;
-    let habitable_zone = ((luminosity / 1.1).sqrt(), (luminosity / 0.53).sqrt());
+    let habitable_zone = get_habitable_zone(&primary, &secondary);
     trace_var!(habitable_zone);
     let combined_mass = primary.mass + secondary.mass;
     let satellite_zone = (0.1 * combined_mass, 40.0 * combined_mass);
     trace_var!(satellite_zone);
-    let frost_line = 4.85 * luminosity.sqrt();
+    let frost_line = get_frost_line(&primary, &secondary);
     trace_var!(frost_line);
     let habitable_zone_is_forbidden = habitable_zone.1 <= forbidden_zone.1;
     trace_var!(habitable_zone_is_forbidden);
