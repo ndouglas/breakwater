@@ -1,4 +1,4 @@
-use crate::astronomy::star_subsystem::Subsystem;
+use crate::astronomy::star_subsystem::StarSubsystem;
 
 pub mod constraints;
 pub mod error;
@@ -19,7 +19,7 @@ use error::*;
 #[derive(Clone, Debug, PartialEq)]
 pub struct StarSystem {
   /// The basic configuration of the host star(s).
-  pub subsystem: Subsystem,
+  pub star_subsystem: StarSubsystem,
   /// The name of the primary star.
   pub name: String,
 }
@@ -31,7 +31,7 @@ impl StarSystem {
   #[named]
   pub fn get_stellar_mass(&self) -> f64 {
     trace_enter!();
-    let result = self.subsystem.get_stellar_mass();
+    let result = self.star_subsystem.get_stellar_mass();
     trace_var!(result);
     trace_exit!();
     result
@@ -41,7 +41,7 @@ impl StarSystem {
   #[named]
   pub fn get_stellar_count(&self) -> u8 {
     trace_enter!();
-    let result = self.subsystem.get_stellar_count();
+    let result = self.star_subsystem.get_stellar_count();
     trace_u8!(result);
     trace_exit!();
     result
@@ -51,7 +51,7 @@ impl StarSystem {
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
-    let result = Ok(self.subsystem.check_habitable()?);
+    let result = Ok(self.star_subsystem.check_habitable()?);
     trace_var!(result);
     trace_exit!();
     result

@@ -6,7 +6,7 @@ use crate::astronomy::satellite_systems::constants::*;
 use crate::astronomy::satellite_systems::error::Error;
 use crate::astronomy::satellite_systems::SatelliteSystems;
 
-/// Constraints for creating a main-sequence star subsystem.
+/// Constraints for creating satellite systems.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
   /// The minimum number to generate.

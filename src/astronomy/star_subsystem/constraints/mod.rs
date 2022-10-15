@@ -5,7 +5,7 @@ use crate::astronomy::distant_binary_star::constraints::Constraints as DistantBi
 use crate::astronomy::planetary_system::constraints::Constraints as PlanetarySystemConstraints;
 use crate::astronomy::star_subsystem::constants::*;
 use crate::astronomy::star_subsystem::error::Error;
-use crate::astronomy::star_subsystem::Subsystem;
+use crate::astronomy::star_subsystem::StarSubsystem;
 
 /// Constraints for creating a main-sequence star subsystem.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -33,9 +33,9 @@ impl Constraints {
 
   /// Generate.
   #[named]
-  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<Subsystem, Error> {
+  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<StarSubsystem, Error> {
     trace_enter!();
-    use Subsystem::*;
+    use StarSubsystem::*;
     let distant_binary_probability = self.distant_binary_probability.unwrap_or(DISTANT_BINARY_PROBABILITY);
     trace_var!(distant_binary_probability);
     let generate_planetary_system: bool = rng.gen_range(0.0..1.0) > distant_binary_probability;

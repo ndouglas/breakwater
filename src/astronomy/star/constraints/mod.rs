@@ -1,4 +1,3 @@
-use rand::distributions::WeightedIndex;
 use rand::prelude::*;
 use std::default::Default;
 
@@ -10,6 +9,10 @@ use crate::astronomy::star::Star;
 /// Constraints for creating a main-sequence star.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
+  /// Minimum amount of mass.
+  pub minimum_mass: Option<f64>,
+  /// Maximum amount of mass.
+  pub maximum_mass: Option<f64>,
   /// Ensure this star is habitable.
   pub make_habitable: bool,
 }
@@ -17,8 +20,12 @@ pub struct Constraints {
 impl Constraints {
   /// Generate a habitable star.
   pub fn habitable() -> Self {
+    let minimum_mass = Some(MINIMUM_HABITABLE_MASS);
+    let maximum_mass = Some(MAXIMUM_HABITABLE_MASS);
     let make_habitable = true;
     Self {
+      minimum_mass,
+      maximum_mass,
       make_habitable,
       ..Constraints::default()
     }
@@ -67,8 +74,14 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
+    let minimum_mass = None;
+    let maximum_mass = None;
     let make_habitable = false;
-    Self { make_habitable }
+    Self {
+      minimum_mass,
+      maximum_mass,
+      make_habitable,
+    }
   }
 }
 

@@ -1,14 +1,14 @@
 use crate::astronomy::star::error::Error as StarError;
-use crate::astronomy::star_subsystem::error::Error as SubsystemError;
+use crate::astronomy::star_subsystem::error::Error as StarSubsystemError;
 
 /// Star system errors.
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub enum Error {
   /// Star Error.
   StarError(StarError),
-  /// Subsystem Error.
-  SubsystemError(SubsystemError),
-  /// No suitable subsystems found.
+  /// StarSubsystem Error.
+  StarSubsystemError(StarSubsystemError),
+  /// No suitable StarSubsystems found.
   NoSuitableSubsystemsCouldBeGenerated,
 }
 
@@ -19,9 +19,9 @@ impl From<StarError> for Error {
   }
 }
 
-impl From<SubsystemError> for Error {
+impl From<StarSubsystemError> for Error {
   #[named]
-  fn from(error: SubsystemError) -> Self {
-    Error::SubsystemError(error)
+  fn from(error: StarSubsystemError) -> Self {
+    Error::StarSubsystemError(error)
   }
 }

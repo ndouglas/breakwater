@@ -160,7 +160,7 @@ impl CloseBinaryStar {
     result
   }
 
-  /// Indicate whether this subsystem is capable of supporting conventional life.
+  /// Indicate whether this StarSubsystem is capable of supporting conventional life.
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();

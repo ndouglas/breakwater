@@ -1,6 +1,6 @@
 use rand::prelude::*;
 
-use crate::astronomy::star_subsystem::constraints::Constraints as SubsystemConstraints;
+use crate::astronomy::star_subsystem::constraints::Constraints as StarSubsystemConstraints;
 use crate::astronomy::star_system::error::Error;
 use crate::astronomy::star_system::StarSystem;
 
@@ -8,7 +8,7 @@ use crate::astronomy::star_system::StarSystem;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
   /// Star subsystem creation constraints.
-  pub subsystem_constraints: Option<SubsystemConstraints>,
+  pub star_subsystem_constraints: Option<StarSubsystemConstraints>,
   /// Number of times to regenerate if requirements aren't met.
   pub retries: Option<u8>,
 }
@@ -16,40 +16,40 @@ pub struct Constraints {
 impl Constraints {
   /// Generate a main-sequence star system.
   pub fn main_sequence() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::default());
+    let star_subsystem_constraints = Some(StarSubsystemConstraints::default());
     let retries = None;
     Self {
-      subsystem_constraints,
+      star_subsystem_constraints,
       retries,
     }
   }
 
   /// Generate a habitable star system.
   pub fn habitable() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable());
+    let star_subsystem_constraints = Some(StarSubsystemConstraints::habitable());
     let retries = Some(10);
     Self {
-      subsystem_constraints,
+      star_subsystem_constraints,
       retries,
     }
   }
 
   /// Generate a habitable star system.
   pub fn habitable_close_binary() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable());
+    let star_subsystem_constraints = Some(StarSubsystemConstraints::habitable());
     let retries = Some(10);
     Self {
-      subsystem_constraints,
+      star_subsystem_constraints,
       retries,
     }
   }
 
   /// Generate a habitable star system.
   pub fn habitable_distant_binary() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::habitable());
+    let star_subsystem_constraints = Some(StarSubsystemConstraints::habitable());
     let retries = Some(10);
     Self {
-      subsystem_constraints,
+      star_subsystem_constraints,
       retries,
     }
   }
@@ -60,14 +60,16 @@ impl Constraints {
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<StarSystem, Error> {
     trace_enter!();
-    let subsystem_constraints = self.subsystem_constraints.unwrap_or(SubsystemConstraints::default());
-    let subsystem = {
+    let star_subsystem_constraints = self
+      .star_subsystem_constraints
+      .unwrap_or(StarSubsystemConstraints::default());
+    let star_subsystem = {
       let mut retries = self.retries.unwrap_or(10);
-      let subsystem;
+      let star_subsystem;
       loop {
-        let candidate_result = subsystem_constraints.generate(rng);
+        let candidate_result = star_subsystem_constraints.generate(rng);
         if let Ok(candidate) = candidate_result {
-          subsystem = candidate;
+          star_subsystem = candidate;
           break;
         }
         if retries == 0 {
@@ -75,12 +77,12 @@ impl Constraints {
         }
         retries -= 1;
       }
-      subsystem
+      star_subsystem
     };
-    trace_var!(subsystem);
+    trace_var!(star_subsystem);
     let name = "Steve".to_string();
     trace_var!(name);
-    let result = StarSystem { subsystem, name };
+    let result = StarSystem { star_subsystem, name };
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -90,10 +92,10 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
-    let subsystem_constraints = Some(SubsystemConstraints::default());
+    let star_subsystem_constraints = Some(StarSubsystemConstraints::default());
     let retries = None;
     Self {
-      subsystem_constraints,
+      star_subsystem_constraints,
       retries,
     }
   }

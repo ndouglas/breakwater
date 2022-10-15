@@ -11,7 +11,7 @@ pub enum Error {
   HabitableZoneContainedWithinForbiddenZone,
   /// The habitable zone isn't sufficiently far from the host stars.
   HabitableZoneContainedWithinDangerZone,
-  /// No habitable conditions found anywhere in subsystem.
+  /// No habitable conditions found anywhere in StarSubsystem.
   NoHabitableZoneFound,
 }
 

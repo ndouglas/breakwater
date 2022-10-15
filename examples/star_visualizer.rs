@@ -6,7 +6,7 @@ use bevy_egui::{egui, EguiContext, EguiPlugin};
 use bevy_fly_camera::{FlyCamera2d, FlyCameraPlugin};
 use bevy_prototype_lyon::prelude::*;
 use breakwater::astronomy::star::Star;
-use breakwater::astronomy::star_subsystem::Subsystem;
+use breakwater::astronomy::star_subsystem::StarSubsystem;
 use breakwater::astronomy::star_system::constraints::Constraints;
 use breakwater::astronomy::star_system::StarSystem;
 use derive_more::Deref;
@@ -143,10 +143,10 @@ fn setup_many_orbits(
     let center = Vec3::new(0.0, 0.0, 10.0);
     let constraints = Constraints::habitable_close_binary();
     if let Ok(star_system) = StarSystem::from_constraints(&mut rng, &constraints) {
-      let subsystem = &star_system.subsystem;
+      let StarSubsystem = &star_system.StarSubsystem;
       spawn_subsystem(
         &mut commands,
-        &subsystem,
+        &StarSubsystem,
         Velocity(Vec2::new(0.0, 0.0)),
         Transform::from_xyz(center.x, center.y, center.z),
       );
@@ -154,10 +154,10 @@ fn setup_many_orbits(
   }
 }
 
-fn spawn_subsystem(commands: &mut Commands, subsystem: &Subsystem, velocity: Velocity, transform: Transform) {
-  use SubsystemType::*;
-  println!("{:#?}", subsystem);
-  match &subsystem.r#type {
+fn spawn_subsystem(commands: &mut Commands, StarSubsystem: &StarSubsystem, velocity: Velocity, transform: Transform) {
+  use StarSubsystemType::*;
+  println!("{:#?}", StarSubsystem);
+  match &StarSubsystem.r#type {
     Single(star) => spawn_star(commands, &star, velocity, transform),
     Double(binary) => {
       let sub1 = &binary.primary;

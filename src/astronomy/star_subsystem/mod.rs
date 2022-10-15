@@ -6,24 +6,23 @@ pub mod constraints;
 pub mod error;
 use error::*;
 
-/// The `Subsystem` type.
+/// The `StarSubsystem` type.
 ///
-/// A subsystem is either one star or two subsystems.  Not three, because of
-/// the 3-body problem.
+/// A StarSubsystem is either one star with a planetary system or a distant binary.
 #[derive(Clone, Debug, PartialEq)]
-pub enum Subsystem {
+pub enum StarSubsystem {
   /// A distant binary system.
   DistantBinaryStar(DistantBinaryStar),
   /// Any other planetary system.
   PlanetarySystem(PlanetarySystem),
 }
 
-impl Subsystem {
+impl StarSubsystem {
   /// Indicate whether this star is capable of supporting conventional life.
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
-    use Subsystem::*;
+    use StarSubsystem::*;
     let result = match &self {
       DistantBinaryStar(distant_binary_star) => Ok(distant_binary_star.check_habitable()?),
       PlanetarySystem(planetary_system) => Ok(planetary_system.check_habitable()?),
@@ -52,7 +51,7 @@ impl Subsystem {
   #[named]
   pub fn get_stellar_mass(&self) -> f64 {
     trace_enter!();
-    use Subsystem::*;
+    use StarSubsystem::*;
     let result = match &self {
       DistantBinaryStar(distant_binary_star) => distant_binary_star.get_stellar_mass(),
       PlanetarySystem(planetary_system) => planetary_system.get_stellar_mass(),
@@ -66,7 +65,7 @@ impl Subsystem {
   #[named]
   pub fn get_stellar_count(&self) -> u8 {
     trace_enter!();
-    use Subsystem::*;
+    use StarSubsystem::*;
     let result = match &self {
       DistantBinaryStar(distant_binary_star) => distant_binary_star.get_stellar_count(),
       PlanetarySystem(planetary_system) => planetary_system.get_stellar_count(),

@@ -5,7 +5,6 @@ use crate::astronomy::close_binary_star::constants::*;
 use crate::astronomy::close_binary_star::error::Error;
 use crate::astronomy::close_binary_star::CloseBinaryStar;
 use crate::astronomy::star::constraints::Constraints as StarConstraints;
-use crate::astronomy::star::Star;
 
 /// Constraints for creating a binary star.
 ///
@@ -133,8 +132,12 @@ impl Constraints {
       }
       primary_mass = rng.gen_range(half..top);
       secondary_mass = combined_mass - primary_mass;
-      let mut primary = Star::from_mass(rng, primary_mass)?;
-      let mut secondary = Star::from_mass(rng, secondary_mass)?;
+      primary_constraints.maximum_mass = Some(1.001 * primary_mass);
+      primary_constraints.minimum_mass = Some(0.999 * primary_mass);
+      secondary_constraints.maximum_mass = Some(1.001 * secondary_mass);
+      secondary_constraints.minimum_mass = Some(0.999 * secondary_mass);
+      let mut primary = primary_constraints.generate(rng)?;
+      let mut secondary = secondary_constraints.generate(rng)?;
       let minimum_age = match self.enforce_habitability {
         true => MINIMUM_HABITABLE_AGE,
         false => 0.1 * primary.life_expectancy,
