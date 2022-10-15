@@ -7,6 +7,16 @@ pub enum Error {
   StarSystemError(StarSystemError),
 }
 
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    StarSystemError(star_system_error) => format!(
+      "an error occurred while generating the star system ({})",
+      honeyholt_brief!(star_system_error)
+    ),
+  }
+});
+
 impl From<StarSystemError> for Error {
   #[named]
   fn from(error: StarSystemError) -> Self {

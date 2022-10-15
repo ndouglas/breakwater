@@ -5,9 +5,17 @@ use crate::astronomy::satellite_system::error::Error as SatelliteSystemError;
 pub enum Error {
   /// Satellite System.
   SatelliteSystemError(SatelliteSystemError),
-  /// Unknown
-  UnknownError,
 }
+
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    SatelliteSystemError(satellite_system_error) => format!(
+      "an error occurred in the satellite system ({})",
+      honeyholt_brief!(satellite_system_error)
+    ),
+  }
+});
 
 impl From<SatelliteSystemError> for Error {
   #[named]

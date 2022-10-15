@@ -11,9 +11,16 @@ pub enum Error {
   MoonsError(MoonsError),
   /// Planet Error.
   PlanetError(PlanetError),
-  /// Unknown.
-  UnknownError,
 }
+
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    MoonError(moon_error) => format!("an error occurred in the moon ({})", honeyholt_brief!(moon_error)),
+    MoonsError(moons_error) => format!("an error occurred in the moons ({})", honeyholt_brief!(moons_error)),
+    PlanetError(planet_error) => format!("an error occurred in the planet ({})", honeyholt_brief!(planet_error)),
+  }
+});
 
 impl From<MoonError> for Error {
   #[named]

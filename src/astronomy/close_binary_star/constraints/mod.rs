@@ -132,10 +132,10 @@ impl Constraints {
       }
       primary_mass = rng.gen_range(half..top);
       secondary_mass = combined_mass - primary_mass;
-      primary_constraints.maximum_mass = Some(1.001 * primary_mass);
       primary_constraints.minimum_mass = Some(0.999 * primary_mass);
-      secondary_constraints.maximum_mass = Some(1.001 * secondary_mass);
+      primary_constraints.maximum_mass = Some(1.001 * primary_mass);
       secondary_constraints.minimum_mass = Some(0.999 * secondary_mass);
+      secondary_constraints.maximum_mass = Some(1.001 * secondary_mass);
       let mut primary = primary_constraints.generate(rng)?;
       let mut secondary = secondary_constraints.generate(rng)?;
       let minimum_age = match self.enforce_habitability {

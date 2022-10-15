@@ -12,6 +12,21 @@ pub enum Error {
   NoSuitableSubsystemsCouldBeGenerated,
 }
 
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    NoSuitableSubsystemsCouldBeGenerated => "no suitable subsystems could be generated".to_string(),
+    StarSubsystemError(star_subsystem_error) => format!(
+      "an error occurred in the star subsystem ({})",
+      honeyholt_brief!(star_subsystem_error)
+    ),
+    StarError(star_error) => format!(
+      "an error occurred while generating the star ({})",
+      honeyholt_brief!(star_error)
+    ),
+  }
+});
+
 impl From<StarError> for Error {
   #[named]
   fn from(error: StarError) -> Self {

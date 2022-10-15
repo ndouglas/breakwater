@@ -10,9 +10,21 @@ pub enum Error {
   DistantBinaryStarError(DistantBinaryStarError),
   /// Wrap a Planetary System error.
   PlanetarySystemError(PlanetarySystemError),
-  /// Unknown
-  UnknownError,
 }
+
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    DistantBinaryStarError(distant_binary_star_error) => format!(
+      "an error occurred in the distant binary star ({})",
+      honeyholt_brief!(distant_binary_star_error)
+    ),
+    PlanetarySystemError(planetary_system_error) => format!(
+      "an error occurred in the planetary system ({})",
+      honeyholt_brief!(planetary_system_error)
+    ),
+  }
+});
 
 impl From<DistantBinaryStarError> for Error {
   #[named]

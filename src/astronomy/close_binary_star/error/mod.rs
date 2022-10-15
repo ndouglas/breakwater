@@ -24,10 +24,7 @@ honeyholt_define_brief!(Error, |error: &Error| {
     },
     HabitableZoneContainedWithinDangerZone => "the stars' habitable zone is too close to the host stars".to_string(),
     NoHabitableZoneFound => "the stars do not have a habitable zone".to_string(),
-    StarError(star_error) => format!(
-      "an error occurred while generating the star ({})",
-      honeyholt_brief!(star_error)
-    ),
+    StarError(star_error) => format!("an error occurred in the star ({})", honeyholt_brief!(star_error)),
   }
 });
 

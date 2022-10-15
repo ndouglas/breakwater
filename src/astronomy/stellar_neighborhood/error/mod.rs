@@ -7,6 +7,16 @@ pub enum Error {
   StellarNeighborError(StellarNeighborError),
 }
 
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    StellarNeighborError(stellar_neighbor_error) => format!(
+      "an error occurred in the stellar neighbor ({})",
+      honeyholt_brief!(stellar_neighbor_error)
+    ),
+  }
+});
+
 impl From<StellarNeighborError> for Error {
   #[named]
   fn from(error: StellarNeighborError) -> Self {

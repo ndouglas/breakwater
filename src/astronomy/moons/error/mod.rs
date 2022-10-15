@@ -5,9 +5,14 @@ use crate::astronomy::moon::error::Error as MoonError;
 pub enum Error {
   /// Moon Error.
   MoonError(MoonError),
-  /// Unknown.
-  UnknownError,
 }
+
+honeyholt_define_brief!(Error, |error: &Error| {
+  use Error::*;
+  match error {
+    MoonError(moon_error) => format!("an error occurred in the moon ({})", honeyholt_brief!(moon_error)),
+  }
+});
 
 impl From<MoonError> for Error {
   #[named]
