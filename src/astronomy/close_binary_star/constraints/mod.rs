@@ -279,6 +279,7 @@ pub mod test {
       }
     }
     print_var!(success);
+    assert_eq!(counter, trials);
     trace_exit!();
     Ok(())
   }
