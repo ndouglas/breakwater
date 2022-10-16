@@ -1,4 +1,5 @@
 pub mod constants;
+use constants::*;
 pub mod constraints;
 pub mod error;
 use error::Error;
@@ -123,7 +124,23 @@ impl TerrestrialPlanet {
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
-    let result = { Ok(()) };
+    let result = {
+      if self.equilibrium_temperature <= MINIMUM_HABITABLE_TEMPERATURE {
+        // About 0ºC is too damned cold.
+        return Err(Error::TooColdToSupportConventionalLife);
+      }
+      if self.equilibrium_temperature >= MAXIMUM_HABITABLE_TEMPERATURE {
+        // About 50ºC is too damned hot.
+        return Err(Error::TooHotToSupportConventionalLife);
+      }
+      if self.gravity <= MINIMUM_HABITABLE_GRAVITY {
+        return Err(Error::GravityTooLowToSupportConventionalLife);
+      }
+      if self.gravity >= MAXIMUM_HABITABLE_GRAVITY {
+        return Err(Error::GravityTooHighToSupportConventionalLife);
+      }
+      Ok(())
+    };
     trace_var!(result);
     trace_exit!();
     result

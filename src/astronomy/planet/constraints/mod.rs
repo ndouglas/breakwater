@@ -1,5 +1,6 @@
 use rand::prelude::*;
 
+use crate::astronomy::gas_giant_planet::constraints::Constraints as GasGiantPlanetConstraints;
 use crate::astronomy::host_star::HostStar;
 use crate::astronomy::planet::error::Error;
 use crate::astronomy::planet::Planet;
@@ -8,6 +9,8 @@ use crate::astronomy::terrestrial_planet::constraints::Constraints as Terrestria
 /// Constraints for creating a planet.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
+  /// Gas Giant planet constraints.
+  pub gas_giant_planet_constraints: Option<GasGiantPlanetConstraints>,
   /// Terrestrial planet constraints.
   pub terrestrial_planet_constraints: Option<TerrestrialPlanetConstraints>,
 }
@@ -26,12 +29,22 @@ impl Constraints {
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R, host_star: &HostStar, distance: f64) -> Result<Planet, Error> {
     trace_enter!();
-    let constraints = self
-      .terrestrial_planet_constraints
-      .unwrap_or(TerrestrialPlanetConstraints::default());
-    trace_var!(constraints);
     use Planet::*;
-    let result = { TerrestrialPlanet(constraints.generate(rng, host_star, distance)?) };
+    let result = {
+      if distance >= host_star.get_frost_line() {
+        let constraints = self
+          .gas_giant_planet_constraints
+          .unwrap_or(GasGiantPlanetConstraints::default());
+        trace_var!(constraints);
+        GasGiantPlanet(constraints.generate(rng, host_star, distance)?)
+      } else {
+        let constraints = self
+          .terrestrial_planet_constraints
+          .unwrap_or(TerrestrialPlanetConstraints::default());
+        trace_var!(constraints);
+        TerrestrialPlanet(constraints.generate(rng, host_star, distance)?)
+      }
+    };
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -41,8 +54,10 @@ impl Constraints {
 impl Default for Constraints {
   /// No constraints, just let it all hang out.
   fn default() -> Self {
+    let gas_giant_planet_constraints = None;
     let terrestrial_planet_constraints = None;
     Self {
+      gas_giant_planet_constraints,
       terrestrial_planet_constraints,
     }
   }

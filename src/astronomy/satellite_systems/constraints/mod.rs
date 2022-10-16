@@ -29,9 +29,11 @@ impl Constraints {
     trace_enter!();
     let generate_primary_gas_giant = true;
     let generate_habitable = true;
+    let satellite_system_constraints = Some(SatelliteSystemConstraints::habitable());
     let result = Self {
       generate_primary_gas_giant,
       generate_habitable,
+      satellite_system_constraints,
       ..Constraints::default()
     };
     trace_var!(result);
@@ -155,6 +157,22 @@ pub mod test {
     let host_star = &HostStarConstraints::default().generate(&mut rng)?;
     trace_var!(host_star);
     let satellite_systems = &Constraints::default().generate(&mut rng, host_star)?;
+    trace_var!(satellite_systems);
+    print_var!(satellite_systems);
+    trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  #[test]
+  pub fn test_habitable() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let host_star = &HostStarConstraints::habitable().generate(&mut rng)?;
+    trace_var!(host_star);
+    let satellite_systems = &Constraints::habitable().generate(&mut rng, host_star)?;
     trace_var!(satellite_systems);
     print_var!(satellite_systems);
     trace_exit!();

@@ -27,12 +27,10 @@ impl Constraints {
         minimum_count = MINIMUM_TERRESTRIAL_MOONS;
         maximum_count = MAXIMUM_TERRESTRIAL_MOONS;
       },
-      /*
       GasGiantPlanet(planet) => {
         minimum_count = MINIMUM_GAS_GIANT_MOONS;
         maximum_count = MAXIMUM_GAS_GIANT_MOONS;
       },
-      */
     }
     trace_var!(minimum_count);
     trace_var!(maximum_count);

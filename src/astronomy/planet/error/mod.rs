@@ -11,6 +11,8 @@ pub enum Error {
   HostStarError(HostStarError),
   /// TerrestrialPlanet error.
   TerrestrialPlanetError(TerrestrialPlanetError),
+  /// The planet type is uninhabitable.
+  UninhabitablePlanetType,
 }
 
 honeyholt_define_brief!(Error, |error: &Error| {
@@ -28,6 +30,7 @@ honeyholt_define_brief!(Error, |error: &Error| {
       "an error occurred in the terrestrial planet ({})",
       honeyholt_brief!(terrestrial_planet_error)
     ),
+    UninhabitablePlanetType => "the type of planet is fundamentally uninhabitable".to_string(),
   }
 });
 

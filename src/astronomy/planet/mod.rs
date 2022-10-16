@@ -1,3 +1,4 @@
+use crate::astronomy::gas_giant_planet::GasGiantPlanet;
 use crate::astronomy::terrestrial_planet::TerrestrialPlanet;
 
 pub mod constants;
@@ -10,6 +11,7 @@ pub mod math;
 #[derive(Clone, Debug, PartialEq)]
 pub enum Planet {
   /// Gas Giant Planet.
+  GasGiantPlanet(GasGiantPlanet),
   /// Terrestrial Planet.
   TerrestrialPlanet(TerrestrialPlanet),
 }
@@ -22,6 +24,7 @@ impl Planet {
     use Planet::*;
     match &self {
       TerrestrialPlanet(terrestrial_planet) => terrestrial_planet.check_habitable()?,
+      _ => return Err(Error::UninhabitablePlanetType),
     }
     let result = Ok(());
     trace_var!(result);

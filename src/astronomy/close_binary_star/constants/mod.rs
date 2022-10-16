@@ -59,7 +59,7 @@ pub const MAXIMUM_HABITABLE_ORBITAL_ECCENTRICITY: f64 = 0.6;
 
 /// Below this is probably too low to support conventional life.
 /// Measured in Msol, or solar mass equivalents.
-pub const MINIMUM_HABITABLE_COMBINED_MASS: f64 = 0.6;
+pub const MINIMUM_HABITABLE_COMBINED_MASS: f64 = 1.0;
 
 /// Above this is probably too high to support conventional life.
 /// Measured in Msol, or solar mass equivalents.

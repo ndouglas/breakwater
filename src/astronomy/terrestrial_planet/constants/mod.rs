@@ -5,10 +5,12 @@ pub const MINIMUM_MASS: f64 = 0.1;
 pub const MAXIMUM_MASS: f64 = 10.0;
 
 /// Minimum mass for a habitable planet, in Mearth.
-pub const MINIMUM_HABITABLE_MASS: f64 = 0.10;
+/// Raised from 0.10 because that sounds ludicrous.
+pub const MINIMUM_HABITABLE_MASS: f64 = 0.75;
 
 /// Maximum mass for a habitable planet, in Mearth.
-pub const MAXIMUM_HABITABLE_MASS: f64 = 3.50;
+/// Lowered because 3.5 just sounds extreme to me.
+pub const MAXIMUM_HABITABLE_MASS: f64 = 1.50;
 
 /// Minimum habitable rotational period, in Dearth.
 pub const MINIMUM_HABITABLE_ROTATIONAL_PERIOD: f64 = 0.25;
@@ -42,3 +44,15 @@ pub const MAXIMUM_HABITABLE_BOND_ALBEDO: f64 = 0.50;
 
 /// Stefan-Boltzmann constant.
 pub const STEFAN_BOLTZMANN_CONSTANT: f64 = 0.00005670374419;
+
+/// Too damned cold.
+pub const MINIMUM_HABITABLE_TEMPERATURE: f64 = 273.0;
+
+/// Too damned hot.
+pub const MAXIMUM_HABITABLE_TEMPERATURE: f64 = 323.0;
+
+/// Too damned floaty.
+pub const MINIMUM_HABITABLE_GRAVITY: f64 = 0.5;
+
+/// Too damned hard to get out of bed.
+pub const MAXIMUM_HABITABLE_GRAVITY: f64 = 1.5;

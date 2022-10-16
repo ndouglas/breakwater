@@ -86,6 +86,7 @@ pub mod test {
     let planetary_system = Constraints::habitable().generate(&mut rng)?;
     trace_var!(planetary_system);
     print_var!(planetary_system);
+    planetary_system.check_habitable()?;
     assert!(planetary_system.is_habitable());
     trace_exit!();
     Ok(())
