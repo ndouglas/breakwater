@@ -13,6 +13,14 @@ pub enum Error {
   GravityTooLowToSupportConventionalLife,
   /// Just sounds kinda lame.
   GravityTooHighToSupportConventionalLife,
+  /// Oxygen unstable in this atmosphere.
+  AtmosphereUnstableForOxygen,
+  /// Carbon Dioxide unstable in this atmosphere.
+  AtmosphereUnstableForCarbonDioxide,
+  /// Argon unstable in this atmosphere.
+  AtmosphereUnstableForArgon,
+  /// Nitrogen unstable in this atmosphere.
+  AtmosphereUnstableForNitrogen,
 }
 
 honeyholt_define_brief!(Error, |error: &Error| {
@@ -26,6 +34,10 @@ honeyholt_define_brief!(Error, |error: &Error| {
     TooHotToSupportConventionalLife => "not habitable because it is too hot".to_string(),
     GravityTooLowToSupportConventionalLife => "not habitable because its gravity is too low".to_string(),
     GravityTooHighToSupportConventionalLife => "not habitable because its gravity is too high".to_string(),
+    AtmosphereUnstableForOxygen => "not habitable because it cannot retain oxygen".to_string(),
+    AtmosphereUnstableForCarbonDioxide => "not habitable because it cannot retain carbon dioxide".to_string(),
+    AtmosphereUnstableForArgon => "not habitable because it cannot retain argon".to_string(),
+    AtmosphereUnstableForNitrogen => "not habitable because it cannot retain nitrogen".to_string(),
   }
 });
 

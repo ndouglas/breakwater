@@ -83,7 +83,14 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let planetary_system = Constraints::habitable().generate(&mut rng)?;
+    let mut planetary_system = Constraints::habitable().generate(&mut rng)?;
+    let mut is_habitable = planetary_system.is_habitable();
+    let mut counter = 0;
+    while !is_habitable && counter < 50 {
+      planetary_system = Constraints::habitable().generate(&mut rng)?;
+      is_habitable = planetary_system.is_habitable();
+      counter += 1;
+    }
     trace_var!(planetary_system);
     print_var!(planetary_system);
     planetary_system.check_habitable()?;

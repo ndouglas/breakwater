@@ -4,6 +4,9 @@ pub mod constraints;
 pub mod error;
 use error::Error;
 pub mod math;
+use math::atmospheric_stability::{
+  is_argon_stable, is_atmospherically_stable, is_carbon_dioxide_stable, is_nitrogen_stable, is_oxygen_stable,
+};
 use math::density::get_density;
 use math::escape_velocity::get_escape_velocity;
 use math::gravity::get_gravity;
@@ -51,6 +54,8 @@ pub struct TerrestrialPlanet {
   pub greenhouse_effect: f64,
   /// Equilibrium temperature, in Kelvin.
   pub equilibrium_temperature: f64,
+  /// Whether we can retain the gases necessary for conventional life.
+  pub is_atmospherically_stable: bool,
 }
 
 impl TerrestrialPlanet {
@@ -95,6 +100,7 @@ impl TerrestrialPlanet {
     let orbital_period = semi_major_axis.powf(3.0).sqrt();
     let equilibrium_temperature =
       get_equilibrium_temperature(bond_albedo, greenhouse_effect, host_star_luminosity, host_star_distance);
+    let is_atmospherically_stable = is_atmospherically_stable(equilibrium_temperature, escape_velocity);
     let result = Self {
       mass,
       core_mass_fraction,
@@ -114,6 +120,7 @@ impl TerrestrialPlanet {
       bond_albedo,
       greenhouse_effect,
       equilibrium_temperature,
+      is_atmospherically_stable,
     };
     trace_var!(result);
     trace_exit!();
@@ -138,6 +145,18 @@ impl TerrestrialPlanet {
       }
       if self.gravity >= MAXIMUM_HABITABLE_GRAVITY {
         return Err(Error::GravityTooHighToSupportConventionalLife);
+      }
+      if !is_oxygen_stable(self.equilibrium_temperature, self.escape_velocity) {
+        return Err(Error::AtmosphereUnstableForOxygen);
+      }
+      if !is_carbon_dioxide_stable(self.equilibrium_temperature, self.escape_velocity) {
+        return Err(Error::AtmosphereUnstableForCarbonDioxide);
+      }
+      if !is_argon_stable(self.equilibrium_temperature, self.escape_velocity) {
+        return Err(Error::AtmosphereUnstableForArgon);
+      }
+      if !is_nitrogen_stable(self.equilibrium_temperature, self.escape_velocity) {
+        return Err(Error::AtmosphereUnstableForNitrogen);
       }
       Ok(())
     };

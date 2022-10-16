@@ -84,9 +84,11 @@ pub mod test {
     let mut host_star = host_star_constraints.generate(&mut rng)?;
     trace_var!(host_star);
     let mut is_habitable = !host_star.is_habitable();
-    while !is_habitable {
+    let mut counter = 0;
+    while !is_habitable && counter < 50 {
       host_star = host_star_constraints.generate(&mut rng)?;
       is_habitable = !host_star.is_habitable();
+      counter += 1;
     }
     let habitable_zone = host_star.get_habitable_zone();
     trace_var!(habitable_zone);

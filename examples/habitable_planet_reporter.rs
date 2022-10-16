@@ -26,9 +26,11 @@ fn main() -> Result<(), Error> {
   let constraints = Constraints::habitable();
   let mut star_system = constraints.generate(&mut rng)?;
   let mut is_habitable = star_system.is_habitable();
-  while !is_habitable {
+  let mut counter = 0;
+  while !is_habitable && counter < 50 {
     star_system = constraints.generate(&mut rng)?;
     is_habitable = star_system.is_habitable();
+    counter += 1;
   }
   let reporter = HabitablePlanetReporter::new();
   reporter.report(&star_system);

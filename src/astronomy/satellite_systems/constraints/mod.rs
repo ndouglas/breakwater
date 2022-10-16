@@ -97,8 +97,8 @@ impl Constraints {
     let mut orbital_distance = minimum;
     let mut index = 0;
     loop {
-      let min_unwrapped = 0.95 * orbital_distance;
-      let max_unwrapped = 1.05 * orbital_distance;
+      let min_unwrapped = 0.80 * orbital_distance;
+      let max_unwrapped = 1.25 * orbital_distance;
       if !result
         .iter()
         .any(|&orbit| orbit > min_unwrapped && orbit < max_unwrapped)
