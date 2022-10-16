@@ -16,6 +16,18 @@ pub const MINIMUM_HABITABLE_ROTATIONAL_PERIOD: f64 = 0.25;
 /// Maximum habitable rotational period, in Dearth.
 pub const MAXIMUM_HABITABLE_ROTATIONAL_PERIOD: f64 = 2.0;
 
+/// Minimum orbitable eccentricity.
+pub const MINIMUM_ORBITAL_ECCENTRICITY: f64 = 0.0;
+
+/// Maximum orbitable eccentricity.
+pub const MAXIMUM_ORBITAL_ECCENTRICITY: f64 = 0.10;
+
+/// Maximum habitable orbitable eccentricity.
+pub const MINIMUM_HABITABLE_ORBITAL_ECCENTRICITY: f64 = MINIMUM_ORBITAL_ECCENTRICITY;
+
+/// Maximum habitable orbitable eccentricity.
+pub const MAXIMUM_HABITABLE_ORBITAL_ECCENTRICITY: f64 = 0.02;
+
 /// Minimum Bond albedo.
 pub const MINIMUM_BOND_ALBEDO: f64 = 0.01;
 

@@ -44,7 +44,7 @@ impl Constraints {
     trace_var!(satellite_systems_constraints);
     let host_star = host_star_constraints.generate(rng)?;
     trace_var!(host_star);
-    let satellite_systems = satellite_systems_constraints.generate(rng)?;
+    let satellite_systems = satellite_systems_constraints.generate(rng, &host_star)?;
     trace_var!(satellite_systems);
     let result = PlanetarySystem {
       host_star,

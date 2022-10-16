@@ -30,10 +30,18 @@ pub struct TerrestrialPlanet {
   pub axial_tilt: f64,
   /// Rotation.
   pub rotation_direction: RotationDirection,
+  /// Semi-Major Axis.
+  pub semi_major_axis: f64,
   /// Tropic Zone.
   pub tropic_zones: (f64, f64),
   /// Polar Zones.
   pub polar_zones: (f64, f64),
+  /// Orbital eccentricity.
+  pub orbital_eccentricity: f64,
+  /// Perihelion.
+  pub perihelion: f64,
+  /// Aphelion.
+  pub aphelion: f64,
   /// Bond albedo.
   pub bond_albedo: f64,
   /// Greenhouse effect.
@@ -73,6 +81,14 @@ impl TerrestrialPlanet {
     trace_var!(host_star_luminosity);
     let host_star_distance = 1.0;
     trace_var!(host_star_distance);
+    let semi_major_axis = host_star_distance;
+    trace_var!(semi_major_axis);
+    let orbital_eccentricity = 0.0167;
+    trace_var!(orbital_eccentricity);
+    let perihelion = (1.0 - orbital_eccentricity) * semi_major_axis;
+    trace_var!(perihelion);
+    let aphelion = (1.0 + orbital_eccentricity) * semi_major_axis;
+    trace_var!(aphelion);
     let equilibrium_temperature =
       get_equilibrium_temperature(bond_albedo, greenhouse_effect, host_star_luminosity, host_star_distance);
     let result = Self {
@@ -84,8 +100,12 @@ impl TerrestrialPlanet {
       radius,
       axial_tilt,
       rotation_direction,
+      semi_major_axis,
       tropic_zones,
       polar_zones,
+      orbital_eccentricity,
+      perihelion,
+      aphelion,
       bond_albedo,
       greenhouse_effect,
       equilibrium_temperature,

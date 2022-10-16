@@ -1,5 +1,6 @@
 use rand::prelude::*;
 
+use crate::astronomy::host_star::HostStar;
 use crate::astronomy::moons::constraints::Constraints as MoonsConstraints;
 use crate::astronomy::planet::constraints::Constraints as PlanetConstraints;
 use crate::astronomy::satellite_system::error::Error;
@@ -17,13 +18,18 @@ pub struct Constraints {
 impl Constraints {
   /// Generate.
   #[named]
-  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R) -> Result<SatelliteSystem, Error> {
+  pub fn generate<R: Rng + ?Sized>(
+    &self,
+    rng: &mut R,
+    host_star: &HostStar,
+    distance: f64,
+  ) -> Result<SatelliteSystem, Error> {
     trace_enter!();
     let planet_constraints = self.planet_constraints.unwrap_or(PlanetConstraints::default());
     trace_var!(planet_constraints);
     let moons_constraints = self.moons_constraints.unwrap_or(MoonsConstraints::default());
     trace_var!(moons_constraints);
-    let planet = planet_constraints.generate(rng)?;
+    let planet = planet_constraints.generate(rng, host_star, distance)?;
     trace_var!(planet);
     let moons = moons_constraints.generate(rng)?;
     trace_var!(moons);
@@ -49,6 +55,7 @@ impl Default for Constraints {
 #[cfg(test)]
 pub mod test {
 
+  use crate::astronomy::host_star::constraints::Constraints as HostStarConstraints;
   use rand::prelude::*;
 
   use super::*;
@@ -61,7 +68,10 @@ pub mod test {
     trace_enter!();
     let mut rng = thread_rng();
     trace_var!(rng);
-    let satellite_system = &Constraints::default().generate(&mut rng)?;
+    let host_star = HostStarConstraints::habitable().generate(&mut rng)?;
+    let habitable_zone = host_star.get_habitable_zone();
+    let distance = rng.gen_range(habitable_zone.0..habitable_zone.1);
+    let satellite_system = &Constraints::default().generate(&mut rng, &host_star, distance)?;
     trace_var!(satellite_system);
     print_var!(satellite_system);
     trace_exit!();
