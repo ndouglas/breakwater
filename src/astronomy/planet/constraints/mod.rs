@@ -13,6 +13,15 @@ pub struct Constraints {
 }
 
 impl Constraints {
+  /// Aim for a habitable planet.
+  pub fn habitable() -> Self {
+    let terrestrial_planet_constraints = Some(TerrestrialPlanetConstraints::habitable());
+    Self {
+      terrestrial_planet_constraints,
+      ..Constraints::default()
+    }
+  }
+
   /// Generate.
   #[named]
   pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R, host_star: &HostStar, distance: f64) -> Result<Planet, Error> {
@@ -21,7 +30,8 @@ impl Constraints {
       .terrestrial_planet_constraints
       .unwrap_or(TerrestrialPlanetConstraints::default());
     trace_var!(constraints);
-    let result = { Planet::TerrestrialPlanet(constraints.generate(rng, host_star, distance)?) };
+    use Planet::*;
+    let result = { TerrestrialPlanet(constraints.generate(rng, host_star, distance)?) };
     trace_var!(result);
     trace_exit!();
     Ok(result)
@@ -58,6 +68,23 @@ pub mod test {
     let habitable_zone = host_star.get_habitable_zone();
     let distance = rng.gen_range(habitable_zone.0..habitable_zone.1);
     let planet = &Constraints::default().generate(&mut rng, &host_star, distance)?;
+    trace_var!(planet);
+    print_var!(planet);
+    trace_exit!();
+    Ok(())
+  }
+
+  #[named]
+  #[test]
+  pub fn test_habitable() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let host_star = &HostStarConstraints::habitable().generate(&mut rng)?;
+    let habitable_zone = host_star.get_habitable_zone();
+    let distance = rng.gen_range(habitable_zone.0..habitable_zone.1);
+    let planet = &Constraints::habitable().generate(&mut rng, &host_star, distance)?;
     trace_var!(planet);
     print_var!(planet);
     trace_exit!();

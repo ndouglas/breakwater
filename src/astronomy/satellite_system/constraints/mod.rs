@@ -16,6 +16,15 @@ pub struct Constraints {
 }
 
 impl Constraints {
+  /// No constraints, just let it all hang out.
+  pub fn habitable() -> Self {
+    let planet_constraints = Some(PlanetConstraints::habitable());
+    Self {
+      planet_constraints,
+      ..Constraints::default()
+    }
+  }
+
   /// Generate.
   #[named]
   pub fn generate<R: Rng + ?Sized>(
@@ -31,7 +40,7 @@ impl Constraints {
     trace_var!(moons_constraints);
     let planet = planet_constraints.generate(rng, host_star, distance)?;
     trace_var!(planet);
-    let moons = moons_constraints.generate(rng)?;
+    let moons = moons_constraints.generate(rng, &planet)?;
     trace_var!(moons);
     let result = SatelliteSystem { planet, moons };
     trace_var!(result);

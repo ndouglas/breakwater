@@ -8,6 +8,8 @@ pub enum Error {
   HostStarError(HostStarError),
   /// Satellite System.
   SatelliteSystemError(SatelliteSystemError),
+  /// No habitable systems found.
+  NoHabitableSatelliteSystemsFound,
 }
 
 honeyholt_define_brief!(Error, |error: &Error| {
@@ -21,6 +23,7 @@ honeyholt_define_brief!(Error, |error: &Error| {
       "an error occurred in the satellite system ({})",
       honeyholt_brief!(satellite_system_error)
     ),
+    NoHabitableSatelliteSystemsFound => "no habitable systems could be found".to_string(),
   }
 });
 

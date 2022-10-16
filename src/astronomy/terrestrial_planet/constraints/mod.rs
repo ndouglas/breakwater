@@ -84,11 +84,11 @@ impl Constraints {
     };
     result.tropic_zones = match axial_tilt {
       axial_tilt if axial_tilt < 90.0 => (0.0, axial_tilt),
-      axial_tilt if axial_tilt > 90.0 => (0.0, 90.0 - (180.0 - axial_tilt)),
+      axial_tilt if axial_tilt > 90.0 => (0.0, 180.0 - axial_tilt),
       _ => (0.0, 0.0),
     };
     result.polar_zones = match axial_tilt {
-      axial_tilt if axial_tilt < 90.0 => ((90.0 - axial_tilt), 90.0),
+      axial_tilt if axial_tilt < 90.0 => (90.0 - axial_tilt, 90.0),
       axial_tilt if axial_tilt > 90.0 => (90.0 - (180.0 - axial_tilt), 90.0),
       _ => (0.0, 0.0),
     };
@@ -109,6 +109,9 @@ impl Constraints {
     let aphelion = (1.0 + orbital_eccentricity) * distance;
     result.aphelion = aphelion;
     trace_var!(aphelion);
+    let orbital_period = (distance.powf(3.0) / host_star.get_stellar_mass()).sqrt();
+    result.orbital_period = orbital_period;
+    trace_var!(orbital_period);
     let bond_albedo = result.bond_albedo;
     trace_var!(bond_albedo);
     let greenhouse_effect = result.greenhouse_effect;

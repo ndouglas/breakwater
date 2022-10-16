@@ -42,6 +42,8 @@ pub struct TerrestrialPlanet {
   pub perihelion: f64,
   /// Aphelion.
   pub aphelion: f64,
+  /// Orbital period, in Earth years.
+  pub orbital_period: f64,
   /// Bond albedo.
   pub bond_albedo: f64,
   /// Greenhouse effect.
@@ -81,7 +83,7 @@ impl TerrestrialPlanet {
     trace_var!(host_star_luminosity);
     let host_star_distance = 1.0;
     trace_var!(host_star_distance);
-    let semi_major_axis = host_star_distance;
+    let semi_major_axis: f64 = host_star_distance;
     trace_var!(semi_major_axis);
     let orbital_eccentricity = 0.0167;
     trace_var!(orbital_eccentricity);
@@ -89,6 +91,7 @@ impl TerrestrialPlanet {
     trace_var!(perihelion);
     let aphelion = (1.0 + orbital_eccentricity) * semi_major_axis;
     trace_var!(aphelion);
+    let orbital_period = semi_major_axis.powf(3.0).sqrt();
     let equilibrium_temperature =
       get_equilibrium_temperature(bond_albedo, greenhouse_effect, host_star_luminosity, host_star_distance);
     let result = Self {
@@ -106,6 +109,7 @@ impl TerrestrialPlanet {
       orbital_eccentricity,
       perihelion,
       aphelion,
+      orbital_period,
       bond_albedo,
       greenhouse_effect,
       equilibrium_temperature,
@@ -113,6 +117,29 @@ impl TerrestrialPlanet {
     trace_var!(result);
     trace_exit!();
     Ok(result)
+  }
+
+  /// Indicate whether this planet is capable of supporting conventional life.
+  #[named]
+  pub fn check_habitable(&self) -> Result<(), Error> {
+    trace_enter!();
+    let result = { Ok(()) };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Indicate whether this planet is capable of supporting conventional life.
+  #[named]
+  pub fn is_habitable(&self) -> bool {
+    trace_enter!();
+    let result = match self.check_habitable() {
+      Ok(()) => true,
+      Err(_) => false,
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
   }
 }
 

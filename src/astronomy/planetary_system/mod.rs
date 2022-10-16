@@ -21,7 +21,11 @@ impl PlanetarySystem {
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {
     trace_enter!();
-    let result = Ok(self.host_star.check_habitable()?);
+    let result = {
+      self.host_star.check_habitable()?;
+      self.satellite_systems.check_habitable()?;
+      Ok(())
+    };
     trace_var!(result);
     trace_exit!();
     result
