@@ -1,10 +1,10 @@
-use rand::distributions::{Distribution, Standard};
-use rand::prelude::*;
+use crate::astronomy::planet::Planet;
 
 pub mod constants;
 use constants::*;
 pub mod constraints;
 pub mod error;
+use error::Error;
 
 /// A `Moon`, mercifully, is a fairly simple concept.
 ///
@@ -18,15 +18,17 @@ pub mod error;
 pub struct Moon {
   /// The mass of this moon.
   pub mass: f64,
-  /// The albedo (geometric) of this moon.
-  pub albedo: f64,
 }
 
-impl Distribution<Moon> for Standard {
+impl Moon {
   #[named]
-  fn sample<R: Rng + ?Sized>(&self, rng: &mut R) -> Moon {
-    let mass = rng.gen_range(MINIMUM_MASS..MAXIMUM_MASS);
-    let albedo = rng.gen_range(MINIMUM_ALBEDO..MAXIMUM_ALBEDO);
-    Moon { mass, albedo }
+  pub fn from_mass(mass: f64, planet: &Planet, distance: f64) -> Result<Moon, Error> {
+    trace_enter!();
+    trace_var!(planet);
+    trace_var!(distance);
+    let result = Moon { mass };
+    trace_var!(result);
+    trace_exit!();
+    Ok(result)
   }
 }

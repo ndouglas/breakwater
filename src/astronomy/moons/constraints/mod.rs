@@ -36,12 +36,20 @@ impl Constraints {
     trace_var!(maximum_count);
     let moon_constraints = self.moon_constraints.unwrap_or(MoonConstraints::default());
     trace_var!(moon_constraints);
+    let rocky_moon_density = 3.35;
+    let satellite_zone = {
+      let inner = 2.44 * planet.get_radius() * 6371.0 * (planet.get_density() / rocky_moon_density).powf(1.0 / 3.0);
+      // @todo: improve this.
+      let outer = 20.0 * inner;
+      (inner, outer)
+    };
     let moons = {
       let count = rng.gen_range(minimum_count..=maximum_count);
       trace_var!(count);
       let mut moons = vec![];
       for _ in 1..count {
-        let moon = moon_constraints.generate(rng, planet)?;
+        let distance = rng.gen_range(satellite_zone.0..satellite_zone.1);
+        let moon = moon_constraints.generate(rng, planet, distance)?;
         moons.push(moon);
       }
       moons

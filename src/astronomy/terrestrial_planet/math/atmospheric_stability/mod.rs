@@ -159,7 +159,7 @@ pub mod test {
   pub fn test_get_oxygen_stability() {
     init();
     trace_enter!();
-    let equilibrium_temperature = 1.0;
+    let equilibrium_temperature = 288.0;
     let escape_velocity = 1.0;
     let oxygen_stability = get_oxygen_stability(equilibrium_temperature, escape_velocity);
     assert_approx_eq!(oxygen_stability, 0.579, 0.001);
@@ -172,7 +172,7 @@ pub mod test {
   pub fn test_get_carbon_dioxide_stability() {
     init();
     trace_enter!();
-    let equilibrium_temperature = 1.0;
+    let equilibrium_temperature = 288.0;
     let escape_velocity = 1.0;
     let carbon_dioxide_stability = get_carbon_dioxide_stability(equilibrium_temperature, escape_velocity);
     assert_approx_eq!(carbon_dioxide_stability, 0.494, 0.001);
@@ -185,7 +185,7 @@ pub mod test {
   pub fn test_get_argon_stability() {
     init();
     trace_enter!();
-    let equilibrium_temperature = 1.0;
+    let equilibrium_temperature = 288.0;
     let escape_velocity = 1.0;
     let argon_stability = get_argon_stability(equilibrium_temperature, escape_velocity);
     assert_approx_eq!(argon_stability, 0.518, 0.001);
@@ -198,7 +198,7 @@ pub mod test {
   pub fn test_get_nitrogen_stability() {
     init();
     trace_enter!();
-    let equilibrium_temperature = 1.0;
+    let equilibrium_temperature = 288.0;
     let escape_velocity = 1.0;
     let nitrogen_stability = get_nitrogen_stability(equilibrium_temperature, escape_velocity);
     assert_approx_eq!(nitrogen_stability, 0.619, 0.001);

@@ -17,6 +17,34 @@ pub enum Planet {
 }
 
 impl Planet {
+  /// Get density of the planet.
+  #[named]
+  pub fn get_density(&self) -> f64 {
+    trace_enter!();
+    use Planet::*;
+    let result = match &self {
+      TerrestrialPlanet(terrestrial_planet) => terrestrial_planet.density,
+      GasGiantPlanet(gas_giant_planet) => gas_giant_planet.density,
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
+  /// Get radius of the planet.
+  #[named]
+  pub fn get_radius(&self) -> f64 {
+    trace_enter!();
+    use Planet::*;
+    let result = match &self {
+      TerrestrialPlanet(terrestrial_planet) => terrestrial_planet.radius,
+      GasGiantPlanet(gas_giant_planet) => gas_giant_planet.radius,
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
   /// Indicate whether this planet is capable of supporting conventional life.
   #[named]
   pub fn check_habitable(&self) -> Result<(), Error> {

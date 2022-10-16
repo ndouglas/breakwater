@@ -8,6 +8,10 @@ use error::Error;
 pub struct GasGiantPlanet {
   /// Mass, in Mjupiter.
   pub mass: f64,
+  /// Density, in Djupiter.
+  pub density: f64,
+  /// Radius, in Rjupiter.
+  pub radius: f64,
   /// Semi-Major Axis.
   pub semi_major_axis: f64,
   /// Orbital eccentricity.
@@ -25,6 +29,12 @@ impl GasGiantPlanet {
   pub fn from_mass(mass: f64) -> Result<Self, Error> {
     trace_enter!();
     trace_var!(mass);
+    // @todo: fix.
+    let density: f64 = 1.0;
+    trace_var!(density);
+    // @todo: fix.
+    let radius: f64 = 1.0;
+    trace_var!(radius);
     let semi_major_axis: f64 = 5.2;
     trace_var!(semi_major_axis);
     let orbital_eccentricity = 0.0167;
@@ -37,6 +47,8 @@ impl GasGiantPlanet {
     trace_var!(orbital_period);
     let result = Self {
       mass,
+      density,
+      radius,
       semi_major_axis,
       orbital_eccentricity,
       perihelion,

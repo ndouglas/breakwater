@@ -98,9 +98,12 @@ impl TerrestrialPlanet {
     let aphelion = (1.0 + orbital_eccentricity) * semi_major_axis;
     trace_var!(aphelion);
     let orbital_period = semi_major_axis.powf(3.0).sqrt();
+    trace_var!(orbital_period);
     let equilibrium_temperature =
       get_equilibrium_temperature(bond_albedo, greenhouse_effect, host_star_luminosity, host_star_distance);
+    trace_var!(equilibrium_temperature);
     let is_atmospherically_stable = is_atmospherically_stable(equilibrium_temperature, escape_velocity);
+    trace_var!(is_atmospherically_stable);
     let result = Self {
       mass,
       core_mass_fraction,
