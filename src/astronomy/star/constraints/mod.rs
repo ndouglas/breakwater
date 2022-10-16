@@ -54,7 +54,6 @@ impl Constraints {
       mass
     };
     trace_var!(mass);
-    print_var!(mass);
     let mut result = Star::from_mass(rng, mass)?;
     trace_var!(result);
     let minimum_age = match self.make_habitable {

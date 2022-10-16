@@ -246,7 +246,7 @@ pub mod test {
     loop {
       match &Constraints::default().generate(&mut rng) {
         Ok(_binary) => success += 1,
-        Err(error) => println!("ERROR: {:#?}", error),
+        Err(error) => print_var!(error),
       }
       counter += 1;
       if counter >= trials {

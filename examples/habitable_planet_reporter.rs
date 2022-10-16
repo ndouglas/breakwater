@@ -1,14 +1,14 @@
 #![allow(unused_imports)]
+///! Generates a star system and prints a little report on it.
 use breakwater::astronomy::star_system::constraints::Constraints;
 use breakwater::astronomy::star_system::error::Error;
 use breakwater::astronomy::star_system::StarSystem;
-///! Generates a star system and prints a little report on it.
 use breakwater::*;
 use rand::prelude::*;
 
-pub struct StarSystemReporter {}
+pub struct HabitablePlanetReporter {}
 
-impl StarSystemReporter {
+impl HabitablePlanetReporter {
   pub fn new() -> Self {
     Self {}
   }
@@ -23,9 +23,14 @@ fn main() -> Result<(), Error> {
   init_pretty_env_logger();
   trace_enter!();
   let mut rng = rand::thread_rng();
-  let constraints = Constraints::main_sequence();
-  let star_system = constraints.generate(&mut rng)?;
-  let reporter = StarSystemReporter::new();
+  let constraints = Constraints::habitable();
+  let mut star_system = constraints.generate(&mut rng)?;
+  let mut is_habitable = star_system.is_habitable();
+  while !is_habitable {
+    star_system = constraints.generate(&mut rng)?;
+    is_habitable = star_system.is_habitable();
+  }
+  let reporter = HabitablePlanetReporter::new();
   reporter.report(&star_system);
   trace_exit!();
   Ok(())

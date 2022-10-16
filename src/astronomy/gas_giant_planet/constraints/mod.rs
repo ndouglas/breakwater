@@ -21,7 +21,7 @@ impl Constraints {
   pub fn generate<R: Rng + ?Sized>(
     &self,
     rng: &mut R,
-    host_star: &HostStar,
+    _host_star: &HostStar,
     distance: f64,
   ) -> Result<GasGiantPlanet, Error> {
     trace_enter!();

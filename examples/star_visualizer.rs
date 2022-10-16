@@ -154,10 +154,10 @@ fn setup_many_orbits(
   }
 }
 
-fn spawn_subsystem(commands: &mut Commands, StarSubsystem: &StarSubsystem, velocity: Velocity, transform: Transform) {
+fn spawn_subsystem(commands: &mut Commands, star_subsystem: &StarSubsystem, velocity: Velocity, transform: Transform) {
   use StarSubsystemType::*;
-  println!("{:#?}", StarSubsystem);
-  match &StarSubsystem.r#type {
+  print_var!("{:#?}", star_subsystem);
+  match &star_subsystem.r#type {
     Single(star) => spawn_star(commands, &star, velocity, transform),
     Double(binary) => {
       let sub1 = &binary.primary;

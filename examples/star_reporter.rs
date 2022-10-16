@@ -52,7 +52,7 @@ impl StarReporter {
         Ok(_) => unreachable!(),
       }
     }
-    println!("{:#?}", star);
+    print_var!(star);
     trace_exit!();
   }
 }

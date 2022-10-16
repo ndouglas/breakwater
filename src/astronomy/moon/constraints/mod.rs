@@ -21,7 +21,7 @@ pub struct Constraints {
 impl Constraints {
   /// Generate.
   #[named]
-  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R, planet: &Planet) -> Result<Moon, Error> {
+  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R, _planet: &Planet) -> Result<Moon, Error> {
     trace_enter!();
     let minimum_mass = self.minimum_mass.unwrap_or(MINIMUM_MASS);
     trace_var!(minimum_mass);
