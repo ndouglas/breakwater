@@ -1,4 +1,5 @@
 pub mod color;
+pub mod distance;
 pub mod frost_line;
 pub mod habitable_zone;
 pub mod luminosity;

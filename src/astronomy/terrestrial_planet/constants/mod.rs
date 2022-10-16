@@ -1,0 +1,32 @@
+/// Minimum mass for a terrestrial planet, in Mearth.
+pub const MINIMUM_MASS: f64 = 0.1;
+
+/// Maximum mass for a terrestrial planet, in Mearth.
+pub const MAXIMUM_MASS: f64 = 10.0;
+
+/// Minimum mass for a habitable planet, in Mearth.
+pub const MINIMUM_HABITABLE_MASS: f64 = 0.10;
+
+/// Maximum mass for a habitable planet, in Mearth.
+pub const MAXIMUM_HABITABLE_MASS: f64 = 3.50;
+
+/// Minimum habitable rotational period, in Dearth.
+pub const MINIMUM_HABITABLE_ROTATIONAL_PERIOD: f64 = 0.25;
+
+/// Maximum habitable rotational period, in Dearth.
+pub const MAXIMUM_HABITABLE_ROTATIONAL_PERIOD: f64 = 2.0;
+
+/// Minimum Bond albedo.
+pub const MINIMUM_BOND_ALBEDO: f64 = 0.01;
+
+/// Maximum Bond albedo.
+pub const MAXIMUM_BOND_ALBEDO: f64 = 1.00;
+
+/// Minimum Bond albedo.
+pub const MINIMUM_HABITABLE_BOND_ALBEDO: f64 = 0.11;
+
+/// Maximum Bond albedo.
+pub const MAXIMUM_HABITABLE_BOND_ALBEDO: f64 = 0.50;
+
+/// Stefan-Boltzmann constant.
+pub const STEFAN_BOLTZMANN_CONSTANT: f64 = 0.00005670374419;

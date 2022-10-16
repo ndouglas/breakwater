@@ -4,7 +4,9 @@
 ///
 /// MOON = ()
 /// MOONS = [MOON]
-/// PLANET = ()
+/// TERRESTRIAL_PLANET = ()
+/// GAS_GIANT_PLANET = ()
+/// PLANET = GAS_GIANT_PLANET | TERRESTRIAL_PLANET
 /// SATELLITE_SYSTEM = (PLANET, MOONS)
 /// SATELLITE_SYSTEMS = [SATELLITE_SYSTEM]
 /// STAR = ()
@@ -20,6 +22,7 @@
 pub mod close_binary_star;
 pub mod distant_binary_star;
 pub mod galaxy;
+pub mod gas_giant_planet;
 pub mod host_star;
 pub mod moon;
 pub mod moons;
@@ -32,3 +35,4 @@ pub mod star_subsystem;
 pub mod star_system;
 pub mod stellar_neighbor;
 pub mod stellar_neighborhood;
+pub mod terrestrial_planet;

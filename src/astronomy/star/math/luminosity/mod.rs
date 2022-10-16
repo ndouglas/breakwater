@@ -1,8 +1,8 @@
 use crate::astronomy::star::constants::*;
 use crate::astronomy::star::error::Error;
 
-pub const ERGS_PER_SEC_PER_LSOL: f64 = 3.826E33;
-pub const JOULES_PER_SEC_PER_LSOL: f64 = 3.826E26;
+pub const ERGS_PER_SEC_PER_LSOL: f64 = 3.846E33;
+pub const JOULES_PER_SEC_PER_LSOL: f64 = 3.846E26;
 
 /// ergs/sec -> Lsol
 pub fn ergs_to_lsol(ergs: f64) -> f64 {

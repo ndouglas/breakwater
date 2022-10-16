@@ -20,7 +20,11 @@ impl Constraints {
   #[named]
   pub fn habitable() -> Self {
     trace_enter!();
+    let host_star_constraints = Some(HostStarConstraints::habitable());
+    let satellite_systems_constraints = Some(SatelliteSystemsConstraints::habitable());
     let result = Self {
+      host_star_constraints,
+      satellite_systems_constraints,
       ..Constraints::default()
     };
     trace_var!(result);
@@ -71,6 +75,21 @@ pub mod test {
 
   use super::*;
   use crate::test::*;
+
+  #[named]
+  #[test]
+  pub fn test_habitable() -> Result<(), Error> {
+    init();
+    trace_enter!();
+    let mut rng = thread_rng();
+    trace_var!(rng);
+    let planetary_system = Constraints::habitable().generate(&mut rng)?;
+    trace_var!(planetary_system);
+    print_var!(planetary_system);
+    assert!(planetary_system.is_habitable());
+    trace_exit!();
+    Ok(())
+  }
 
   #[named]
   #[test]
