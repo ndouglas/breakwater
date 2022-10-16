@@ -5,18 +5,11 @@ The general idea is that I want to be able to create maps, rooms, weather phenom
 
 I don't know, I'm just making this up as I go.
 
-## Star System
+Currently we generate habitable planets from the stellar neighborhood level and work our way down the scale.  We start by generating roughly twelve star systems:
 
-Generation will begin with a star system.  In nature, star systems can have one, two, three, four, or even more bodies -- but I don't see much reason to go beyond four.  Systems of three or more stars can be _hierarchical_ - meaning that they _effectively_ can be described as a two-body system - or not, but the latter are so complicated and unstable that it's difficult to imagine intelligent life arising there.
+<img width="895" alt="Screen Shot 2022-10-16 at 4 31 01 PM" src="https://user-images.githubusercontent.com/1318579/196056830-0aea9951-64ad-406c-9e1b-6e470cb39013.png">
 
-So our process is as follows:
-
-1. Determine an _arity_ of the star system, in which solitary stars are most common, followed by binary, trinary, and so forth.
-2. Determine an _arrangement_ of the star system, the specific details.  
-
-## Planetary System
-
-Generation of the Planetary System begins with a Host Star.  This is what we'll term the star at the center of this conjectured extrasolar system.  It's possible for the host star to be part of a binary system; in a non-circumbinary (S-type) planetary orbit, the planet will circle only one of the stars, whereas a circumbinary (P-type) planetary orbit features the planet circling both.  This could lead to very interesting worlds!
+Each star system may be either a distant binary or single, each of which may be a close binary or a solitary.  Thus we can have a solitary host star, binary host star, or a combination of solitary and close binary stars in our system.  Around each host star are zero or more planets, and around each of those are zero or more moons.
 
 ## Hornvale Project
 - [Hornvale](https://github.com/ndouglas/hornvale/): Frontend and connective logic
