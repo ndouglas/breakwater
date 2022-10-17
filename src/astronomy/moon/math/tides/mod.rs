@@ -59,7 +59,7 @@ pub fn get_spring_tide(lunar_tide: f64, solar_tide: f64) -> f64 {
   trace_enter!();
   trace_var!(lunar_tide);
   trace_var!(solar_tide);
-  let result = (lunar_tide + solar_tide) * 0.54;
+  let result = ((lunar_tide + solar_tide) * 0.54).abs();
   trace_var!(result);
   trace_exit!();
   result
@@ -71,7 +71,7 @@ pub fn get_neap_tide(lunar_tide: f64, solar_tide: f64) -> f64 {
   trace_enter!();
   trace_var!(lunar_tide);
   trace_var!(solar_tide);
-  let result = (lunar_tide - solar_tide) * 0.54;
+  let result = ((lunar_tide - solar_tide) * 0.54).abs();
   trace_var!(result);
   trace_exit!();
   result

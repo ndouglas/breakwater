@@ -31,7 +31,7 @@ pub struct Moon {
   pub radius: f64,
   /// The gravity of this moon, in Gearth (not Gmoon).
   pub gravity: f64,
-  /// The escape velocity of this moon, in Vearth.
+  /// The escape velocity of this moon, in KM/sec.
   pub escape_velocity: f64,
   /// The Bond albedo of this moon.
   pub bond_albedo: f64,
@@ -91,7 +91,7 @@ impl Moon {
     // to the Moon, and Gmoon is 0.1654 * Gearth.
     let gravity = (mass / radius.powf(2.0)) * 0.1654;
     trace_var!(gravity);
-    // This is in Vearth, not Vmoon, as a result of the constant.
+    // This is in KM/sec.
     let escape_velocity = (mass / radius).sqrt() * 2.380;
     trace_var!(escape_velocity);
     // Peg this to the albedo of the Moon for the time being.
