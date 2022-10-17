@@ -8,9 +8,9 @@ use crate::astronomy::planet::Planet;
 /// Constraints for creating a moon.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Constraints {
-  /// The minimum mass.
+  /// The minimum mass, in Mmoon.
   pub minimum_mass: Option<f64>,
-  /// The maximum mass.
+  /// The maximum mass, in Mmoon.
   pub maximum_mass: Option<f64>,
 }
 

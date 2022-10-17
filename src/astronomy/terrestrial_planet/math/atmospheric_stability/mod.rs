@@ -149,8 +149,6 @@ pub fn is_atmospherically_stable(equilibrium_temperature: f64, escape_velocity: 
 #[cfg(test)]
 pub mod test {
 
-  use rand::prelude::*;
-
   use super::*;
   use crate::test::*;
 
