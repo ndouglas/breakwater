@@ -11,7 +11,7 @@ pub fn get_lunar_tide(lunar_mass: f64, planet_radius: f64, semi_major_axis: f64)
   trace_var!(planet_radius);
   trace_var!(semi_major_axis);
   let corrected_lunar_mass = 2_230_000.0 * lunar_mass * 0.0123;
-  let result = (corrected_lunar_mass * planet_radius) / (semi_major_axis / 12742.0).powf(3.0);
+  let result = (corrected_lunar_mass * planet_radius) / (semi_major_axis / 12_742.0).powf(3.0);
   trace_var!(result);
   trace_exit!();
   result
@@ -20,7 +20,7 @@ pub fn get_lunar_tide(lunar_mass: f64, planet_radius: f64, semi_major_axis: f64)
 /// Calculate the magnitude of the solar tide.
 /// `star_mass` - mass of the sun, in Msun.
 /// `planet_radius`  - radius of the planet, in Rearth.
-/// `semi_major_axis` - semi-major axis of the planet's orbit, in KM.
+/// `semi_major_axis` - semi-major axis of the planet's orbit, in AU.
 ///
 /// Returns a magnitude in meters.
 #[named]
@@ -47,7 +47,7 @@ pub fn get_planetary_tide(moon_mass: f64, moon_radius: f64, semi_major_axis: f64
   trace_var!(moon_mass);
   trace_var!(moon_radius);
   trace_var!(semi_major_axis);
-  let result = (2_230_000.0 * moon_mass * moon_radius * 0.027264) / (semi_major_axis / 12742.0).powf(3.0);
+  let result = (2_230_000.0 * moon_mass * moon_radius * 0.027264) / (semi_major_axis / 12_742.0).powf(3.0);
   trace_var!(result);
   trace_exit!();
   result
@@ -72,6 +72,34 @@ pub fn get_neap_tide(lunar_tide: f64, solar_tide: f64) -> f64 {
   trace_var!(lunar_tide);
   trace_var!(solar_tide);
   let result = (lunar_tide - solar_tide) * 0.54;
+  trace_var!(result);
+  trace_exit!();
+  result
+}
+
+/// Determine whether the planet is tidally locked.
+#[named]
+pub fn is_planet_tidally_locked(lunar_tide: f64, solar_tide: f64, star_age: f64, planet_mass: f64) -> bool {
+  trace_enter!();
+  trace_var!(lunar_tide);
+  trace_var!(solar_tide);
+  trace_var!(star_age);
+  trace_var!(planet_mass);
+  let result = ((lunar_tide + solar_tide) * star_age / planet_mass) > 50.0;
+  trace_var!(result);
+  trace_exit!();
+  result
+}
+
+/// Determine whether the moon is tidally locked.
+#[named]
+pub fn is_moon_tidally_locked(solar_tide: f64, planet_tide: f64, star_age: f64, moon_mass: f64) -> bool {
+  trace_enter!();
+  trace_var!(solar_tide);
+  trace_var!(planet_tide);
+  trace_var!(star_age);
+  trace_var!(moon_mass);
+  let result = (((solar_tide + planet_tide) * star_age) / (moon_mass * 0.0123)) > 50.0;
   trace_var!(result);
   trace_exit!();
   result

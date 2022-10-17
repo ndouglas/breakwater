@@ -1,5 +1,6 @@
 use rand::prelude::*;
 
+use crate::astronomy::host_star::HostStar;
 use crate::astronomy::moon::constraints::Constraints as MoonConstraints;
 use crate::astronomy::moons::constants::*;
 use crate::astronomy::moons::error::Error;
@@ -16,9 +17,17 @@ pub struct Constraints {
 impl Constraints {
   /// Generate.
   #[named]
-  pub fn generate<R: Rng + ?Sized>(&self, rng: &mut R, planet: &Planet) -> Result<Moons, Error> {
+  pub fn generate<R: Rng + ?Sized>(
+    &self,
+    rng: &mut R,
+    host_star: &HostStar,
+    star_distance: f64,
+    planet: &Planet,
+  ) -> Result<Moons, Error> {
     trace_enter!();
     trace_var!(planet);
+    trace_var!(host_star);
+    trace_var!(star_distance);
     let minimum_count;
     let maximum_count;
     use Planet::*;
@@ -37,19 +46,22 @@ impl Constraints {
     let moon_constraints = self.moon_constraints.unwrap_or(MoonConstraints::default());
     trace_var!(moon_constraints);
     let rocky_moon_density = 3.35;
+    trace_var!(rocky_moon_density);
     let satellite_zone = {
-      let inner = 2.44 * planet.get_radius() * 6371.0 * (planet.get_density() / rocky_moon_density).powf(1.0 / 3.0);
+      let inner = 2.44 * planet.get_radius() * 6_371.0 * (planet.get_density() / rocky_moon_density).powf(1.0 / 3.0);
       // @todo: improve this.
       let outer = 20.0 * inner;
       (inner, outer)
     };
+    trace_var!(satellite_zone);
     let moons = {
       let count = rng.gen_range(minimum_count..=maximum_count);
       trace_var!(count);
       let mut moons = vec![];
       for _ in 1..count {
-        let distance = rng.gen_range(satellite_zone.0..satellite_zone.1);
-        let moon = moon_constraints.generate(rng, planet, distance)?;
+        let planet_distance = rng.gen_range(satellite_zone.0..satellite_zone.1);
+        let moon = moon_constraints.generate(rng, host_star, star_distance, planet, planet_distance)?;
+        trace_var!(moon);
         moons.push(moon);
       }
       moons
@@ -91,11 +103,11 @@ pub mod test {
     trace_var!(host_star);
     let habitable_zone = host_star.get_habitable_zone();
     trace_var!(habitable_zone);
-    let distance = rng.gen_range(habitable_zone.0..habitable_zone.1);
-    trace_var!(distance);
-    let planet = &PlanetConstraints::default().generate(&mut rng, &host_star, distance)?;
+    let star_distance = rng.gen_range(habitable_zone.0..habitable_zone.1);
+    trace_var!(star_distance);
+    let planet = &PlanetConstraints::default().generate(&mut rng, &host_star, star_distance)?;
     trace_var!(planet);
-    let moon = &Constraints::default().generate(&mut rng, &planet)?;
+    let moon = &Constraints::default().generate(&mut rng, &host_star, star_distance, &planet)?;
     trace_var!(moon);
     print_var!(moon);
     trace_exit!();

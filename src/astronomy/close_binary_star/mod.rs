@@ -130,6 +130,18 @@ impl CloseBinaryStar {
     Ok(result)
   }
 
+  /// Retrieve or calculate the age of the stars.
+  ///
+  /// Calculated in Gyr.
+  #[named]
+  pub fn get_current_age(&self) -> f64 {
+    trace_enter!();
+    let result = self.primary.current_age;
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.

@@ -31,16 +31,18 @@ impl Constraints {
     &self,
     rng: &mut R,
     host_star: &HostStar,
-    distance: f64,
+    star_distance: f64,
   ) -> Result<SatelliteSystem, Error> {
     trace_enter!();
+    trace_var!(host_star);
+    trace_var!(star_distance);
     let planet_constraints = self.planet_constraints.unwrap_or(PlanetConstraints::default());
     trace_var!(planet_constraints);
     let moons_constraints = self.moons_constraints.unwrap_or(MoonsConstraints::default());
     trace_var!(moons_constraints);
-    let planet = planet_constraints.generate(rng, host_star, distance)?;
+    let planet = planet_constraints.generate(rng, host_star, star_distance)?;
     trace_var!(planet);
-    let moons = moons_constraints.generate(rng, &planet)?;
+    let moons = moons_constraints.generate(rng, host_star, star_distance, &planet)?;
     trace_var!(moons);
     let result = SatelliteSystem { planet, moons };
     trace_var!(result);

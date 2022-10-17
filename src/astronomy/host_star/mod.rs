@@ -23,6 +23,22 @@ pub enum HostStar {
 }
 
 impl HostStar {
+  /// Retrieve or calculate the age of the stars.
+  ///
+  /// Calculated in Gyr.
+  #[named]
+  pub fn get_current_age(&self) -> f64 {
+    trace_enter!();
+    use HostStar::*;
+    let result = match &self {
+      Star(star) => star.current_age,
+      CloseBinaryStar(close_binary_star) => close_binary_star.get_current_age(),
+    };
+    trace_var!(result);
+    trace_exit!();
+    result
+  }
+
   /// Retrieve or calculate the total mass of the stars.
   ///
   /// Calculated in Msol.
